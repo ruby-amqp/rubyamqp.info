@@ -7,6 +7,14 @@
     %link{ :href => "/assets/stylesheets/prettify.css", :rel => "stylesheet" }
     %script{ :src => "/assets/javascripts/prettify.js", :type => "text/javascript" }
   %body
+    .topbar
+      .topbar-inner
+        .container
+          %a.brand{:href => "#"} Orceo docs
+          %ul.nav
+            %li
+              %a{:href => "#overview"} Overview
+
     %section.content
       = yield
     %script{ :type => "text/javascript" }

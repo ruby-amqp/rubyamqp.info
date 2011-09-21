@@ -10,8 +10,8 @@ end
 
 compile '*' do
   case item[:extension]
-    when 'html'
-      filter :erb
+    when 'haml'
+      filter :haml
       layout 'default'
     when 'textile'
       filter :redcloth

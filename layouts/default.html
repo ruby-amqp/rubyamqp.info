@@ -1,0 +1,15 @@
+!!!
+%html
+  %head
+    %title
+      = "#{@item[:title]}"
+    %link{ :href => "/assets/stylesheets/sass/styles.css", :rel => "stylesheet", :type => "text/css", :media => "screen" }
+    %link{ :href => "/assets/stylesheets/prettify.css", :rel => "stylesheet" }
+    %script{ :src => "/assets/javascripts/prettify.js", :type => "text/javascript" }
+  %body
+    %section.content
+      = yield
+    %script{ :type => "text/javascript" }
+      :preserve
+        window.onload = function() { prettyPrint() }
+

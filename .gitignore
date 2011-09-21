@@ -1,0 +1,10 @@
+.DS_Store
+.sass-cache
+output/*
+*~
+.DS_Store
+*.rbc
+*.class
+\#*
+.\#*
+tmp/*

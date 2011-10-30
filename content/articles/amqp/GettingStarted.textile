@@ -34,15 +34,11 @@ h2. Installing RabbitMQ
 The "RabbitMQ site":http://rabbitmq.com has a good "installation guide":http://www.rabbitmq.com/install.html that addresses many operating systems.
 On Mac OS X, the fastest way to install RabbitMQ is with "Homebrew":http://mxcl.github.com/homebrew/:
 
-<pre class="prettyprint">
-brew install rabbitmq
-</pre>
+@brew install rabbitmq@
 
 then run it:
 
-<pre class="prettyprint">
-rabbitmq-server
-</pre>
+@rabbitmq-server@
 
 On Debian and Ubuntu, you can either "download the RabbitMQ .deb package":http://www.rabbitmq.com/server.html and install it with
 "dpkg":http://www.debian.org/doc/FAQ/ch-pkgtools.en.html or make use of the "apt repository":http://www.rabbitmq.com/debian.html#apt that the RabbitMQ team provides.
@@ -70,26 +66,22 @@ h3. You can use Rubygems to install the amqp gem
 
 h4. On Microsoft Windows 7:
 
-<pre class="prettyprint">
+<pre>
 gem install eventmachine --pre
 gem install amqp
-</pre>
+gem install amqp
+gem install amqp</pre>
 
 h4. On other OSes or JRuby:
 
-<pre class="prettyprint">
-gem install amqp
-</pre>
+<pre>gem install amqp</pre>
 
 h3. You can also use Bundler to install the gem
 
-<pre class="prettyprint">
-
-source :rubygems
-
+pre. source :rubygems
 gem "amqp", "~> 0.8.0" # optionally: :git => "git://github.com/ruby-amqp/amqp.git", :branch => "0.8.x-stable"
 
-</pre>
+
 
 h3. Verifying your installation
 
@@ -119,12 +111,10 @@ This example demonstrates a very common communication scenario: *application A* 
 a queue that *application B* listens on. In this case, the queue name is "amqpgem.examples.hello". Let us go through the code
 step by step:
 
-<pre class="prettyprint">
-
+<textarea class="code">
 require "rubygems"
-require "amqp"
+require "amqp"</textarea>
 
-</pre>
 
 is the simplest way to load the amqp gem if you have installed it with RubyGems. The following piece of code
 
@@ -185,14 +175,15 @@ according to rules called _bindings_. In this particular example, there are no e
 The exchange that we defined is known as the _default exchange_ and it has implied bindings to all queues. Before we get
 into that, let us see how we define a handler for incoming messages
 
-<pre class="prettyprint">
-
+<textarea class="code">
 queue.subscribe do |payload|
   puts "Received a message: #{payload}. Disconnecting..."
   connection.close { EventMachine.stop }
 end
 
-</pre>
+
+</textarea>
+
 
 {AMQP::Queue#subscribe} takes a block that will be called every time a message arrives. {AMQP::Session#close} closes the
 AMQP connection and runs a callback that stops the EventMachine reactor.

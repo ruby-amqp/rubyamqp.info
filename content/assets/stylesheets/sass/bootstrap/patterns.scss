@@ -464,9 +464,8 @@ a.menu:after,
     letter-spacing: -1px;
   }
   p {
-    font-size: 18px;
     font-weight: 200;
-    line-height: $baseline * 1.5;
+    line-height: $baseline;
   }
 }
 footer {

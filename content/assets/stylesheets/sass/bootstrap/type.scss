@@ -160,7 +160,7 @@ address {
 
 // Inline and block code styles
 
-code {
+code, .CodeMirror {
   padding: 0 3px 2px;
   font-family: Monaco, Andale Mono, Courier New, monospace;
   font-size: 12px;
@@ -178,5 +178,4 @@ code {
   white-space: pre;
   white-space: pre-wrap;
   word-wrap: break-word;
-
 }

@@ -10,12 +10,14 @@ end
 
 compile '*' do
   case item[:extension]
+    when 'html'
+      layout item[:layout] || 'default'
     when 'haml'
       filter :haml
-      layout 'default'
+      layout item[:layout] || 'default'
     when 'textile'
       filter :redcloth
-      layout 'default'
+      layout item[:layout] || 'default'
     when 'sass'
       filter :sass, Compass.sass_engine_options
       filter :relativize_paths, :type => :css

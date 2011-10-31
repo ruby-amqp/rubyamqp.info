@@ -1,8 +1,6 @@
 !!!
-%html<>
+%html{:lang => "en"}
   %head
-    %title
-      = "#{@item[:title]}"
     %link{ :href => "/assets/stylesheets/sass/styles.css", :rel => "stylesheet", :type => "text/css", :media => "screen" }
 
     %script{ :src => "http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js", :type => "text/javascript" }
@@ -10,30 +8,7 @@
     %link{ :rel => "stylesheet", :href => "/assets/stylesheets/codemirror.css" }
     %script{ :src => "/assets/javascripts/mode/ruby.js" }
     %link{ :rel => "stylesheet", :href => "/assets/stylesheets/theme/default.css" }
-  %body<>
-    .topbar
-      .topbar-inner
-        .container
-          %ul.nav
-            %li
-              %a{:href => "#overview"} Overview
 
-    %section.content><
+  %body
+    .container
       = yield
-
-    :javascript
-
-      $('pre1').each(function() {
-        var $this = $(this),
-            $code = $this.html();
-
-        $this.empty();
-
-        var myCodeMirror = CodeMirror(this, {
-            value: $code,
-            mode: 'ruby',
-            lineNumbers: true,
-            readOnly: true
-        });
-
-      });

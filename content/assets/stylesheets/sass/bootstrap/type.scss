@@ -179,3 +179,16 @@ code, .CodeMirror {
   white-space: pre-wrap;
   word-wrap: break-word;
 }
+
+
+.highlight {
+  background: ghostWhite;
+  border: 1px solid #DEDEDE;
+  font-size: 12px;
+  font-size: 13px;
+  line-height: 22px;
+  font-family: Menlo, Monaco, Consolas, "Lucida Console", monospace;
+  margin: 0;
+  padding: .2em;
+  color: #252519;
+}

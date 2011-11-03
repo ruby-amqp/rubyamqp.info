@@ -101,7 +101,7 @@ end</pre>
 
 h3. Using AMQP.connect with a block
 
-Once the event loop is running, the {AMQP.connect} method will attempt to connect to the broker. It can be used in two ways. Here is the first one:
+Once the event loop is running, the <span class="highlight">AMQP.connect</span> method will attempt to connect to the broker. It can be used in two ways. Here is the first one:
 
 <pre>require "amqp"
 
@@ -112,7 +112,7 @@ EventMachine.run do
   end
 end</pre>
 
-<span class="highlight">{AMQP.connect}</span> takes a block that will be executed as soon as the AMQP connection is open. In order for a connection to be opened a TCP connection has to be set up, authentication has to succeed, and the broker and client need to complete negotiation of connection parameters like max frame size.
+<span class="highlight">AMQP.connect</span> takes a block that will be executed as soon as the AMQP connection is open. In order for a connection to be opened a TCP connection has to be set up, authentication has to succeed, and the broker and client need to complete negotiation of connection parameters like max frame size.
 
 h3. Using AMQP.connect without a callback
 
@@ -132,7 +132,7 @@ If you do not need to assign the returned value to a variable, then the "block v
 
 h3. Using AMQP.start
 
-EventMachine.run and <span class="highlight">{AMQP.connect}</span> with a block is such a common combination that the amqp gem provides a shortcut:
+EventMachine.run and <span class="highlight">AMQP.connect</span> with a block is such a common combination that the amqp gem provides a shortcut:
 
 <pre>require "amqp"
 
@@ -140,13 +140,13 @@ AMQP.start("amqp://dev.rabbitmq.com:5672") do |client|
   # connection is open and ready to be used
 end</pre>
 
-As these examples demonstrate, {AMQP.connect} and {AMQP.start} accept either a Hash of connection options or a connection URI string.
+As these examples demonstrate, <span class="highlight">AMQP.connect</span> and <span class="highlight">AMQP.start</span> accept either a Hash of connection options or a connection URI string.
 
 See the reference documentation for each method to learn all of the options that they accept and what the default values are.
 
 h3. On Thread#sleep use
 
-When not passing a block to <span class="highlight">{AMQP.connect}</span>, it is tempting to "give the connection some time to become established" by using <span class="highlight">Thread#sleep</span>. Unless you are running the event loop in a separate thread, please do not do this. <span class="highlight">Thread#sleep</span> blocks the current thread so that if the event loop is running in the current thread, blocking the thread _will also block the event loop_. *When the event loop is blocked, no data is sent or received, so the connection does not proceed.*
+When not passing a block to <span class="highlight">AMQP.connect</span>, it is tempting to "give the connection some time to become established" by using <span class="highlight">Thread#sleep</span>. Unless you are running the event loop in a separate thread, please do not do this. <span class="highlight">Thread#sleep</span> blocks the current thread so that if the event loop is running in the current thread, blocking the thread _will also block the event loop_. *When the event loop is blocked, no data is sent or received, so the connection does not proceed.*
 
 h3. Detecting TCP connection failures
 
@@ -178,7 +178,7 @@ rescue AMQP::TCPConnectionFailed => e
   puts "Caught AMQP::TCPConnectionFailed => TCP connection failed, as expected."
 end</pre>
 
-<span class="highlight">{AMQP.connect}</span> (and <span class="highlight">{AMQP.start}</span>) will raise <span class="highlight">{AMQP::TCPConnectionFailed}</span> if the connection fails. Code that catches the error can write to a log about the issue or use retry to execute the begin block one more time. Because initial connection failures are due to misconfiguration or network outage, reconnection to the same endpoint (hostname, port, vhost combination) will result in the same error over and over again. TBD: failover, connection to the cluster.
+<span class="highlight">AMQP.connect</span> (and <span class="highlight">AMQP.start</span>) will raise <span class="highlight">AMQP::TCPConnectionFailed</span> if the connection fails. Code that catches the error can write to a log about the issue or use retry to execute the begin block one more time. Because initial connection failures are due to misconfiguration or network outage, reconnection to the same endpoint (hostname, port, vhost combination) will result in the same error over and over again. TBD: failover, connection to the cluster.
 
 An alternative way of handling connection failure is with an _errback_ (a callback for a specific kind of error):
 
@@ -279,7 +279,7 @@ In case you are wondering why the callback name has "possible" in it, {http://bi
 
 h2. Starting the event loop and connecting in Web applications (Ruby on Rails, Sinatra, Merb, Rack)
 
-Web applications are different from standalone applications in that the main thread is occupied by a Web/application server like Unicorn or Thin, so you need to start the EventMachine reactor before you attempt to use <span class="highlight">{AMQP.connect}</span>. In a Ruby on Rails application, probably the best place for this is in the initializer (like config/initializers/amqp.rb). For Merb applications it is <span class="highlight">config/init.rb</span>. For Sinatra and pure Rack applications, place it next to the other configuration code.
+Web applications are different from standalone applications in that the main thread is occupied by a Web/application server like Unicorn or Thin, so you need to start the EventMachine reactor before you attempt to use <span class="highlight">AMQP.connect</span>. In a Ruby on Rails application, probably the best place for this is in the initializer (like config/initializers/amqp.rb). For Merb applications it is <span class="highlight">config/init.rb</span>. For Sinatra and pure Rack applications, place it next to the other configuration code.
 
 Next, we are going to discuss issues specific to particular Web servers.
 

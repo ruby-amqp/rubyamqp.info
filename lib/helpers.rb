@@ -13,7 +13,6 @@ module Helpers
     Syntax = /(#{::Liquid::Expression}+), (#{::Liquid::Expression}+)?/
 
     def initialize(tag_name, markup, tokens)
-      puts tag_name, markup, tokens
       if markup =~ Syntax
         @name = $1
         @gist_id = $2

@@ -40,9 +40,7 @@ route '/assets/*/' do
 end
 
 route '*' do
-  puts item.identifier
   rep.item.identifier + 'index.html'
-  # item.identifier + 'index.html'
 end
 
 

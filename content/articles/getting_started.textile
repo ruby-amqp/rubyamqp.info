@@ -86,28 +86,7 @@ h2. "Hello, world" example
 
 Let us begin with the classic "Hello, world" example. First, here is the code (or you can view it on <a href="/articles/amqp/hello_world/index.html">rocco-style page</a>):
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-EventMachine.run do
-  connection = AMQP.connect(:host => '127.0.0.1')
-  puts "Connected to AMQP broker. Running #{AMQP::VERSION} version of the gem..."
-
-  channel  = AMQP::Channel.new(connection)
-  queue    = channel.queue("amqpgem.examples.helloworld", :auto_delete => true)
-  exchange = channel.direct("")
-
-  queue.subscribe do |payload|
-    puts "Received a message: #{payload}. Disconnecting..."
-    connection.close { EventMachine.stop }
-  end
-
-  exchange.publish "Hello, world!", :routing_key => queue.name
-end</pre>
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998690)</span>
+{% example getting_started/hello_world.rb, 998690 %}
 
 This example demonstrates a very common communication scenario: *application A* wants to publish a message that will end up in a queue that *application B* listens on. In this case, the queue name is "amqpgem.examples.hello". Let us go through the code step by step:
 
@@ -163,28 +142,7 @@ Routing key is one of the _message attributes_. The default exchange will route 
 
 This first example can be modified to use the method chaining technique:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-EventMachine.run do
-  AMQP.connect(:host => '127.0.0.1') do |connection|
-    puts "Connected to AMQP broker. Running #{AMQP::VERSION} version of the gem..."
-
-    channel  = AMQP::Channel.new(connection)
-
-    channel.queue("amqpgem.examples.helloworld", :auto_delete => true).subscribe do |payload|
-      puts "Received a message: #{payload}. Disconnecting..."
-
-      connection.close { EventMachine.stop }
-    end
-
-    channel.direct("").publish "Hello, world!", :routing_key => "amqpgem.examples.helloworld"
-  end
-end</pre>
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998691)</span>
+{% example getting_started/hello_world_dslified.rb, 998691 %}
 
 This diagram demonstrates the "Hello, world" example data flow:
 
@@ -199,39 +157,7 @@ The previous example demonstrated how a connection to a broker is made and how t
 
 A very well-known broadcast example is Twitter: every time a person tweets, followers receive a notification. Blabbr, our imaginary information network, models this scenario: every network member has a separate queue and publishes blabs to a separate exchange. 3 Blabbr members, Joe, Aaron and Bob, follow the official NBA account on Blabbr to get updates about what is happening in the world of basketball. Here is the code:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-AMQP.start("amqp://dev.rabbitmq.com:5672") do |connection|
-  channel  = AMQP::Channel.new(connection)
-  exchange = channel.fanout("nba.scores")
-
-  channel.queue("joe", :auto_delete => true).bind(exchange).subscribe do |payload|
-    puts "#{payload} => joe"
-  end
-
-  channel.queue("aaron", :auto_delete => true).bind(exchange).subscribe do |payload|
-    puts "#{payload} => aaron"
-  end
-
-  channel.queue("bob", :auto_delete => true).bind(exchange).subscribe do |payload|
-    puts "#{payload} => bob"
-  end
-
-  exchange.publish("BOS 101, NYK 89").publish("ORL 85, ALT 88")
-
-  # disconnect & exit after 2 seconds
-  EventMachine.add_timer(2) do
-    exchange.delete
-
-    connection.close { EventMachine.stop }
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998692)</span>
+{% example getting_started/blabbr.rb, 998692 %}
 
 The first line has a few differences from the "Hello, world" example above:
 
@@ -298,62 +224,7 @@ Our example features multiple consumer applications monitoring updates for diffe
 
 Here is the code:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-EventMachine.run do
-  AMQP.connect do |connection|
-    channel  = AMQP::Channel.new(connection)
-    exchange = channel.topic("pub/sub", :auto_delete => true)
-
-    # Subscribers.
-    channel.queue("", :exclusive => true) do |queue|
-      queue.bind(exchange, :routing_key => "americas.north.#").subscribe do |headers, payload|
-        puts "An update for North America: #{payload}, routing key is #{headers.routing_key}"
-      end
-    end
-    channel.queue("americas.south").bind(exchange, :routing_key => "americas.south.#").subscribe do |headers, payload|
-      puts "An update for South America: #{payload}, routing key is #{headers.routing_key}"
-    end
-    channel.queue("us.california").bind(exchange, :routing_key => "americas.north.us.ca.*").subscribe do |headers, payload|
-      puts "An update for US/California: #{payload}, routing key is #{headers.routing_key}"
-    end
-    channel.queue("us.tx.austin").bind(exchange, :routing_key => "#.tx.austin").subscribe do |headers, payload|
-      puts "An update for Austin, TX: #{payload}, routing key is #{headers.routing_key}"
-    end
-    channel.queue("it.rome").bind(exchange, :routing_key => "europe.italy.rome").subscribe do |headers, payload|
-      puts "An update for Rome, Italy: #{payload}, routing key is #{headers.routing_key}"
-    end
-    channel.queue("asia.hk").bind(exchange, :routing_key => "asia.southeast.hk.#").subscribe do |headers, payload|
-      puts "An update for Hong Kong: #{payload}, routing key is #{headers.routing_key}"
-    end
-
-    EM.add_timer(1) do
-      exchange.publish("San Diego update", :routing_key => "americas.north.us.ca.sandiego").
-        publish("Berkeley update",         :routing_key => "americas.north.us.ca.berkeley").
-        publish("San Francisco update",    :routing_key => "americas.north.us.ca.sanfrancisco").
-        publish("New York update",         :routing_key => "americas.north.us.ny.newyork").
-        publish("São Paolo update",        :routing_key => "americas.south.brazil.saopaolo").
-        publish("Hong Kong update",        :routing_key => "asia.southeast.hk.hongkong").
-        publish("Kyoto update",            :routing_key => "asia.southeast.japan.kyoto").
-        publish("Shanghai update",         :routing_key => "asia.southeast.prc.shanghai").
-        publish("Rome update",             :routing_key => "europe.italy.roma").
-        publish("Paris update",            :routing_key => "europe.france.paris")
-    end
-
-
-    show_stopper = Proc.new {
-      connection.close { EventMachine.stop }
-    }
-
-    EM.add_timer(2, show_stopper)
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998694)</span>
+{% example getting_started/weathr.rb, 998694 %}
 
 The first line that is different from the Blabbr example is
 
@@ -487,97 +358,7 @@ end
 
 The "Hello, world" example can be ported to use this technique:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-class Consumer
-
-  #
-  # API
-  #
-
-  def handle_message(metadata, payload)
-    puts "Received a message: #{payload}, content_type = #{metadata.content_type}"
-  end # handle_message(metadata, payload)
-end
-
-
-class Worker
-
-  #
-  # API
-  #
-
-
-  def initialize(channel, queue_name = AMQ::Protocol::EMPTY_STRING, consumer = Consumer.new)
-    @queue_name = queue_name
-
-    @channel    = channel
-    @channel.on_error(&method(:handle_channel_exception))
-
-    @consumer   = consumer
-  end # initialize
-
-  def start
-    @queue = @channel.queue(@queue_name, :exclusive => true)
-    @queue.subscribe(&@consumer.method(:handle_message))
-  end # start
-
-
-
-  #
-  # Implementation
-  #
-
-  def handle_channel_exception(channel, channel_close)
-    puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
-  end # handle_channel_exception(channel, channel_close)
-end
-
-
-class Producer
-
-  #
-  # API
-  #
-
-  def initialize(channel, exchange)
-    @channel  = channel
-    @exchange = exchange
-  end # initialize(channel, exchange)
-
-  def publish(message, options = {})
-    @exchange.publish(message, options)
-  end # publish(message, options = {})
-
-
-  #
-  # Implementation
-  #
-
-  def handle_channel_exception(channel, channel_close)
-    puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
-  end # handle_channel_exception(channel, channel_close)
-end
-
-
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel  = AMQP::Channel.new(connection)
-  worker   = Worker.new(channel, "amqpgem.objects.integration")
-  worker.start
-
-  producer = Producer.new(channel, channel.default_exchange)
-  puts "Publishing..."
-  producer.publish("Hello, world", :routing_key => "amqpgem.objects.integration")
-
-  # stop in 2 seconds
-  EventMachine.add_timer(2.0) { connection.close { EventMachine.stop } }
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/1009447)</span>
+{% example getting_started/13_objects_that_consume_messages_take_two.rb, 1009447 %}
 
 The most important line in this example is
 

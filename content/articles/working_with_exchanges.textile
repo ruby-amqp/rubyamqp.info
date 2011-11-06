@@ -118,41 +118,7 @@ Each of the queues bound to the exchange receives a *copy* of the message.
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "bundler"
-Bundler.setup
-
-$:.unshift(File.expand_path("../../../lib", __FILE__))
-
-require "amqp"
-
-EventMachine.run do
-  AMQP.connect("amqp://dev.rabbitmq.com") do |connection|
-    channel  = AMQP::Channel.new(connection)
-    exchange = channel.topic("amqpgem.examples.routing.fanout_routing", :auto_delete => true)
-
-    # Subscribers.
-    10.times do
-      q = channel.queue("", :exclusive => true, :auto_delete => true).bind(exchange)
-      q.subscribe do |payload|
-        puts "Queue #{q.name} received #{payload}"
-      end
-    end
-
-    # Publish some test data in a bit, after all queues are declared & bound
-    EventMachine.add_timer(1.2) { exchange.publish "Hello, fanout exchanges world!" }
-
-
-    show_stopper = Proc.new { connection.close { EventMachine.stop } }
-
-    Signal.trap "TERM", show_stopper
-    EM.add_timer(3, show_stopper)
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/1020181)</span>
+{% example working_with_exchanges/fanout_routing.rb, 1020181 %}
 
 h3. Fanout use cases
 
@@ -218,46 +184,7 @@ The routing key will then be compared for equality with routing keys on bindings
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "bundler"
-Bundler.setup
-
-$:.unshift(File.expand_path("../../../lib", __FILE__))
-
-require "amqp"
-
-EventMachine.run do
-  AMQP.connect do |connection|
-    channel1  = AMQP::Channel.new(connection)
-    channel2  = AMQP::Channel.new(connection)
-    exchange = channel1.direct("amqpgem.examples.exchanges.direct", :auto_delete => true)
-
-    q1 = channel1.queue("amqpgem.examples.queues.shared", :auto_delete => true).bind(exchange, :routing_key => "shared.key")
-    q1.subscribe do |payload|
-      puts "Queue #{q1.name} on channel 1 received #{payload}"
-    end
-
-    # since the queue is shared, binding here is redundant but we will leave it in for completeness.
-    q2 = channel2.queue("amqpgem.examples.queues.shared", :auto_delete => true).bind(exchange, :routing_key => "shared.key")
-    q2.subscribe do |payload|
-      puts "Queue #{q2.name} on channel 2 received #{payload}"
-    end
-
-    # Publish some test data in a bit, after all queues are declared & bound
-    EventMachine.add_timer(1.2) do
-      5.times { |i| exchange.publish("Hello #{i}, direct exchanges world!", :routing_key => "shared.key") }
-    end
-
-    show_stopper = Proc.new { connection.close { EventMachine.stop } }
-
-    Signal.trap "TERM", show_stopper
-    EM.add_timer(3, show_stopper)
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/1041787)</span>
+{% example working_with_exchanges/round_robin_balancing_using_direct_exchange.rb, 1041787 %}
 
 h3. Direct exchanges and load balancing of messages
 
@@ -303,67 +230,11 @@ Some examples of usage:
 
 The default exchange is used by the "Hello, World" example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-EventMachine.run do
-  AMQP.connect(:host => '127.0.0.1') do |connection|
-    puts "Connected to AMQP broker. Running #{AMQP::VERSION} version of the gem..."
-
-    channel  = AMQP::Channel.new(connection)
-
-    channel.queue("amqpgem.examples.helloworld", :auto_delete => true).subscribe do |payload|
-      puts "Received a message: #{payload}. Disconnecting..."
-
-      connection.close { EventMachine.stop }
-    end
-
-    channel.direct("").publish "Hello, world!", :routing_key => "amqpgem.examples.helloworld"
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998691)</span>
+{% example getting_started/hello_world_dslified.rb, 998691 %}
 
 Additionally, the routing example above can be rewritten to use the default exchange:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-EventMachine.run do
-  AMQP.connect do |connection|
-    channel1  = AMQP::Channel.new(connection)
-    channel2  = AMQP::Channel.new(connection)
-    exchange = channel1.default_exchange
-
-    q1 = channel1.queue("amqpgem.examples.queues.shared", :auto_delete => true)
-    q1.subscribe do |payload|
-      puts "Queue #{q1.name} on channel 1 received #{payload}"
-    end
-
-    q2 = channel2.queue("amqpgem.examples.queues.shared", :auto_delete => true)
-    q2.subscribe do |payload|
-      puts "Queue #{q2.name} on channel 2 received #{payload}"
-    end
-
-    # Publish some test data in a bit, after queues are declared & bound
-    EventMachine.add_timer(0.3) do
-      5.times { |i| exchange.publish("Hello #{i}, fanout exchanges world!", :routing_key => "amqpgem.examples.queues.shared") }
-    end
-
-
-    show_stopper = Proc.new { connection.close { EventMachine.stop } }
-    Signal.trap "TERM", show_stopper
-    EM.add_timer(3, show_stopper)
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/1041778)</span>
+{% example getting_started/round_robin_balancing_using_the_default_exchange.rb, 1041778 %}
 
 h3. Direct exchange use cases
 
@@ -374,7 +245,6 @@ Direct exchanges can be used in a wide variety of cases:
  * Distributing tasks between multiple instances of the same application all having the same function, for example, image processors
  * Passing data between workflow steps, each having an identifier (also consider using headers exchange)
  * Delivering notifications to individual software services in the network
-
 
 h2. Topic exchanges
 
@@ -387,7 +257,6 @@ Topic exchanges are commonly used for the "multicast routing":http://en.wikipedi
 !http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Multicast.svg/500px-Multicast.svg.png!
 
 Topic exchanges can be used for "broadcast routing":http://en.wikipedia.org/wiki/Broadcasting_%28computing%29, but fanout exchanges are usually more efficient for this use case.
-
 
 h3. Topic exchange routing example
 
@@ -431,58 +300,7 @@ As you can see, the "*" part of the pattern matches 1 word only.
 
 Full example:
 
-<pre>require "rubygems" # or use Bundler.setup
-require "amqp"
-
-EventMachine.run do
-  AMQP.connect do |connection|
-    channel  = AMQP::Channel.new(connection)
-    exchange = channel.topic("pub/sub", :auto_delete => true)
-
-    # Subscribers
-    channel.queue("", :exclusive => true) do |queue|
-      queue.bind(exchange, :routing_key => "americas.north.#").subscribe do |metadata, payload|
-        puts "An update for North America: #{payload}, routing key is #{metadata.routing_key}"
-      end
-    end
-    channel.queue("americas.south").bind(exchange, :routing_key => "americas.south.#").subscribe do |metadata, payload|
-      puts "An update for South America: #{payload}, routing key is #{metadata.routing_key}"
-    end
-    channel.queue("us.california").bind(exchange, :routing_key => "americas.north.us.ca.*").subscribe do |metadata, payload|
-      puts "An update for US/California: #{payload}, routing key is #{metadata.routing_key}"
-    end
-    channel.queue("us.tx.austin").bind(exchange, :routing_key => "#.tx.austin").subscribe do |metadata, payload|
-      puts "An update for Austin, TX: #{payload}, routing key is #{metadata.routing_key}"
-    end
-    channel.queue("it.rome").bind(exchange, :routing_key => "europe.italy.rome").subscribe do |metadata, payload|
-      puts "An update for Rome, Italy: #{payload}, routing key is #{metadata.routing_key}"
-    end
-    channel.queue("asia.hk").bind(exchange, :routing_key => "asia.southeast.hk.#").subscribe do |metadata, payload|
-      puts "An update for Hong Kong: #{payload}, routing key is #{metadata.routing_key}"
-    end
-
-    # publish updates 1 second later, after all queues are declared and bound
-    EventMachine.add_timer(1) do
-      exchange.publish("San Diego update", :routing_key => "americas.north.us.ca.sandiego").
-        publish("Berkeley update",        :routing_key => "americas.north.us.ca.berkeley").
-        publish("San Francisco update",    :routing_key => "americas.north.us.ca.sanfrancisco").
-        publish("New York update",         :routing_key => "americas.north.us.ny.newyork").
-        publish("São Paolo update",        :routing_key => "americas.south.brazil.saopaolo").
-        publish("Hong Kong update",        :routing_key => "asia.southeast.hk.hongkong").
-        publish("Kyoto update",            :routing_key => "asia.southeast.japan.kyoto").
-        publish("Shanghai update",         :routing_key => "asia.southeast.prc.shanghai").
-        publish("Rome update",             :routing_key => "europe.italy.roma").
-        publish("Paris update",            :routing_key => "europe.france.paris")
-    end
-
-    show_stopper = Proc.new { connection.close { EventMachine.stop } }
-
-    Signal.trap "TERM", show_stopper
-    EM.add_timer(3, show_stopper)
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/1020308)</span>
+{% example working_with_exchanges/weather_broadcasts_with_fanout_exchange.rb, 1020308 %}
 
 h3. Topic exchange use cases
 
@@ -520,24 +338,7 @@ To publish a message to an AMQP exchange, use <span class="highlight">AMQP::Exch
 
 <span class="highlight">AMQP::Exchange#publish</span> can accept any object that responds to the `to_s` method, not just string instances:
 
-<pre>class Message
-
-  #
-  # API
-  #
-
-  # ...
-
-  def to_s
-    # returns textual or binary representation of the message as a String instance
-  end
-
-  # ...
-end
-
-exchange.publish(Message.new)</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/1020336)</span>
+{% example working_with_exchanges/publishing_messages_as_objects.rb, 1020336 %}
 
 The message payload is completely opaque to the library and is not modified in any way.
 
@@ -553,7 +354,6 @@ A few popular options for data serialization are:
  * XML: "Nokogiri":https://nokogiri.org is a swiss army knife for XML processing with Ruby, built on top of libxml2
  * Protocol Buffers: "beefcake":https://github.com/bmizerany/beefcake
  * Thrift: "thrift-client":https://github.com/fauna/thrift_client
-
 
 h3. Message metadata
 
@@ -579,24 +379,7 @@ All other attributes can be added to a _headers table_ (in Ruby parlance, header
 
 An example to show how message metadata attributes are passed to <span class="highlight">AMQP::Exchange#publish</span>:
 
-<pre>exchange.publish("Hey, what a great view!",
-                 :app_id         => "amqpgem.example",
-                 :priority       => 8,
-                 :type           => "kinda.checkin",
-                 :correlation_id => "b907b65a4876fc0d4b12fbdef1b41fb0a9876a94",
-                 # headers table keys can be anything
-                 :headers        => {
-                   :coordinates => {
-                     :latitude  => 59.35,
-                     :longitude => 18.066667
-                   },
-                   :participants => 11,
-                   :venue        => "Stockholm"
-                 },
-                 :timestamp   => Time.now.to_i,
-                 :routing_key => "amqpgem.key")</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/1020424)</span>
+{% example working_with_exchanges/specifying_message_metadata_on_publishing.rb, 1020424 %}
 
 <dl>
   <dt>:routing_key</dt>
@@ -718,15 +501,16 @@ An example of <span class="highlight">AMQP::Exchange#publish</span> being used t
 <pre>exchange.publish("Message ##{i}", :immediate => true)</pre>
 
 The following code example demonstrates a message that is published as immediate but cannot be immediately consumed (no consumers) and thus is returned back to the producer:
-<script src="https://gist.github.com/1025700.js"></script>
 
+{% example working_with_exchanges/handling_returned_messages_with_amqp_gem.rb, 1025700 %}
 
 h3. Publishing messages as mandatory
 
 When publishing messages, it is possible to use the ":mandatory" option to publish a message as "mandatory". When a mandatory message cannot be *routed* to any queue (for example, there are no bindings or none of the bindings match), the message is returned to the producer.
 
 The following code example demonstrates a message that is published as mandatory but cannot be routed (no bindings) and thus is returned back to the producer:
-<script src="https://gist.github.com/1041835.js"> </script>
+
+{% example working_with_exchanges/unroutable_mandatory_message_is_returned.rb, 1041835 %}
 
 h3. Returned messages
 
@@ -772,7 +556,7 @@ h3. Sending one-off messages
 
 The following example publishes a message and *safely* closes the AMQP connection afterwards by passing a block to <span class="highlight">AMQP::Exchange#publish</span> :
 
-<script src="https://gist.github.com/1020425.js"> </script>
+{% example working_with_exchanges/publishing_one_off_messages_with_ruby_amqp_gem.rb, 1020425 %}
 
 h2. Headers exchanges
 
@@ -863,7 +647,8 @@ h3. Headers exchange routing example
 When there is just one queue bound to a headers exchange, messages are routed to it if one or all headers of the message match those specified upon binding. Whether it is "any header" or "all of them" depends on the "x-match" header value. In the case of multiple queues, a headers exchange will deliver a copy of a message to each queue, just like direct exchanges do. Distribution rules between consumers on a particular queue are the same as for a direct exchange.
 
 Full example:
-<script src="https://gist.github.com/1034875.js"> </script>
+
+{% example working_with_exchanges/headers_exchange_example.rb, 1034875 %}
 
 h3. Headers exchange use cases
 
@@ -957,7 +742,8 @@ Exchanges can be *auto-deleted*. To declare an exchange as auto-deleted, use the
 <pre>exchange = channel.direct("nodes.metadata", :auto_delete => true)</pre>
 
 Full example:
-<script src="https://gist.github.com/1020226.js"> </script>
+
+{% example working_with_exchanges/auto_deleted_exchanges.rb, 1020226 %}
 
 TBD: explain when exchange is considered to be "no longer in use"
 
@@ -966,7 +752,8 @@ h2. Objects as message producers.
 Since Ruby is a genuine object-oriented language, it is important to demonstrate how the Ruby amqp gem can be integrated into rich object-oriented code. This part of the guide focuses on exchanges and the problems/solutions concerning producer applications (applications that primarily generate and publish messages, as opposed to consumers that receive and process them).
 
 Full example:
-<script src="https://gist.github.com/1009425.js"> </script>
+
+{% example working_with_exchanges/12_objects_that_consume_messages.rb, 1009425 %}
 
 TBD
 

@@ -69,8 +69,8 @@ h4. On other OSes or JRuby:
 
 h3. You can also use Bundler to install the gem
 
-pre. source :rubygems
-gem "amqp", "~> 0.8.0" # optionally: :git => "git://github.com/ruby-amqp/amqp.git", :branch => "0.8.x-stable"
+<pre>source :rubygems
+gem "amqp", "~> 0.8.0" # optionally: :git => "git://github.com/ruby-amqp/amqp.git", :branch => "0.8.x-stable"</pre>
 
 h3. Verifying your installation
 
@@ -90,26 +90,26 @@ Let us begin with the classic "Hello, world" example. First, here is the code (o
 
 This example demonstrates a very common communication scenario: *application A* wants to publish a message that will end up in a queue that *application B* listens on. In this case, the queue name is "amqpgem.examples.hello". Let us go through the code step by step:
 
-pre. require "rubygems"
-require "amqp"
+<pre>require "rubygems"
+require "amqp"</pre>
 
 is the simplest way to load the amqp gem if you have installed it with RubyGems. The following piece of code
 
-pre. EventMachine.run do
+<pre>EventMachine.run do
   # ...
-end
+end</pre>
 
 runs what is called the "EventMachine":http://rubyeventmachine.com reactor. We will not go into what the term 'reactor' means here, but suffice it to say that the amqp gem is asynchronous and is based on an asynchronous network I/O library called _EventMachine_.
 
 The next line
 
-pre. connection = AMQP.connect(:host => '127.0.0.1')
+<pre>connection = AMQP.connect(:host => '127.0.0.1')</pre>
 
 connects to the server running on localhost, with the default port (5672), username (guest), password (guest) and virtual host ('/').
 
 The next line
 
-pre. channel  = AMQP::Channel.new(connection)
+<pre>channel  = AMQP::Channel.new(connection)</pre>
 
 opens a new _channel_. AMQP is a multi-channeled protocol that uses channels to multiplex a TCP connection.
 
@@ -117,26 +117,26 @@ Channels are opened on a connection, therefore the AMQP::Channel constructor tak
 
 This line
 
-pre. queue    = channel.queue("amqpgem.examples.helloworld", :auto_delete => true)
+<pre>queue    = channel.queue("amqpgem.examples.helloworld", :auto_delete => true)</pre>
 
 declares a _queue_ on the channel that we have just opened. Consumer applications get messages from queues. We declared this queue with the "auto-delete" parameter. Basically, this means that the queue will be deleted when there are no more processes consuming messages from it.
 
 The next line
 
-pre. exchange = channel.direct("")
+<pre>exchange = channel.direct("")</pre>
 
 instantiates an _exchange_. Exchanges receive messages that are sent by producers. Exchanges route messages to queues according to rules called _bindings_. In this particular example, there are no explicitly defined bindings. The exchange that we defined is known as the _default exchange_ and it has implied bindings to all queues. Before we get into that, let us see how we define a handler for incoming messages
 
-pre. queue.subscribe do |payload|
+<pre>queue.subscribe do |payload|
   puts "Received a message: #{payload}. Disconnecting..."
   connection.close { EventMachine.stop }
-end
+end</pre>
 
 {AMQP::Queue#subscribe} takes a block that will be called every time a message arrives. {AMQP::Session#close} closes the AMQP connection and runs a callback that stops the EventMachine reactor.
 
 Finally, we publish our message
 
-pre. exchange.publish "Hello, world!", :routing_key => queue.name
+<pre>exchange.publish "Hello, world!", :routing_key => queue.name</pre>
 
 Routing key is one of the _message attributes_. The default exchange will route the message to a queue that has the same name as the message's routing key. This is how our message ends up in the "amqpgem.examples.helloworld" queue.
 
@@ -168,11 +168,11 @@ The first line has a few differences from the "Hello, world" example above:
 
 {AMQP.start} is just a convenient way to do
 
-pre. EventMachine.run do
+<pre>EventMachine.run do
   AMQP.connect(options) do |connection|
     # ...
   end
-end
+end</pre>
 
 The {AMQP.start} call blocks the current thread which means that its use is limited to scripts and small command line applications. Blabbr is just that.
 
@@ -180,19 +180,19 @@ The {AMQP.start} call blocks the current thread which means that its use is limi
 
 In this example, opening a channel is no different to opening a channel in the previous example, however, the exchange is declared differently
 
-pre. exchange = channel.fanout("nba.scores")
+<pre>exchange = channel.fanout("nba.scores")</pre>
 
 The exchange that we declare above using {AMQP::Channel#fanout} is a _fanout exchange_. A fanout exchange delivers messages to all of the queues that are bound to it: exactly what we want in the case of Blabbr!
 
 This piece of code
 
-pre channel.queue("joe", :auto_delete => true).bind(exchange).subscribe do |payload|
+<pre>channel.queue("joe", :auto_delete => true).bind(exchange).subscribe do |payload|
   puts "#{payload} => joe"
-end
+end</pre>
 
 is similar to the subscription code that we used for message delivery previously, but what does that {AMQP::Queue#bind} method do? It sets up a binding between the queue and the exchange that you pass to it. We need to do this to make sure that our fanout exchange routes messages to the queues of any subscribed followers.
 
-pre. exchange.publish("BOS 101, NYK 89").publish("ORL 85, ALT 88")
+<pre>exchange.publish("BOS 101, NYK 89").publish("ORL 85, ALT 88")</pre>
 
 demonstrates {AMQP::Exchange#publish} call chaining. Blabbr members use a fanout exchange for publishing, so there is no need to specify a message routing key because every queue that is bound to the exchange will get its own copy of all messages, regardless of the queue name and routing key used.
 
@@ -203,16 +203,14 @@ A diagram for Blabbr looks like this:
 
 Next we use EventMachine's {http://eventmachine.rubyforge.org/EventMachine.html#M000466 add_timer} method to run a piece of code in 1 second from now:
 
-pre. EventMachine.add_timer(1) do
+<pre>EventMachine.add_timer(1) do
   exchange.delete
   connection.close { EventMachine.stop }
-end
+end</pre>
 
 The code that we want to run deletes the exchange that we declared earlier using {AMQP::Exchange#delete} and closes the AMQP connection with {AMQP::Session#close}. Finally, we stop the EventMachine event loop and exit.
 
 Blabbr is pretty unlikely to secure hundreds of millions of dollars in funding, but it does a pretty good job of demonstrating how one can use AMQP fanout exchanges to do broadcasting.
-
-
 
 h2. Weathr: many-to-many topic routing example
 
@@ -228,13 +226,13 @@ Here is the code:
 
 The first line that is different from the Blabbr example is
 
-pre. exchange = channel.topic("pub/sub", :auto_delete => true)
+<pre>exchange = channel.topic("pub/sub", :auto_delete => true)</pre>
 
 We use a topic exchange here. Topic exchanges are used for "multicast":http://en.wikipedia.org/wiki/Multicast messaging where consumers indicate which topics they are interested in (think of it as subscribing to a feed for an individual tag in your favourite blog as opposed to the full feed). Routing with a topic exchange is done by specifying a _routing pattern_ on binding, for example:
 
-pre. channel.queue("americas.south").bind(exchange, :routing_key => "americas.south.#").subscribe do |headers, payload|
+<pre>channel.queue("americas.south").bind(exchange, :routing_key => "americas.south.#").subscribe do |headers, payload|
   puts "An update for South America: #{payload}, routing key is #{headers.routing_key}"
-end
+end</pre>
 
 Here we bind a queue with the name of "americas.south" to the topic exchange declared earlier using the {AMQP::Queue#bind} method.  This means that only messages with a routing key matching "americas.south.#" will be routed to that queue. A routing pattern consists of several words separated by dots, in a similar way to URI path segments joined by slashes. Here are a few examples:
 
@@ -284,17 +282,17 @@ and so on.
 
 As the following binding demonstrates, "#" and "*" can also appear at the beginning of routing patterns:
 
-pre. channel.queue("us.tx.austin").bind(exchange, :routing_key => "#.tx.austin").subscribe do |headers, payload|
+<pre>channel.queue("us.tx.austin").bind(exchange, :routing_key => "#.tx.austin").subscribe do |headers, payload|
   puts "An update for Austin, TX: #{payload}, routing key is #{headers.routing_key}"
-end
+end</pre>
 
 For this example the publishing of messages is no different from that of previous examples. If we were to run the program, a message published with a routing key of "americas.north.us.ca.berkeley" would be routed to 2 queues: "us.california" and the _server-named queue_ that we declared by passing a blank string as the name:
 
-pre. channel.queue("", :exclusive => true) do |queue|
+<pre>channel.queue("", :exclusive => true) do |queue|
   queue.bind(exchange, :routing_key => "americas.north.#").subscribe do |headers, payload|
     puts "An update for North America: #{payload}, routing key is #{headers.routing_key}"
   end
-end
+end</pre>
 
 The name of the server-named queue is generated by the broker and sent back to the client with a queue declaration confirmation. Because the queue name is not known before the reply arrives, we pass {AMQP::Channel#queue} a callback and it yields us back a queue object once confirmation has arrived.
 
@@ -362,11 +360,11 @@ The "Hello, world" example can be ported to use this technique:
 
 The most important line in this example is
 
-pre. @queue.subscribe(&@consumer.method(:handle_message))
+<pre>@queue.subscribe(&@consumer.method(:handle_message))</pre>
 
 Ampersand (&) preceding an object is equivalent to calling the #to_proc method on it. We obtain a Consumer#handle_message method reference with
 
-pre. @consumer.method(:handle_message)
+<pre>@consumer.method(:handle_message)</pre>
 
 and then the ampersand calls #to_proc on it. {AMQP::Queue#subscribe} then will be using this Proc instance to handle incoming messages.
 

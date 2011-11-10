@@ -58,25 +58,7 @@ To declare a queue with a particular name, for example, "images.resize", pass it
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-# Declaring a queue with explicitly given name using AMQP::Queue constructor
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel = AMQP::Channel.new(connection)
-  queue   = AMQP::Queue.new(channel, "images.resize", :auto_delete => true)
-
-  puts "#{queue.name} is ready to go."
-
-  connection.close {
-    EventMachine.stop { exit }
-  }
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998721)</span>
+{% example working_with_queues/01b_declaring_a_queue_using_queue_constructor.rb, 998721 %}
 
 h3. Server-named queues
 
@@ -88,25 +70,7 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-# Declaring a queue with server-generated name using AMQP::Queue constructor
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel = AMQP::Channel.new(connection)
-  AMQP::Queue.new(channel, "", :auto_delete => true) do |queue|
-    puts "#{queue.name} is ready to go."
-
-    connection.close {
-      EventMachine.stop { exit }
-    }
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998720)</span>
+{% example working_with_queues/01a_declaring_a_server_named_queue_using_queue_constructor.rb, 998720 %}
 
 The amqp gem allows server-named queues to be declared without callbacks:
 
@@ -162,23 +126,7 @@ To declare a durable shared queue, you pass a queue name that is a non-blank str
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-# Declaring a durable shared queue
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel = AMQP::Channel.new(connection)
-  queue   = AMQP::Queue.new(channel, "images.resize", :durable => true)
-
-  connection.close {
-    EventMachine.stop { exit }
-  }
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998723)</span>
+{% example working_with_queues/02a_declaring_a_durable_shared_queue.rb, 998723 %}
 
 the same example rewritten to use <span class="highlight">AMQP::Channel#queue</span>:
 
@@ -188,26 +136,7 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-# Declaring a temporary exclusive queue
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  AMQP::Channel.new do |channel, open_ok|
-    channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
-      puts "#{queue.name} is ready to go."
-
-      connection.close {
-        EventMachine.stop { exit }
-      }
-    end
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998724)</span>
+{% example working_with_queues/02b_declaring_a_durable_shared_queue.rb, 998724 %}
 
 h2. Declaring a temporary exclusive queue
 
@@ -219,26 +148,7 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-# Declaring a temporary exclusive queue
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel = AMQP::Channel.new(connection)
-
-  AMQP::Queue.new(channel, "", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
-    puts "#{queue.name} is ready to go."
-
-    connection.close {
-      EventMachine.stop { exit }
-    }
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998725)</span>
+{% example working_with_queues/03a_declaring_a_temporary_exclusive_queue.rb, 998725 %}
 
 The same example can be rewritten to use <span class="highlight">AMQP::Channel#queue</span>:
 
@@ -248,69 +158,11 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-# Declaring a temporary exclusive queue
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  AMQP::Channel.new do |channel, open_ok|
-    channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
-      puts "#{queue.name} is ready to go."
-
-      connection.close {
-        EventMachine.stop { exit }
-      }
-    end
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998726)</span>
+{% example working_with_queues/03b_declaring_a_temporary_exclusive_queue.rb, 998726 %}
 
 Exclusive queues may only be accessed by the current connection and are deleted when that connection closes. The declaration of an exclusive queue by other connections is not allowed and will result in a channel-level exception with the code 405 (RESOURCE_LOCKED) and a reply message similar to
 
-<code>RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'amqpgem.examples.queue' in vhost '/'</code>
-
-The following example demonstrates this:
-
-<pre>require "rubygems"
-require 'amqp'
-
-
-puts "=> Queue exclusivity violation results "
-puts
-EventMachine.run do
-  connection1 = AMQP.connect("amqp://guest:guest@dev.rabbitmq.com")
-  channel1    = AMQP::Channel.new(connection1)
-
-  connection2 = AMQP.connect("amqp://guest:guest@dev.rabbitmq.com")
-  channel2    = AMQP::Channel.new(connection2)
-
-  channel1.on_error do |ch, close|
-    puts "Handling a channel-level exception on channel1: #{close.reply_text}, #{close.inspect}"
-  end
-  channel2.on_error do |ch, close|
-    puts "Handling a channel-level exception on channel2: #{close.reply_text}, #{close.inspect}"
-  end
-
-  name = "amqpgem.examples.queue"
-  channel1.queue(name, :auto_delete => true, :exclusive => true)
-  # declare a queue with the same name on a different connection
-  channel2.queue(name, :auto_delete => true, :exclusive => true)
-
-
-  EventMachine.add_timer(3.5) do
-    connection1.close {
-      connection2.close {
-        EventMachine.stop { exit }
-      }
-    }
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/1008529)</span>
+{% example working_with_queues/queue_exclusivity_violation_results.rb, 1008529 %}
 
 h2. Binding queues to exchanges
 
@@ -322,29 +174,7 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-# Binding a queue to an exchange
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel  = AMQP::Channel.new(connection)
-  exchange = channel.fanout("amq.fanout")
-
-  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
-    queue.bind(exchange) do |bind_ok|
-      puts "Just bound #{queue.name} to #{exchange.name}"
-    end
-
-    connection.close {
-      EventMachine.stop { exit }
-    }
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998727)</span>
+{% example working_with_queues/04_bind_a_queue_using_exchange_instance.rb, 998727 %}
 
 The same example using a string without callback:
 
@@ -352,28 +182,7 @@ The same example using a string without callback:
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-# Binding a queue to an exchange
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel = AMQP::Channel.new(connection)
-  exchange_name = "amq.fanout"
-
-  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
-    queue.bind(exchange_name)
-    puts "Bound #{queue.name} to #{exchange_name}"
-
-    connection.close {
-      EventMachine.stop { exit }
-    }
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998729)</span>
+{% example working_with_queues/05_bind_a_queue_using_exchange_name.rb, 998729 %}
 
 h2. Subscribing to receive messages ("push API")
 
@@ -385,31 +194,7 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel  = AMQP::Channel.new(connection)
-  exchange = channel.fanout("amq.fanout")
-
-  channel.queue("", :auto_delete => true, :exclusive => true) do |queue|
-    queue.bind(exchange).subscribe do |metadata, payload|
-      puts "Received a message: #{payload.inspect}. Shutting down..."
-
-      connection.close { EventMachine.stop }
-    end
-
-    EventMachine.add_timer(0.2) do
-      puts "=> Publishing..."
-      exchange.publish("Ohai!")
-    end
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998731)</span>
+{% example working_with_queues/06_subscribe_to_receive_messages.rb, 998731 %}
 
 Subscriptions for message delivery are usually referred to as <span class="highlight">consumers</span> in the AMQP v0.9.1 specification, client library documentation and books. Consumers last as long as the channel that they were declared on, or until  client cancels them (unsubscribes).
 
@@ -467,68 +252,7 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "bundler"
-Bundler.setup
-
-$:.unshift(File.expand_path("../../../lib", __FILE__))
-
-require 'amqp'
-
-EventMachine.run do
-  connection = AMQP.connect(:host => '127.0.0.1')
-  puts "Connected to AMQP broker. Running #{AMQP::VERSION} version of the gem..."
-
-  channel  = AMQP::Channel.new(connection)
-  queue    = channel.queue("amqpgem.examples.hello_world", :auto_delete => true)
-  exchange = channel.direct("amq.direct")
-
-  queue.bind(exchange)
-
-  channel.on_error do |ch, channel_close|
-    puts channel_close.reply_text
-    connection.close { EventMachine.stop }
-  end
-
-  queue.subscribe do |metadata, payload|
-    puts "metadata.routing_key : #{metadata.routing_key}"
-    puts "metadata.content_type: #{metadata.content_type}"
-    puts "metadata.priority    : #{metadata.priority}"
-    puts "metadata.headers     : #{metadata.headers.inspect}"
-    puts "metadata.timestamp   : #{metadata.timestamp.inspect}"
-    puts "metadata.type        : #{metadata.type}"
-    puts "metadata.delivery_tag: #{metadata.delivery_tag}"
-    puts "metadata.redelivered : #{metadata.redelivered}"
-
-    puts "metadata.app_id      : #{metadata.app_id}"
-    puts "metadata.exchange    : #{metadata.exchange}"
-    puts
-    puts "Received a message: #{payload}. Disconnecting..."
-
-    connection.close {
-      EventMachine.stop { exit }
-    }
-  end
-
-  exchange.publish("Hello, world!",
-                   :app_id      => "amqpgem.example",
-                   :priority    => 8,
-                   :type        => "kinda.checkin",
-                   # headers table keys can be anything
-                   :headers     => {
-                     :coordinates => {
-                       :latitude  => 59.35,
-                       :longitude => 18.066667
-                     },
-                     :participants => 11,
-                     :venue        => "Stockholm"
-                   },
-                   :timestamp   => Time.now.to_i)
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998739)</span>
+{% example working_with_queues/accessing_message_metadata.rb, 998739 %}
 
 h3. Exclusive consumers
 
@@ -600,104 +324,7 @@ end</pre>
 
 To demonstrate how redelivery works, let us have a look at the following code example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "bundler"
-Bundler.setup
-
-$:.unshift(File.expand_path("../../../lib", __FILE__))
-
-require 'amqp'
-
-puts "=> Subscribing for messages using explicit acknowledgements model"
-puts
-
-# this example uses Kernel#sleep and thus we must run EventMachine reactor in
-# a separate thread, or nothing will be sent/received while we sleep() on the current thread.
-t = Thread.new { EventMachine.run }
-sleep(0.5)
-
-# open two connections to imitate two apps
-connection1 = AMQP.connect
-connection2 = AMQP.connect
-connection3 = AMQP.connect
-
-channel_exception_handler = Proc.new { |ch, channel_close| EventMachine.stop; raise "channel error: #{channel_close.reply_text}" }
-
-# open two channels
-channel1    = AMQP::Channel.new(connection1)
-channel1.on_error(&channel_exception_handler)
-# first app will be given up to 3 messages at a time. If it doesn't
-# ack any messages after it was delivered 3, messages will be routed to
-# the app #2.
-channel1.prefetch(3)
-
-channel2    = AMQP::Channel.new(connection2)
-channel2.on_error(&channel_exception_handler)
-# app #2 processes messages one-by-one and has to send and ack every time
-channel2.prefetch(1)
-
-# app 3 will just publish messages
-channel3    = AMQP::Channel.new(connection3)
-channel3.on_error(&channel_exception_handler)
-
-exchange = channel3.direct("amq.direct")
-
-queue1    = channel1.queue("amqpgem.examples.acknowledgements.explicit", :auto_delete => false)
-# purge the queue so that we don't get any redeliveries from previous runs
-queue1.purge
-queue1.bind(exchange).subscribe(:ack => true) do |metadata, payload|
-  # do some work
-  sleep(0.2)
-
-  # acknowledge some messages, they will be removed from the queue
-  if rand > 0.5
-    # FYI: there is a shortcut, metadata.ack
-    channel1.acknowledge(metadata.delivery_tag, false)
-    puts "[consumer1] Got message ##{metadata.headers['i']}, ack-ed"
-  else
-    # some messages are not ack-ed and will remain in the queue for redelivery
-    # when app #1 connection is closed (either properly or due to a crash)
-    puts "[consumer1] Got message ##{metadata.headers['i']}, SKIPPPED"
-  end
-end
-
-queue2    = channel2.queue!("amqpgem.examples.acknowledgements.explicit", :auto_delete => false)
-queue2.subscribe(:ack => true) do |metadata, payload|
-  metadata.ack
-  # app 2 always acks messages
-  puts "[consumer2] Received #{payload}, redelivered = #{metadata.redelivered}, ack-ed"
-end
-
-# after 2.5 seconds one of the consumers dies
-EventMachine.add_timer(4.0) {
-  connection1.close
-  puts "----- Connection 1 is now closed (we pretend that it has crashed) -----"
-}
-
-EventMachine.add_timer(10.0) do
-  # purge the queue so that we don't get any redeliveries on the next run
-  queue2.purge {
-    connection2.close {
-      connection3.close { EventMachine.stop }
-    }
-  }
-end
-
-
-i = 0
-EventMachine.add_periodic_timer(0.8) {
-  3.times do
-    exchange.publish("Message ##{i}", :headers => { :i => i })
-    i += 1
-  end
-}
-
-
-t.join</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/999396)</span>
+{% example working_with_queues/amqp_acknowledgements_and_message_redelivery.rb, 999396 %}
 
 So what is going on here? This example uses 3 AMQP connections to imitate 3 applications, 1 producer and two consumers. Each AMQP connection opens a single channel:
 
@@ -959,36 +586,7 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel = AMQP::Channel.new(connection)
-  exchange = channel.fanout("amq.fanout")
-
-  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
-    queue.bind(exchange)
-    puts "Bound. Publishing a message..."
-    exchange.publish("Ohai!")
-
-    EventMachine.add_timer(0.5) do
-      queue.pop do |metadata, payload|
-        if payload
-          puts "Fetched a message: #{payload.inspect}, content_type: #{metadata.content_type}. Shutting down..."
-        else
-          puts "No messages in the queue"
-        end
-
-        connection.close { EventMachine.stop }
-      end
-    end
-  end
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998732)</span>
+{% example working_with_queues/07_fetch_a_message_from_the_queue.rb, 998732 %}
 
 If the queue is empty, then the `payload` argument will be nil, otherwise arguments are identical to those of the <span class="highlight">AMQP::Queue#subscribe</span> callback.
 
@@ -1008,31 +606,7 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel = AMQP::Channel.new(connection)
-  exchange = channel.fanout("amq.fanout")
-
-  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
-    queue.bind(exchange).subscribe do |headers, payload|
-      puts "Received a new message"
-    end
-
-    EventMachine.add_timer(0.3) do
-      queue.unsubscribe
-      puts "Unsubscribed. Shutting down..."
-
-      connection.close { EventMachine.stop }
-    end # EventMachine.add_timer
-  end # channel.queue
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998734)</span>
+{% example working_with_queues/08_unsubscribing_a_consumer.rb, 998734 %}
 
 In AMQP parlance, unsubscribing from messages is often referred to as "cancelling a consumer". Once a consumer is cancelled, messages will no longer be delivered to it, however, due to the asynchronous nature of the protocol, it is possible for "in flight" messages to be received after this call completes.
 
@@ -1047,34 +621,7 @@ To unbind a queue from an exchange use <span class="highlight">AMQP::Queue#unbin
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel = AMQP::Channel.new(connection)
-  channel.on_error do |ch, channel_close|
-    raise "Channel-level exception: #{channel_close.reply_text}"
-  end
-
-  exchange = channel.fanout("amq.fanout")
-
-  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
-    queue.bind(exchange)
-
-    EventMachine.add_timer(0.5) do
-      queue.unbind(exchange) do |_|
-        puts "Unbound. Shutting down..."
-
-        connection.close { EventMachine.stop }
-      end
-    end # EventMachine.add_timer
-  end # channel.queue
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998742)</span>
+{% example working_with_queues/09_unbinding_from_exchange.rb, 998742 %}
 
 Note that trying to unbind a queue from an exchange that the queue was never bound to will result in a channel-level exception.
 
@@ -1090,44 +637,7 @@ end</pre>
 
 Full example:
 
-<pre>require 'rubygems'
-require 'amqp'
-
-puts "=> Queue#status example"
-puts
-AMQP.start(:host => 'localhost') do |connection|
-  channel   = AMQP::Channel.new(connection)
-
-  queue_name = "amqpgem.integration.queue.status.queue"
-  exchange   = channel.fanout("amqpgem.integration.queue.status.fanout", :auto_delete => true)
-  queue      = channel.queue(queue_name, :auto_delete => true).bind(exchange)
-
-  100.times do |i|
-    print "."
-    exchange.publish(Time.now.to_i.to_s + "_#{i}", :key => queue_name)
-  end
-  $stdout.flush
-
-  EventMachine.add_timer(0.5) do
-    queue.status do |number_of_messages, number_of_consumers|
-      puts
-      puts "# of messages in the queue #{queue.name} = #{number_of_messages}"
-      puts
-      queue.purge
-    end
-  end
-
-
-  show_stopper = Proc.new do
-    $stdout.puts "Stopping..."
-    connection.close { EventMachine.stop }
-  end
-
-  Signal.trap "INT", show_stopper
-  EventMachine.add_timer(2, show_stopper)
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/1068363)</span>
+{% example working_with_queues/queue_status_example.rb, 1068363 %}
 
 h2. Querying the number of consumers on a queue
 
@@ -1141,44 +651,7 @@ end</pre>
 
 Full example:
 
-<pre>require 'rubygems'
-require 'amqp'
-
-puts "=> Queue#status example"
-puts
-AMQP.start(:host => 'localhost') do |connection|
-  channel   = AMQP::Channel.new(connection)
-
-  queue_name = "amqpgem.integration.queue.status.queue"
-  exchange   = channel.fanout("amqpgem.integration.queue.status.fanout", :auto_delete => true)
-  queue      = channel.queue(queue_name, :auto_delete => true).bind(exchange)
-
-  100.times do |i|
-    print "."
-    exchange.publish(Time.now.to_i.to_s + "_#{i}", :key => queue_name)
-  end
-  $stdout.flush
-
-  EventMachine.add_timer(0.5) do
-    queue.status do |number_of_messages, number_of_consumers|
-      puts
-      puts "# of consumer on the queue #{queue.name} = #{number_of_consumers}"
-      puts
-      queue.purge
-    end
-  end
-
-
-  show_stopper = Proc.new do
-    $stdout.puts "Stopping..."
-    connection.close { EventMachine.stop }
-  end
-
-  Signal.trap "INT", show_stopper
-  EventMachine.add_timer(2, show_stopper)
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/1068377)</span>
+{% example working_with_queues/another_queue_status_example.rb, 1068377 %}
 
 h2. Purging queues
 
@@ -1194,31 +667,7 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com:5672") do |connection, open_ok|
-  channel = AMQP::Channel.new(connection)
-  channel.on_error do |ch, channel_close|
-    raise "Channel-level exception: #{channel_close.reply_text}"
-  end
-  exchange = channel.fanout("amq.fanout")
-
-  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
-    queue.purge do |_|
-      puts "Purged #{queue.name}"
-    end
-
-    EventMachine.add_timer(0.5) do
-      connection.close { EventMachine.stop }
-    end # EventMachine.add_timer
-  end # channel.queue
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998743)</span>
+{% example working_with_queues/10_purge_a_queue.rb, 998743 %}
 
 Note that this example purges a newly declared queue with a unique server-generated name. When a queue is declared, it is empty, so for server-named queues, there is no need to purge them before they are used.
 
@@ -1236,30 +685,7 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel = AMQP::Channel.new(connection)
-  channel.on_error do |ch, channel_close|
-    raise "Channel-level exception: #{channel_close.reply_text}"
-  end
-  exchange = channel.fanout("amq.fanout")
-
-  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
-    EventMachine.add_timer(0.5) do
-      queue.delete do
-        puts "Deleted #{queue.name}"
-        connection.close { EventMachine. stop }
-      end
-    end # EventMachine.add_timer
-  end # channel.queue
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/998744)</span>
+{% example working_with_queues/11_deleting_a_queue.rb, 998744 %}
 
 h2. Objects as message consumers and unit testing consumers in isolation
 
@@ -1308,77 +734,7 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-class Consumer
-
-  #
-  # API
-  #
-
-  def initialize(channel, queue_name = AMQ::Protocol::EMPTY_STRING)
-    @queue_name = queue_name
-
-    @channel    = channel
-    @channel.on_error(&method(:handle_channel_exception))
-  end # initialize
-
-  def start
-    @queue = @channel.queue(@queue_name, :exclusive => true)
-    @queue.subscribe(&method(:handle_message))
-  end # start
-
-
-
-  #
-  # Implementation
-  #
-
-  def handle_message(metadata, payload)
-    puts "Received a message: #{payload}, content_type = #{metadata.content_type}"
-  end # handle_message(metadata, payload)
-
-  def handle_channel_exception(channel, channel_close)
-    puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
-  end # handle_channel_exception(channel, channel_close)
-end
-
-
-class Producer
-
-  #
-  # API
-  #
-
-  def initialize(channel, exchange)
-    @channel  = channel
-    @exchange = exchange
-  end # initialize(channel, exchange)
-
-  def publish(message, options = {})
-    @exchange.publish(message, options)
-  end # publish(message, options = {})
-end
-
-
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel  = AMQP::Channel.new(connection)
-  worker   = Consumer.new(channel, "amqpgem.objects.integration")
-  worker.start
-
-  producer = Producer.new(channel, channel.default_exchange)
-  puts "Publishing..."
-  producer.publish("Hello, world", :routing_key => "amqpgem.objects.integration")
-
-  # stop in 2 seconds
-  EventMachine.add_timer(2.0) { connection.close { EventMachine.stop } }
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/1009425)</span>
+{% example working_with_queues/12_objects_that_consume_messages.rb, 1009425 %}
 
 In this example, <span class="highlight">Consumer</span> instances have to be instantiated with an <span class="highlight">AMQP::Channel</span> instance. If the message handling was done by an aggregated object, it would completely separate the handling logic and would be make it easy to unit test in isolation:
 
@@ -1427,97 +783,7 @@ end</pre>
 
 Full example:
 
-<pre>#!/usr/bin/env ruby
-# encoding: utf-8
-
-require "rubygems"
-require "amqp"
-
-class Consumer
-
-  #
-  # API
-  #
-
-  def handle_message(metadata, payload)
-    puts "Received a message: #{payload}, content_type = #{metadata.content_type}"
-  end # handle_message(metadata, payload)
-end
-
-
-class Worker
-
-  #
-  # API
-  #
-
-
-  def initialize(channel, queue_name = AMQ::Protocol::EMPTY_STRING, consumer = Consumer.new)
-    @queue_name = queue_name
-
-    @channel    = channel
-    @channel.on_error(&method(:handle_channel_exception))
-
-    @consumer   = consumer
-  end # initialize
-
-  def start
-    @queue = @channel.queue(@queue_name, :exclusive => true)
-    @queue.subscribe(&@consumer.method(:handle_message))
-  end # start
-
-
-
-  #
-  # Implementation
-  #
-
-  def handle_channel_exception(channel, channel_close)
-    puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
-  end # handle_channel_exception(channel, channel_close)
-end
-
-
-class Producer
-
-  #
-  # API
-  #
-
-  def initialize(channel, exchange)
-    @channel  = channel
-    @exchange = exchange
-  end # initialize(channel, exchange)
-
-  def publish(message, options = {})
-    @exchange.publish(message, options)
-  end # publish(message, options = {})
-
-
-  #
-  # Implementation
-  #
-
-  def handle_channel_exception(channel, channel_close)
-    puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
-  end # handle_channel_exception(channel, channel_close)
-end
-
-
-AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
-  channel  = AMQP::Channel.new(connection)
-  worker   = Worker.new(channel, "amqpgem.objects.integration")
-  worker.start
-
-  producer = Producer.new(channel, channel.default_exchange)
-  puts "Publishing..."
-  producer.publish("Hello, world", :routing_key => "amqpgem.objects.integration")
-
-  # stop in 2 seconds
-  EventMachine.add_timer(2.0) { connection.close { EventMachine.stop } }
-end</pre>
-
-<span class="help-block">(if the example above isn't displayed, see this "gist":https://gist.github.com/1009447)</span>
+{% example working_with_queues/13_objects_that_consume_messages_take_two.rb, 1009447 %}
 
 Note that the <span class="highlight>Consumer</span> class demonstrated above can be easily tested in isolation without spinning up any AMQP connections:
 

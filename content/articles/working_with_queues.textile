@@ -3,6 +3,8 @@ title: "Ruby AMQP gem: Working with queues"
 layout: article
 -----
 
+<div class="toc"></div>
+
 h1. Working with queues
 
 h2. About this guide
@@ -865,4 +867,33 @@ If, for some reason, you cannot use the communication channels mentioned above, 
         dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
+</script>
+
+<script>
+  var listStack = [ $("<ul />")]
+  listStack[0].appendTo($(".toc"))
+
+  Array.prototype.last = function() { return this[this.length - 1]}
+
+  var level = 1
+  $(document).ready(function() {
+    $(":header").each(function(index, el) {
+      var text = $(el).text()
+      var anchor = text.replace(/[^a-zA-Z 0-9]+/g,'').replace(/\s/g, "_").toLowerCase()
+      $(el).attr('id', anchor)
+
+      var currentLevel = parseInt(el.tagName[1])
+      if(currentLevel > level) {
+        var nextLevelList = $("<ul />")
+        nextLevelList.appendTo(listStack.last().children("li").last())
+        listStack.push(nextLevelList)
+      } else if(currentLevel < level) {
+        listStack.pop()
+      }
+      level = currentLevel;
+      var li = $("<li />")
+      $("<a />").text(text).attr('href', "#" + anchor).appendTo(li)
+      li.appendTo(listStack.last())
+    });
+  });
 </script>

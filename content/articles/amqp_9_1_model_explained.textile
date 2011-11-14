@@ -3,6 +3,8 @@ title: "Ruby amqp gem: AMQP 0.9.1 Model Explained"
 layout: article
 -----
 
+<div class="toc"></div>
+
 h1. AMQP 0.9.1 Model Explained
 
 h2. About this guide
@@ -254,7 +256,7 @@ To stay up to date with amqp gem development, "follow @rubyamqp on Twitter":http
 
 h2. What to read next
 
-Documentation is organized as a number of {file:docs/DocumentationGuidesIndex.textile documentation guides}, covering all kinds of topics from {file:docs/Exchanges.textile use cases for various exchange types} to {file:docs/ErrorHandling.textile error handling} and {file:docs/VendorSpecificExchanges.textile Broker-specific AMQP 0.9.1 extensions}.
+Documentation is organized as a number of documentation guides, covering all kinds of topics from "use cases for various exchange types":/articles/working_with_exchanges/ to "error handling":/articles/error_handling/ and "Broker-specific AMQP 0.9.1 extensions":/articles/broker_specific_extensions.
 
 We recommend that you read the following guides next, if possible, in this order:
 

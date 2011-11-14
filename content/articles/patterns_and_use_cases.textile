@@ -3,6 +3,7 @@ title: "Ruby AMQP gem: Patterns and Use Cases"
 layout: article
 -----
 
+<div class="toc"></div>
 
 h1. Patterns and Use Cases
 

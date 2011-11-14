@@ -3,6 +3,8 @@ title: "Ruby amqp gem: Ruby amqp gem: Connecting to the broker, integrating with
 layout: article
 -----
 
+<div class="toc"></div>
+
 h1. Connecting to the broker <small>integrating with Ruby on Rails, Merb and Sinatra</small>
 
 h2. About this guide

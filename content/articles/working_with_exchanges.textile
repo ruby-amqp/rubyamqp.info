@@ -3,6 +3,8 @@ title: "Ruby AMQP gem: Working with exchanges"
 layout: article
 -----
 
+<div class="toc"></div>
+
 h1. Working with exchanges
 
 h2. About this guide

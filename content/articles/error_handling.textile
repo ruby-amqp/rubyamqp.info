@@ -3,6 +3,8 @@ title: "Ruby AMQP gem: Error handling and recovery"
 layout: article
 -----
 
+<div class="toc"></div>
+
 h1. Error handling and recovery
 
 h2. About this guide

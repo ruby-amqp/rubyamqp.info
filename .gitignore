@@ -7,4 +7,5 @@ output/*
 *.class
 \#*
 .\#*
-tmp/*
+source/tmp/*
+source/output/*

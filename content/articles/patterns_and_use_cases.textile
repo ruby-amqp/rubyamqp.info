@@ -1,11 +1,7 @@
 -----
-title: "Ruby AMQP gem: Patterns and Use Cases"
+title: "Patterns and Use Cases"
 layout: article
 -----
-
-<div class="toc"></div>
-
-h1. Patterns and Use Cases
 
 h2. About this guide
 
@@ -72,7 +68,7 @@ h4. Server code
 
 {% example patterns_and_use_cases/request_reply_server.rb, 1207764 %}
 
-In the examples above messages are published with the :immediate attribute set. This is not necessary in allcases: sometimes it is OK for requests to sit in the queue without active consumers. Replies, on the other hand,assume an active consumer and existing replies queue, so if routing or immediate delivery do not succeed,server application will log returned messages. More on this in the {file:docs/Exchanges.textile Working With Exchanges} guide.
+In the examples above messages are published with the :immediate attribute set. This is not necessary in allcases: sometimes it is OK for requests to sit in the queue without active consumers. Replies, on the other hand,assume an active consumer and existing replies queue, so if routing or immediate delivery do not succeed,server application will log returned messages. More on this in the "Working With Exchanges":/articles/working_with_exchanges/ guide.
 
 h3. Related patterns
 
@@ -151,7 +147,7 @@ h4. Request message attributes
 </dl>
 <span class="note">Due to misconfiguration or different upgrade time/policy, applications may receive events they do not know how to handle.It is important for developers to handle such cases, otherwise it is likely that consumers may crash.</span>
 
-More on fanout exchange type in the {file:docs/Exchanges.textile Working With Exchanges} guide.
+More on fanout exchange type in the "Working With Exchanges":/articles/working_with_exchanges/ guide.
 
 h3. Code example
 
@@ -254,13 +250,3 @@ TBD
 h3. Code example
 
 TBD
-
-h2. Authors
-
-These guides were written by "Michael Klishin":http://twitter.com/michaelklishin and edited by "Chris Duncan":https://twitter.com/celldee
-
-h2. Tell us what you think!
-
-Please take a moment and tell us what you think about this guide "on Twitter":http://twitter.com/rubyamqp or "Ruby AMQP mailing list":http://groups.google.com/group/ruby-amqp:what was unclear? what wasn't covered? maybe you don't like guide style or grammar and spelling are incorrect? Readers feedback iskey to making documentation better.
-
-If mailing list communication is not an option for you for some reason, you can "contact guides author directly":mailto:michael@novemberain.com?subject=amqp%20gem%20documentation

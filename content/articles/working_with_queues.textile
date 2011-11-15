@@ -1,11 +1,9 @@
 -----
-title: "Ruby AMQP gem: Working with queues"
+title: "Working with queues"
 layout: article
+disqus_identifier: "amqp_queues"
+disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/Queues.textile"
 -----
-
-<div class="toc"></div>
-
-h1. Working with queues
 
 h2. About this guide
 
@@ -20,7 +18,7 @@ h2. Queues in AMQP v0.9.1 - overview
 
 h3. What are AMQP queues?
 
-<span class="highlight">Queues</span> store and forward messages to consumers. They are similar to mailboxes in SMTP. Messages flow from producing applications to {file:docs/Exchanges.textile exchanges} that route them to queues and finally queues deliver the messages to consumer applications (or consumer applications fetch messages as needed).
+<span class="highlight">Queues</span> store and forward messages to consumers. They are similar to mailboxes in SMTP. Messages flow from producing applications to "exchanges":/articles/working_with_exchanges/ that route them to queues and finally queues deliver the messages to consumer applications (or consumer applications fetch messages as needed).
 
 Note that unlike some other messaging protocols/systems, messages are not delivered directly to queues. They are delivered to exchanges that route messages to queues using rules known as <span class="highlight">bindings</span>.
 
@@ -28,7 +26,7 @@ AMQP is a programmable protocol, so queues and bindings alike are declared by ap
 
 h3. Concept of bindings
 
-A <span class="highlight">binding</span> is an association between a queue and an exchange. Queues must be bound to at least one exchange in order to receive messages from publishers. Learn more about bindings in the {file:docs/Bindings.textile Bindings guide}.
+A <span class="highlight">binding</span> is an association between a queue and an exchange. Queues must be bound to at least one exchange in order to receive messages from publishers. Learn more about bindings in the "Bindings guide":/articles/bindings/.
 
 h3. Queue attributes
 
@@ -500,7 +498,7 @@ end</pre>
 
 h3. Negative acknowledgements
 
-Messages are rejected with the <span class="highlight">`basic.reject`</span> AMQP method. There is one limitation that <span class="highlight">`basic.reject`</span> has: there is no way to reject multiple messages, as you can do with acknowledgements. However, if you are using "RabbitMQ":http://rabbitmq.com, then there is a solution. RabbitMQ provides an AMQP v0.9.1 extension known as "negative acknowledgements":http://www.rabbitmq.com/extensions.html#negative-acknowledgements (nacks) and the amqp gem supports this extension. For more information, please refer to the {file:docs/VendorSpecificExtensions.textile Vendor-specific Extensions guide}.
+Messages are rejected with the <span class="highlight">`basic.reject`</span> AMQP method. There is one limitation that <span class="highlight">`basic.reject`</span> has: there is no way to reject multiple messages, as you can do with acknowledgements. However, if you are using "RabbitMQ":http://rabbitmq.com, then there is a solution. RabbitMQ provides an AMQP v0.9.1 extension known as "negative acknowledgements":http://www.rabbitmq.com/extensions.html#negative-acknowledgements (nacks) and the amqp gem supports this extension. For more information, please refer to the "Vendor-specific Extensions guide":/articles/broker_specific_extensions/.
 
 h3. QoS - Prefetching messages
 
@@ -557,7 +555,7 @@ In cases where you cannot afford to lose a single message, AMQP v0.9.1 applicati
  * Publishing messages as immediate
  * Transactions (noticeable overhead)
 
-This topic is covered in depth in the {file:docs/Exchanges.textile Working With Exchanges} guide. In this guide, we will only mention how message acknowledgements are related to AMQP transactions and the Publisher Confirms extension.
+This topic is covered in depth in the "Working With Exchanges":/articles/working_with_exchanges/ guide. In this guide, we will only mention how message acknowledgements are related to AMQP transactions and the Publisher Confirms extension.
 
 Let us consider a publisher application (P) that communications with a consumer (C) using AMQP v0.9.1. Their communication can be graphically represented like this:
 
@@ -820,52 +818,22 @@ TBD
 
 h2. Queue durability vs message durability
 
-See {file:docs/Durability.textile Durability guide}
+See "Durability guide":/articles/durability/
 
 h2. Error handling and recovery
 
-See {file:docs/ErrorHandling.textile Error handling and recovery guide}
+See "Error handling and recovery guide":/articles/error_handling/
 
 h2. Vendor-specific extensions related to queues
 
-See {file:docs/VendorSpecificExtensions.textile Vendor-specific Extensions guide}
+See "Vendor-specific Extensions guide":/articles/broker_specific_extensions/
 
 h2.  What to read next
 
-The documentation is organized as several {file:docs/DocumentationGuidesIndex.textile documentation guides}, covering all kinds of topics. Guides related to this one are:
+The documentation is organized as several "documentation guides":/, covering all kinds of topics. Guides related to this one are:
 
- * {file:docs/Exchanges.textile Working With Exchanges}
- * {file:docs/Bindings.textile Bindings}
- * {file:docs/ErrorHandling.textile Error handling and recovery}
+ * "Working With Exchanges":/articles/working_with_exchanges/
+ * "Bindings":/articles/bindings/
+ * "Error handling and recovery":/articles/error_handling/
 
-RabbitMQ implements a number of extensions to AMQP v0.9.1 functionality that are covered in the {file:docs/VendorSpecificExtensions.textile Vendor-specific Extensions guide}. At least one extension, per-queue messages time-to-live (TTL), is related to this guide and can be used with the amqp gem v0.8.0 and later.
-
-h2. Authors
-
-This guide was written by "Michael Klishin":http://twitter.com/michaelklishin and edited by "Chris Duncan":https://twitter.com/celldee.
-
-h2. Tell us what you think!
-
-Please take a moment to tell us what you think about this guide "on Twitter":http://twitter.com/rubyamqp or the "Ruby AMQP mailing list":http://groups.google.com/group/ruby-amqp. Let us know what was unclear or what has not been covered. Maybe you do not like the guide style or grammar or discover spelling mistakes. Reader feedback is
-key to making the documentation better.
-
-If, for some reason, you cannot use the communication channels mentioned above, you can "contact the author of the guides directly":mailto:michael@novemberain.com?subject=amqp%20gem%20documentation
-
-
-<div id="disqus_thread"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = 'rubyamqpdocs'; // required: replace example with your forum shortname
-
-    var disqus_developer = 0; // set to 1 on local machine for testing comments
-    var disqus_identifier = 'amqp_queues';
-    var disqus_url = 'http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/Queues.textile';
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-
+RabbitMQ implements a number of extensions to AMQP v0.9.1 functionality that are covered in the "Vendor-specific Extensions guide":/articles/broker_specific_extensions/. At least one extension, per-queue messages time-to-live (TTL), is related to this guide and can be used with the amqp gem v0.8.0 and later.

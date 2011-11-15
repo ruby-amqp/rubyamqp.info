@@ -1,18 +1,15 @@
 -----
-title: "Ruby amqp gem: Ruby amqp gem: Connecting to the broker, integrating with Ruby on Rails, Merb and Sinatra"
+title: "Connecting to the broker, integrating with Ruby on Rails, Merb and Sinatra"
 layout: article
+disqus_identifier: "amqp_connecting_to_the_broker"
+disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/ConnectingToTheBroker.textile"
 -----
-
-<div class="toc"></div>
-
-h1. Connecting to the broker <small>integrating with Ruby on Rails, Merb and Sinatra</small>
 
 h2. About this guide
 
 This guide covers connection to an AMQP broker from standalone and Web applications, connection error handling, authentication failure handling and related issues.
 
 This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images & stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
-
 
 h2. Which versions of the amqp gem does this guide cover?
 
@@ -375,39 +372,11 @@ So, in case the EventMachine reactor is not yet running on server/application bo
 
 h2. If it just does not work: troubleshooting
 
-If you have read this guide and your issue is still unresolved, check our {file:docs/Troubleshooting.textile Troubleshooting guide} before asking on the mailing list.
+If you have read this guide and your issue is still unresolved, check our "Troubleshooting guide":/articles/troubleshooting/ before asking on the mailing list.
 
 h2. What to read next
 
- * {file:docs/Queues.textile Working With Queues}. This guide focuses on features consumer applications use heavily.
- * {file:docs/Exchanges.textile Working With Exchanges}. This guide focuses on features producer applications use heavily.
- * {file:docs/ErrorHandling.textile Error handling}
- * {file:docs/ConnectionEncryptionWithTLS.textile Using TLS (SSL)} (if you want to use an SSL encrypted connection to the broker)
-
-
-h2. Authors
-
-This guide was written by "Michael Klishin":http://twitter.com/michaelklishin and edited by "Chris Duncan":https://twitter.com/celldee.
-
-h2. Tell us what you think!
-
-Please take a moment to tell us what you think about this guide "on Twitter":http://twitter.com/rubyamqp or the "Ruby AMQP mailing list":http://groups.google.com/group/ruby-amqp. Let us know what was unclear or what has not been covered. Maybe you do not like the guide style or grammar or discover spelling mistakes. Reader feedback is key to making the documentation better.
-
-If, for some reason, you cannot use the communication channels mentioned above, you can "contact the author of the guides directly":mailto:michael@novemberain.com?subject=amqp%20gem%20documentation
-
-<div id="disqus_thread"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = 'rubyamqpdocs'; // required: replace example with your forum shortname
-
-    var disqus_developer = 0; // set to 1 on local machine for testing comments
-    var disqus_identifier = 'amqp_connecting_to_the_broker';
-    var disqus_url = 'http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/ConnectingToTheBroker.textile';
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
+  * "Working With Queues":/articles/working_with_queues/. This guide focuses on features that consumer applications use heavily.
+  * "Working With Exchanges":/articles/working_with_exchanges/. This guide focuses on features that producer applications use heavily.
+  * "Error Handling & Recovery":/articles/error_handling/. This guide explains how to handle protocol errors, network failures and other things that may go wrong in real world projects.
+ * "Using TLS (SSL)":/articles/connection_encryption_with_tls/ (if you want to use an SSL encrypted connection to the broker)

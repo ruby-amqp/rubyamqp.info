@@ -1,11 +1,9 @@
 -----
-title: "Ruby AMQP gem: Error handling and recovery"
+title: "Error handling and recovery"
 layout: article
+disqus_identifier: "amqp_error_handling"
+disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/ErrorHandling.textile"
 -----
-
-<div class="toc"></div>
-
-h1. Error handling and recovery
 
 h2. About this guide
 
@@ -432,30 +430,3 @@ Ruby amqp gem 0.8.x and later lets applications to define handlers that handle c
 amqp gem error handling and interruption is not a copy of RabbitMQ Java client's "Shutdown Protocol":http://www.rabbitmq.com/api-guide.html#shutdown,but they turn out to be similar with respect to network failures and connection-level exceptions.
 
 TBD
-
-h2. Authors
-
-This guide was written by "Michael Klishin":http://twitter.com/michaelklishin and edited by "Chris Duncan":https://twitter.com/celldee.
-
-h2. Tell us what you think!
-
-Please take a moment and tell us what you think about this guide "on Twitter":http://twitter.com/rubyamqp or "Ruby AMQP mailing list":http://groups.google.com/group/ruby-amqp:what was unclear? what wasn't covered? maybe you don't like guide style or grammar and spelling are incorrect? Readers feedback iskey to making documentation better.
-
-If mailing list communication is not an option for you for some reason, you can "contact guides author directly":mailto:michael@novemberain.com?subject=amqp%20gem%20documentation
-
-<div id="disqus_thread"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = 'rubyamqpdocs'; // required: replace example with your forum shortname
-
-    var disqus_developer = 0; // set to 1 on local machine for testing comments
-    var disqus_identifier = 'amqp_error_handling';
-    var disqus_url = 'http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/ErrorHandling.textile';
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>

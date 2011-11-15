@@ -1,11 +1,7 @@
 -----
-title: "Ruby AMQP gem: Bindings"
+title: "Bindings"
 layout: article
 -----
-
-<div class="toc"></div>
-
-h1. Working With Bindings
 
 h2. About this guide
 
@@ -21,7 +17,7 @@ h2. Bindings in AMQP 0.9.1
 
 Bindings are rules that exchanges use (among other things) to route messages to queues. To instruct an exchange E to route messages to a queue Q,Q has to _be bound_ to E. Bindings may have an optional _routing key_ attribute used by some exchange types. The purpose of the routing key is toselectively match only specific (matching) messages published to an exchange to the bound queue. In other words, the routing key acts like a filter.
 
-Learn more about how bindings fit into the AMQP Model in the {file:docs/AMQP091ModelExplained.textile AMQP 0.9.1 Model Explained} documentation guide.
+Learn more about how bindings fit into the AMQP Model in the "AMQP 0.9.1 Model Explained":/articles/amqp_9_1_model_explained/ documentation guide.
 
 h2. What Are AMQP 0.9.1 Bindings
 
@@ -86,7 +82,7 @@ The takeaway is that messages may or may not be routed and it is important for a
 
 h3. Handling of Unroutable Messages
 
-Unroutable messages are either dropped or returned back to producers. Vendor-specific extensions can provide additional ways of handing of unroutablemessages: for example, RabbitMQ's "Alternate Exchanges extension":http://www.rabbitmq.com/extensions.html#alternate-exchange makes it possible to route unroutable messages to another exchange.amqp gem support for it is documented in the {file:docs/VendorSpecificExtensions.textile Vendor-specific Extensions guide}.
+Unroutable messages are either dropped or returned back to producers. Vendor-specific extensions can provide additional ways of handing of unroutablemessages: for example, RabbitMQ's "Alternate Exchanges extension":http://www.rabbitmq.com/extensions.html#alternate-exchange makes it possible to route unroutable messages to another exchange.amqp gem support for it is documented in the "Vendor-specific Extensions guide":/articles/broker_specific_extensions/.
 
 RabbitMQ 2.6 will introduce a new feature callled dead letter queue where unroutable messages will be put instead of dropping them.
 
@@ -96,14 +92,4 @@ amqp gem provides a way to handle returned messages with the {AMQP::Exchange#on_
   puts "#{payload} was returned! reply_code = #{basic_return.reply_code}, reply_text = #{basic_return.reply_text}"
 end</pre>
 
-{file:docs/Exchanges.textile Working With Exchanges} documentation guide provides more information on the subject, including full code examples.
-
-h2. Authors
-
-This guide was written by "Michael Klishin":http://twitter.com/michaelklishin and edited by "Chris Duncan":https://twitter.com/celldee.
-
-h2. Tell us what you think!
-
-Please take a moment and tell us what you think about this guide "on Twitter":http://twitter.com/rubyamqp or "Ruby AMQP mailing list":http://groups.google.com/group/ruby-amqp:what was unclear? what wasn't covered? maybe you don't like guide style or grammar and spelling are incorrect? Readers feedback iskey to making documentation better.
-
-If mailing list communication is not an option for you for some reason, you can "contact guides author directly":mailto:michael@novemberain.com?subject=amqp%20gem%20documentation
+"Working With Exchanges":/articles/working_with_exchanges/ documentation guide provides more information on the subject, including full code examples.

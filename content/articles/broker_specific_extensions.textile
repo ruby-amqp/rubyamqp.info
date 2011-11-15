@@ -1,11 +1,9 @@
 -----
-title: "Ruby AMQP gem: Using vendor-specific AMQP extensions"
+title: "Vendor-specific AMQP extensions support in amqp gem"
 layout: article
+disqus_identifier: "amqp_vendor_specific_extensions"
+disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/VendorSpecificExtensions.textile"
 -----
-
-<div class="toc"></div>
-
-h1. Vendor-specific AMQP extensions support in amqp gem
 
 h2. RabbitMQ extensions
 
@@ -55,7 +53,7 @@ h2. Publisher Confirms (Publisher Acknowledgements)
 
 In some situations not a single message can be lost. The only reliable way of doing so is using confirmations."Publisher Confirms AMQP extension":http://www.rabbitmq.com/blog/2011/02/10/introducing-publisher-confirms/ was designed to solve the reliable publishing problem.
 
-Publisher confirms are similar to message acknowledgements documented in the {file:docs/Queues.textile Working With Queues} guide but involve publisher and AMQP brokerinstead of consumer and AMQP broker.
+Publisher confirms are similar to message acknowledgements documented in the "Working With Queues":/articles/working_with_queues/ guide but involve publisher and AMQP brokerinstead of consumer and AMQP broker.
 
 !https://github.com/ruby-amqp/amqp/raw/master/docs/diagrams/006_amqp_091_message_acknowledgements.png!
 
@@ -117,30 +115,3 @@ h3. Example
 h3. Learn More
 
 See also rabbitmq.com section on "Alternate Exchanges":http://www.rabbitmq.com/extensions.html#alternate-exchange
-
-h2. Authors
-
-This guide was written by "Michael Klishin":http://twitter.com/michaelklishin and edited by "Chris Duncan":https://twitter.com/celldee.
-
-h2. Tell us what you think!
-
-Please take a moment and tell us what you think about this guide "on Twitter":http://twitter.com/rubyamqp or "Ruby AMQP mailing list":http://groups.google.com/group/ruby-amqp:what was unclear? what wasn't covered? maybe you don't like guide style or grammar and spelling are incorrect? Readers feedback iskey to making documentation better.
-
-2If mailing list communication is not an option for you for some reason, you can "contact guides author directly":mailto:michael@novemberain.com?subject=amqp%20gem%20documentation
-
-<div id="disqus_thread"></div>
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = 'rubyamqpdocs'; // required: replace example with your forum shortname
-
-    var disqus_developer = 0; // set to 1 on local machine for testing comments
-    var disqus_identifier = 'amqp_vendor_specific_extensions';
-    var disqus_url = 'http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/VendorSpecificExtensions.textile';
-
-    /* * * DON'T EDIT BELOW THIS LINE * * */
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>

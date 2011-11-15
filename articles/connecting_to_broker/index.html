@@ -1,0 +1,401 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head>
+  <title>
+    Ruby amqp gem:
+    Connecting to the broker, integrating with Ruby on Rails, Merb and Sinatra
+  </title>
+  <link href='/assets/stylesheets/sass/styles.css' media='screen' rel='stylesheet' type='text/css' />
+</head>
+<script src='/assets/javascripts/jquery-1.7.min.js' type='text/javascript'></script>
+<script src='/assets/javascripts/codemirror.js'></script>
+<script src='/assets/javascripts/toc.js'></script>
+<script src='/assets/javascripts/code_highlight.js'></script>
+<link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
+<script src='/assets/javascripts/mode/ruby.js'></script>
+<link href='/assets/stylesheets/theme/default.css' rel='stylesheet' /><body><div class='topbar'>
+  <div class='topbar-inner'>
+    <div class='container'>
+      <ul class='nav'>
+        <li>
+          <a href='/'>
+            Home
+          </a>
+        </li>
+        <li>
+          <a href='/articles/getting_started/'>
+            Getting Started
+          </a>
+        </li>
+        <li>
+          <a href='/articles/amqp_9_1_model_explained/'>
+            AMQP 0.9.1 Model
+          </a>
+        </li>
+        <li>
+          <a href='/articles/connecting_to_broker/'>
+            Connecting
+          </a>
+        </li>
+        <li>
+          <a href='/articles/working_with_queues/'>
+            Queues
+          </a>
+        </li>
+        <li>
+          <a href='/articles/working_with_exchanges/'>
+            Exchanges
+          </a>
+        </li>
+        <li>
+          <a href='/articles/patterns_and_use_cases/'>
+            Patterns & Use Cases
+          </a>
+        </li>
+        <li>
+          <a href='/articles/error_handling/'>
+            Error Handling
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div><section class='content'><article><div class='toc'></div>
+<h1>Connecting to the broker, integrating with Ruby on Rails, Merb and Sinatra</h1>
+<h2>About this guide</h2>
+<p>This guide covers connection to an <span class="caps">AMQP</span> broker from standalone and Web applications, connection error handling, authentication failure handling and related issues.</p>
+<p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images &amp; stylesheets). The source is available <a href="https://github.com/ruby-amqp/amqp/tree/master/docs">on Github</a>.</p>
+<h2>Which versions of the amqp gem does this guide cover?</h2>
+<p>This guide covers v0.8.0 and later of the <a href="http://github.com/ruby-amqp/amqp">Ruby amqp gem</a>.</p>
+<h2>Terminology</h2>
+<p>In this guide we define a standalone application as an application that does not run on a Web server like Unicorn or Passenger. The key difference is that these applications control the main Ruby VM thread and often use it to run the <span class="highlight">EventMachine</span> event loop. When the amqp gem is used in a Web application, the main thread is occupied by the Web application server and the code required to establish a connection to an <span class="caps">AMQP</span> broker needs to be a little bit different.</p>
+<h2>Two ways to specify connection parameters</h2>
+<p>Connection parameters (host, port, username, vhost and so on) can be passed in two forms:</p>
+<ul>
+	<li>As a hash</li>
+	<li>As a connection <span class="caps">URI</span> string (à la <span class="caps">JDBC</span>)</li>
+</ul>
+<h3>Using a hash</h3>
+<p>Hash options that the amqp gem will recognize are</p>
+<ul>
+	<li>:host</li>
+	<li>:port</li>
+	<li>:username (aliased as :user)</li>
+	<li>:password (aliased as :pass)</li>
+	<li>:vhost</li>
+	<li>:ssl</li>
+	<li>:timeout</li>
+	<li>:frame_max</li>
+</ul>
+<h4>Default parameters</h4>
+<p>Default connection parameters are</p>
+<pre>{
+  :host      =&gt; "127.0.0.1",
+  :port      =&gt; 5672,
+  :user      =&gt; "guest",
+  :pass      =&gt; "guest",
+  :vhost     =&gt; "/",
+  :ssl       =&gt; false,
+  :frame_max =&gt; 131072
+}</pre>
+<h3>Using connection strings</h3>
+<p>It is convenient to be able to specify the <span class="caps">AMQP</span> connection parameters as a <span class="caps">URI</span> string, and various &#8220;amqp&#8221; <span class="caps">URI</span> schemes exist.  Unfortunately, there is no standard for these URIs, so while the schemes share the same basic idea, they differ in some details.  This implementation aims to encourage URIs that work as widely as possible.</p>
+<p>Here are some examples:</p>
+<ul>
+	<li>amqp://dev.rabbitmq.com</li>
+	<li>amqp://dev.rabbitmq.com:5672</li>
+	<li>amqp://guest:guest@dev.rabbitmq.com:5672</li>
+	<li>amqp://hedgehog:t0ps3kr3t@hub.megacorp.internal/production</li>
+	<li>amqps://hub.megacorp.internal/%2Fvault</li>
+</ul>
+<p>The <span class="caps">URI</span> scheme should be &#8220;amqp&#8221;, or &#8220;amqps&#8221; if <span class="caps">SSL</span> is required.</p>
+<p>The host, port, username and password are represented in the authority component of the <span class="caps">URI</span> in the same way as in http URIs.</p>
+<p>The vhost is obtained from the first segment of the path, with the leading slash removed.  The path should contain only a single segment (i.e, the only slash in it should be the leading one).  If the vhost is to include slashes or other reserved <span class="caps">URI</span> characters, these should be percent-escaped.</p>
+<p>Here are some examples that demonstrate how <span class="highlight"><span class="caps">AMQP</span>::Client.parse_connection_uri</span> parses out the vhost from connection URIs:</p>
+<pre>AMQP::Client.parse_connection_uri("amqp://dev.rabbitmq.com")            # =&gt; vhost is nil, so default ("/") will be used
+AMQP::Client.parse_connection_uri("amqp://dev.rabbitmq.com/")           # =&gt; vhost is an empty string
+AMQP::Client.parse_connection_uri("amqp://dev.rabbitmq.com/%2Fvault")   # =&gt; vhost is "/vault"
+AMQP::Client.parse_connection_uri("amqp://dev.rabbitmq.com/production") # =&gt; vhost is "production"
+AMQP::Client.parse_connection_uri("amqp://dev.rabbitmq.com/a.b.c")      # =&gt; vhost is "a.b.c"
+AMQP::Client.parse_connection_uri("amqp://dev.rabbitmq.com/foo/bar")  # =&gt; ArgumentError</pre>
+<h2>Starting the event loop and connecting in standalone applications</h2>
+<h3>EventMachine event loop</h3>
+<p>The amqp gem uses <a href="http://rubyeventmachine.com">EventMachine</a> under the hood and needs an EventMachine event loop to be running in order to connect to an <span class="caps">AMQP</span> broker or to send any data. This means that before connecting to an <span class="caps">AMQP</span> broker, we need to <em>start the EventMachine reactor</em> (get the event loop going). Here is how to do it:</p>
+<pre>require "amqp"
+
+EventMachine.run do
+  # ...
+end</pre>
+<p><a href="http://eventmachine.rubyforge.org/EventMachine.html#M000461">EventMachine.run</a> will block the current thread until the event loop is stopped. Standalone applications often can afford to start the event loop on the main thread. If you have no experience with threading, this is a recommended way to proceed.</p>
+<h3>Using <span class="caps">AMQP</span>.connect with a block</h3>
+<p>Once the event loop is running, the <span class="highlight"><span class="caps">AMQP</span>.connect</span> method will attempt to connect to the broker. It can be used in two ways. Here is the first one:</p>
+<pre>require "amqp"
+
+EventMachine.run do
+  # using AMQP.connect with a block
+  AMQP.connect(:host =&gt; "localhost") do |client|
+    # connection is open and ready to be used
+  end
+end</pre>
+<p><span class="highlight"><span class="caps">AMQP</span>.connect</span> takes a block that will be executed as soon as the <span class="caps">AMQP</span> connection is open. In order for a connection to be opened a <span class="caps">TCP</span> connection has to be set up, authentication has to succeed, and the broker and client need to complete negotiation of connection parameters like max frame size.</p>
+<h3>Using <span class="caps">AMQP</span>.connect without a callback</h3>
+<p>An alternative way of connecting is this:</p>
+<pre>require "amqp"
+
+EventMachine.run do
+  # using AMQP.connect with a block
+  client = AMQP.connect(:host =&gt; "hub.megacorp.internal", :username =&gt; "hedgehog", :password =&gt; "t0ps3kr3t")
+  # connection is not yet open, however, amqp gem will delay channel
+  # operations until after the connection is open. Bear in mind that
+  # amqp gem cannot solve every possible race condition so be careful
+end</pre>
+<p>If you do not need to assign the returned value to a variable, then the &#8220;block version&#8221; is recommended because it eliminates issues that may arise from attempts to use a connection object that is not fully opened yet. For example, handling of authentication failures is simpler with the block version, as we will see in the following sections.</p>
+<h3>Using <span class="caps">AMQP</span>.start</h3>
+<p>EventMachine.run and <span class="highlight"><span class="caps">AMQP</span>.connect</span> with a block is such a common combination that the amqp gem provides a shortcut:</p>
+<pre>require "amqp"
+
+AMQP.start("amqp://dev.rabbitmq.com:5672") do |client|
+  # connection is open and ready to be used
+end</pre>
+<p>As these examples demonstrate, <span class="highlight"><span class="caps">AMQP</span>.connect</span> and <span class="highlight"><span class="caps">AMQP</span>.start</span> accept either a Hash of connection options or a connection <span class="caps">URI</span> string.</p>
+<p>See the reference documentation for each method to learn all of the options that they accept and what the default values are.</p>
+<h3>On Thread#sleep use</h3>
+<p>When not passing a block to <span class="highlight"><span class="caps">AMQP</span>.connect</span>, it is tempting to &#8220;give the connection some time to become established&#8221; by using <span class="highlight">Thread#sleep</span>. Unless you are running the event loop in a separate thread, please do not do this. <span class="highlight">Thread#sleep</span> blocks the current thread so that if the event loop is running in the current thread, blocking the thread <em>will also block the event loop</em>. <strong>When the event loop is blocked, no data is sent or received, so the connection does not proceed.</strong></p>
+<h3>Detecting <span class="caps">TCP</span> connection failures</h3>
+<p>When applications connect to the broker, they need to handle connection failures. Networks are not 100% reliable and even with modern system configuration tools, like <a href="http://http://www.opscode.com/chef">Chef</a> or <a href="http://http://www.puppetlabs.com">Puppet</a>, misconfigurations can happen. Also, the broker might be down for some reason. Ideally, error detection should happen as early as possible. There are two ways of detecting <span class="caps">TCP</span> connection failure, the first one is to catch an exception:</p>
+<pre>#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+
+puts "=&gt; TCP connection failure handling with a rescue statement"
+puts
+
+connection_settings = {
+  :port     =&gt; 9689,
+  :vhost    =&gt; "/amq_client_testbed",
+  :user     =&gt; "amq_client_gem",
+  :password =&gt; "amq_client_gem_password",
+  :timeout        =&gt; 0.3
+}
+
+begin
+  AMQP.start(connection_settings) do |connection, open_ok|
+    raise "This should not be reachable"
+  end
+rescue AMQP::TCPConnectionFailed =&gt; e
+  puts "Caught AMQP::TCPConnectionFailed =&gt; TCP connection failed, as expected."
+end</pre>
+<p><span class="highlight"><span class="caps">AMQP</span>.connect</span> (and <span class="highlight"><span class="caps">AMQP</span>.start</span>) will raise <span class="highlight"><span class="caps">AMQP</span>::TCPConnectionFailed</span> if the connection fails. Code that catches the error can write to a log about the issue or use retry to execute the begin block one more time. Because initial connection failures are due to misconfiguration or network outage, reconnection to the same endpoint (hostname, port, vhost combination) will result in the same error over and over again. <span class="caps">TBD</span>: failover, connection to the cluster.</p>
+<p>An alternative way of handling connection failure is with an <em>errback</em> (a callback for a specific kind of error):</p>
+<pre>#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+puts "=&gt; TCP connection failure handling with a callback"
+puts
+
+handler             = Proc.new { |settings| puts "Failed to connect, as expected"; EM.stop }
+connection_settings = {
+  :port     =&gt; 9689,
+  :vhost    =&gt; "/amq_client_testbed",
+  :user     =&gt; "amq_client_gem",
+  :password =&gt; "amq_client_gem_password",
+  :timeout        =&gt; 0.3,
+  :on_tcp_connection_failure =&gt; handler
+}
+
+
+AMQP.start(connection_settings) do |connection, open_ok|
+  raise "This should not be reachable"
+end</pre>
+<p>the <span class="highlight">:on_tcp_connection_failure</span> option accepts any object that responds to #call.</p>
+<p>If you connect to the broker from code in a class (as opposed to top-level scope in a script), Object#method can be used to pass an object method as a handler instead of a Proc.</p>
+<p><span class="caps">TBD</span>: provide an example</p>
+<h3>Detecting authentication failures</h3>
+<p>A connection may also fail due to authentication failure. Handling authentication failure is very similar to handling an initial <span class="caps">TCP</span> connection failure:</p>
+<pre>#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+puts "=&gt; Authentication failure handling with a callback"
+puts
+
+handler             = Proc.new { |settings| puts "Failed to connect, as expected"; EM.stop }
+connection_settings = {
+  :port     =&gt; 5672,
+  :vhost    =&gt; "/amq_client_testbed",
+  :user     =&gt; "amq_client_gem",
+  :password =&gt; "amq_client_gem_password_that_is_incorrect #{Time.now.to_i}",
+  :timeout        =&gt; 0.3,
+  :on_tcp_connection_failure =&gt; handler,
+  :on_possible_authentication_failure =&gt; Proc.new { |settings|
+                                            puts "Authentication failed, as expected, settings are: #{settings.inspect}"
+
+                                            EM.stop
+                                          }
+}
+
+AMQP.start(connection_settings) do |connection, open_ok|
+  raise "This should not be reachable"
+end</pre>
+<p>default handler raises <span class="highlight">{AMQP::PossibleAuthenticationFailureError}</span>:</p>
+<pre>#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+puts "=&gt; Authentication failure handling with a rescue block"
+puts
+
+handler             = Proc.new { |settings| puts "Failed to connect, as expected"; EM.stop }
+connection_settings = {
+  :port     =&gt; 5672,
+  :vhost    =&gt; "/amq_client_testbed",
+  :user     =&gt; "amq_client_gem",
+  :password =&gt; "amq_client_gem_password_that_is_incorrect #{Time.now.to_i}",
+  :timeout        =&gt; 0.3,
+  :on_tcp_connection_failure =&gt; handler
+}
+
+
+begin
+  AMQP.start(connection_settings) do |connection, open_ok|
+    raise "This should not be reachable"
+  end
+rescue AMQP::PossibleAuthenticationFailureError =&gt; afe
+  puts "Authentication failed, as expected, caught #{afe.inspect}"
+  EventMachine.stop if EventMachine.reactor_running?
+end</pre>
+<p>In case you are wondering why the callback name has &#8220;possible&#8221; in it, {http://bit.ly/mTr1YN <span class="caps">AMQP</span> 0.9.1 spec} requires broker implementations to simply close the <span class="caps">TCP</span> connection without sending any more data when an exception, such as authentication failure, occurs before the <span class="caps">AMQP</span> connection is open. In practice, however, when a broker closes a <span class="caps">TCP</span> connection after a successful <span class="caps">TCP</span> connection has been established but before an <span class="caps">AMQP</span> connection is open, it means that authentication has failed.</p>
+<h2>Starting the event loop and connecting in Web applications (Ruby on Rails, Sinatra, Merb, Rack)</h2>
+<p>Web applications are different from standalone applications in that the main thread is occupied by a Web/application server like Unicorn or Thin, so you need to start the EventMachine reactor before you attempt to use <span class="highlight"><span class="caps">AMQP</span>.connect</span>. In a Ruby on Rails application, probably the best place for this is in the initializer (like config/initializers/amqp.rb). For Merb applications it is <span class="highlight">config/init.rb</span>. For Sinatra and pure Rack applications, place it next to the other configuration code.</p>
+<p>Next, we are going to discuss issues specific to particular Web servers.</p>
+<h3>Using Ruby amqp gem with Unicorn</h3>
+<h4>Unicorn is a pre-forking server</h4>
+<p><a href="http://unicorn.bogomips.org">Unicorn</a> is a pre-forking server. That means it forks worker processes that serve <span class="caps">HTTP</span> requests. The <a href="http://en.wikipedia.org/wiki/Fork_(operating_system)" title="2">fork</a> system call has several gotchas associated with it, two of which affect EventMachine and the <a href="http://github.com/ruby-amqp/amqp">Ruby amqp gem</a>:</p>
+<ul>
+	<li>Unintentional file descriptor sharing</li>
+	<li>The fact that a <a href="http://bit.ly/fork-and-threads">forked child process only inherits one thread</a> and therefore the EventMachine thread is not inherited</li>
+</ul>
+<p>To avoid both problems, start the EventMachine reactor and <span class="caps">AMQP</span> connection <strong>after</strong> the master process forks workers. The master Unicorn process never serves <span class="caps">HTTP</span> requests and usually does not need to hold an <span class="caps">AMQP</span> connection. Next, let us see how to spin up the EventMachine reactor and connect to the broker after Unicorn forks a worker.</p>
+<h4>Starting the EventMachine reactor and connecting to the broker after Unicorn forks worker processes</h4>
+<p>Unicorn lets you specify a configuration file to use. In that file you define a callback that Unicorn runs after it forks worker process(es):</p>
+<pre>ENV["FORKING"] = "true"
+
+listen 3000
+
+worker_processes 1
+timeout          30
+
+preload_app true
+
+
+after_fork do |server, worker|
+  require "amqp"
+
+  # the following is *required* for Rails + "preload_app true",
+  defined?(ActiveRecord::Base) and
+    ActiveRecord::Base.establish_connection
+
+
+  t = Thread.new { AMQP.start }
+  sleep(1.0)
+
+  EventMachine.next_tick do
+    AMQP.channel ||= AMQP::Channel.new(AMQP.connection)
+    AMQP.channel.queue("amqpgem.examples.rails23.warmup", :durable =&gt; true)
+
+    3.times do |i|
+      puts "[after_fork/amqp] Publishing a warmup message ##{i}"
+
+      AMQP.channel.default_exchange.publish("A warmup message #{i} from #{Time.now.strftime('%H:%M:%S %m/%b/%Y')}", :routing_key =&gt; "amqpgem.examples.rails23.warmup")
+    end
+  end
+end</pre>
+<p>In the example above we start the EventMachine reactor in a separate thread, block the current thread for 1 second to let the event loop spin up and then connect to the <span class="caps">AMQP</span> broker on the next event loop tick. Publishing several warmup messages on boot is a good idea because it<br />
+allows the early detection of issues that forking may cause.</p>
+<p>Note that a configuration file can easily be used in development environments because, other than the fact that Unicorn runs in the foreground, it gives you exactly the same application boot behavior as in QA and production environments.</p>
+<p>An <a href="http://bit.ly/ruby-amqp-gem-example-with-ruby-on-rails-and-unicorn">example Ruby on Rails application that uses the Ruby amqp gem and Unicorn</a> is available on GitHub.</p>
+<h3>Using the Ruby amqp gem with Passenger</h3>
+<p><a href="http://www.modrails.com">Phusion Passenger</a> is also a pre-forking server, and just as with Unicorn, the EventMachine reactor and <span class="caps">AMQP</span> connection should be started <strong>after</strong> it forks worker processes. The Passenger documentation has <a href="http://bit.ly/passenger-forking-gotchas">a section</a> that explains how to avoid problems related to the behavior of the fork(2) system call, namely:</p>
+<ul>
+	<li>Unintentional file descriptor sharing</li>
+	<li>The fact that a <a href="http://bit.ly/fork-and-threads">forked child process only inherits one thread</a> and therefore the EventMachine thread is not inherited</li>
+</ul>
+<h4>Using an event handler to spawn one amqp connection per worker</h4>
+<p>Passenger provides a hook that you should use for spawning <span class="caps">AMQP</span> connections:</p>
+<pre>if defined?(PhusionPassenger) # otherwise it breaks rake commands if you put this in an initializer
+  PhusionPassenger.on_event(:starting_worker_process) do |forked|
+    if forked
+      # We're in a smart spawning mode
+      # Now is a good place to connect to the broker
+    end
+  end
+end</pre>
+<p>Basically, the recommended default smart spawn mode works exactly the same as in Unicorn (with all of the same common pitfalls). An <a href="http://bit.ly/ruby-amqp-gem-example-with-ruby-on-rails-and-passenger">example application</a> is available on github.</p>
+<h3>Using the Ruby amqp gem with Thin and Goliath</h3>
+<h4>Thin and Goliath start the EventMachine reactor for you, but there is a little nuance</h4>
+<p>If you use <a href="http://code.macournoyer.com/thin/">Thin</a> or <a href="https://github.com/postrank-labs/goliath/">Goliath</a>, you are all set because those two servers use EventMachine under the hood. There is no need to start the EventMachine reactor. However, depending on the application server, its version, the version of the framework and Rack middleware being used, EventMachine reactor start may be slightly delayed. To overcome this potential difficulty, use EventMachine.next_tick to delay connection until after the reactor is actually running:</p>
+<pre>EventMachine.next_tick { AMQP.connect(...) }</pre>
+<p>So, in case the EventMachine reactor is not yet running on server/application boot, the connection will not fail but will instead wait for the reactor to start. Thin and Goliath are not pre-forking servers so there is no need to re-establish the connection as you do with Unicorn and Passenger.</p>
+<h2>If it just does not work: troubleshooting</h2>
+<p>If you have read this guide and your issue is still unresolved, check our <a href="/articles/troubleshooting/">Troubleshooting guide</a> before asking on the mailing list.</p>
+<h2>What to read next</h2>
+<ul>
+	<li><a href="/articles/working_with_queues/">Working With Queues</a>. This guide focuses on features that consumer applications use heavily.</li>
+	<li><a href="/articles/working_with_exchanges/">Working With Exchanges</a>. This guide focuses on features that producer applications use heavily.</li>
+	<li><a href="/articles/error_handling/">Error Handling &amp; Recovery</a>. This guide explains how to handle protocol errors, network failures and other things that may go wrong in real world projects.</li>
+	<li><a href="/articles/connection_encryption_with_tls/" title="SSL">Using <span class="caps">TLS</span></a> (if you want to use an <span class="caps">SSL</span> encrypted connection to the broker)</li>
+</ul>
+<h2>Authors</h2>
+This guide was written by
+<a href='http://twitter.com/michaelklishin'>
+  Michael Klishin
+</a>
+and edited by
+<a href='https://twitter.com/celldee'>
+  Chris Duncan
+</a>
+<h2>Tell us what you think!</h2>
+<p>
+  Please take a moment to tell us what you think about this guide
+  <a href='http://twitter.com/rubyamqp'>
+    on Twitter or the
+  </a>
+  <a href='http://groups.google.com/group/ruby-amqp.'>
+    Ruby AMQP mailing list
+  </a>
+</p>
+<p>
+  Let us know what was unclear or what has not been covered. Maybe you do not like the guide style or grammar or discover spelling mistakes. Reader feedback is key to making the documentation better.
+</p>
+<p>
+  If, for some reason, you cannot use the communication channels mentioned above, you can
+  <a href='mailto:michaelklishin@me.com?subject=amqp%20gem%20documentation'>
+    contact the author of the guides directly
+  </a>
+</p>
+<div id='disqus_thread'></div>
+<script type='text/javascript'>
+  //<![CDATA[
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'rubyamqpdocs'; // required: replace example with your forum shortname
+    
+    var disqus_developer = 0; // set to 1 on local machine for testing comments
+    = "var disqus_identifier = 'amqp_connecting_to_the_broker';"
+    = "var disqus_url = 'http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/ConnectingToTheBroker.textile';
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  //]]>
+</script></article></section></body></html>

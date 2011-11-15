@@ -1,0 +1,462 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head>
+  <title>
+    Ruby amqp gem:
+    Patterns and Use Cases
+  </title>
+  <link href='/assets/stylesheets/sass/styles.css' media='screen' rel='stylesheet' type='text/css' />
+</head>
+<script src='/assets/javascripts/jquery-1.7.min.js' type='text/javascript'></script>
+<script src='/assets/javascripts/codemirror.js'></script>
+<script src='/assets/javascripts/toc.js'></script>
+<script src='/assets/javascripts/code_highlight.js'></script>
+<link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
+<script src='/assets/javascripts/mode/ruby.js'></script>
+<link href='/assets/stylesheets/theme/default.css' rel='stylesheet' /><body><div class='topbar'>
+  <div class='topbar-inner'>
+    <div class='container'>
+      <ul class='nav'>
+        <li>
+          <a href='/'>
+            Home
+          </a>
+        </li>
+        <li>
+          <a href='/articles/getting_started/'>
+            Getting Started
+          </a>
+        </li>
+        <li>
+          <a href='/articles/amqp_9_1_model_explained/'>
+            AMQP 0.9.1 Model
+          </a>
+        </li>
+        <li>
+          <a href='/articles/connecting_to_broker/'>
+            Connecting
+          </a>
+        </li>
+        <li>
+          <a href='/articles/working_with_queues/'>
+            Queues
+          </a>
+        </li>
+        <li>
+          <a href='/articles/working_with_exchanges/'>
+            Exchanges
+          </a>
+        </li>
+        <li>
+          <a href='/articles/patterns_and_use_cases/'>
+            Patterns & Use Cases
+          </a>
+        </li>
+        <li>
+          <a href='/articles/error_handling/'>
+            Error Handling
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div><section class='content'><article><div class='toc'></div>
+<h1>Patterns and Use Cases</h1>
+<h2>About this guide</h2>
+<p>This guide explains typical messaging patterns and use cases. It only covers the most common scenarios. For comprehensive listof messaging patterns, consult books on this subject, for example, <a href="http://www.eaipatterns.com">Enterprise Integration Patterns</a>.</p>
+<p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images &amp; stylesheets). The source is available <a href="https://github.com/ruby-amqp/amqp/tree/master/docs">on Github</a>.</p>
+<h2>Covered versions</h2>
+<p>This guide covers <a href="http://github.com/ruby-amqp/amqp">Ruby amqp gem</a> v0.8.0 and later.</p>
+<h2>Introduction</h2>
+<p>Messaging patterns are a lot like object-oriented design patterns: they are generalized reusable solutions to specific problems. They are notrecipes, however, and their exact implementation may and will vary from application to application. Just like OO design patterns,they can classified:</p>
+<ul>
+	<li>Message construction patterns describe form, content and purpose of messages.</li>
+	<li>Message routing patterns outline how messages can be directed from producers to consumers.</li>
+	<li>Message transformation patterns change message content or metadata.<br />
+There are other, more specialized group of messaging patterns that are out of scope of this guide.<br />
+This guide demonstrates implementation of several common routing patterns plus explains how built-in <span class="caps">AMQP</span> 0.9.1 featurescan be used to implement message construction and message transformation patterns.<br />
+Note that guide is a work in progress. There are many messaging patterns and new variations are being discovered every year.This guide thus strives to be useful to the 80% of developers instead of being &#8220;complete&#8221;.</li>
+</ul>
+<h2>Request/Reply pattern</h2>
+<h3>Description &amp; Use cases</h3>
+<p>Request/Reply is a simple way of integration when one application issues a request and another application respondsto it. This pattern is often referred to as&quot;Remote Procedure Call&quot;, even when it is not entirely correct. Request/Replypattern is a 1:1 communication pattern.<br />
+Some examples of Request/Reply pattern are:</p>
+<ul>
+	<li>The 1st application requests a document that the 2nd application generates or loads and returns.</li>
+	<li>End-user application issues a search request and another application returns results back.</li>
+	<li>One application requests a progress report from another application.</li>
+</ul>
+<h3><span class="caps">AMQP</span>-based implementation</h3>
+<p>Implementation of Request/Reply pattern on top of <span class="caps">AMQP</span> 0.9.1 involves two messages: a request (Req) and a response (Res).Client app generates a request identifier and sets :message_id attribute on Req. Client also uses a server-namedexclusive queue to receive replies and thus sets :reply_to Req attribute to the name of that queue.</p>
+<p>Server app uses a well-known queue name to receive requests and sets :correlation_id to :message_id of the originalrequest message (Req) to make it possible for the client to identify what request this reply is for.</p>
+<h4>Request message attributes</h4>
+<dl>
+  <dt>:message_id</dt>
+  <dd>Unique message identifier</dd>
+  <dt>:reply_to</dt>
+  <dd>Queue name server should send the response to</dd>
+</dl>
+<h4>Response message attributes</h4>
+<dl>
+  <dt>:correlation_id</dt>
+  <dd>Identifier of the original request message (set to request&#8217;s :correlation_id)</dd>
+  <dt>:routing_key</dt>
+  <dd>Client&#8217;s replies queue name (set to request&#8217;s :reply_to)</dd>
+</dl>
+<h3>Code example</h3>
+<h4>Client code</h4>
+<pre>require "amqp"
+
+EventMachine.run do
+  connection = AMQP.connect
+  channel    = AMQP::Channel.new(connection)
+
+  replies_queue = channel.queue("", :exclusive =&gt; true, :auto_delete =&gt; true)
+  replies_queue.subscribe do |metadata, payload|
+    puts "[response] Response for #{metadata.correlation_id}: #{payload.inspect}"
+  end
+
+  # request time from a peer every 3 seconds
+  EventMachine.add_periodic_timer(3.0) do
+    puts "[request] Sending a request..."
+    channel.default_exchange.publish("get.time",
+                                     :routing_key =&gt; "amqpgem.examples.services.time",
+                                     :message_id  =&gt; Kernel.rand(10101010).to_s,
+                                     :reply_to    =&gt; replies_queue.name,
+                                     :immediate   =&gt; true)
+  end
+
+
+  Signal.trap("INT") { connection.close { EventMachine.stop } }
+end
+</pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1207763">gist</a>)</span></p>
+<h4>Server code</h4>
+<pre>require "amqp"
+
+EventMachine.run do
+  connection = AMQP.connect
+  channel    = AMQP::Channel.new(connection)
+
+  requests_queue = channel.queue("amqpgem.examples.services.time", :exclusive =&gt; true, :auto_delete =&gt; true)
+  requests_queue.subscribe(:ack =&gt; true) do |metadata, payload|
+    puts "[requests] Got a request #{metadata.message_id}. Sending a reply..."
+    channel.default_exchange.publish(Time.now.to_s,
+                                     :routing_key    =&gt; metadata.reply_to,
+                                     :correlation_id =&gt; metadata.message_id,
+                                     :immediate      =&gt; true,
+                                     :mandatory      =&gt; true)
+
+    metadata.ack
+  end
+
+
+  Signal.trap("INT") { connection.close { EventMachine.stop } }
+end
+</pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1207764">gist</a>)</span></p>
+<p>In the examples above messages are published with the :immediate attribute set. This is not necessary in allcases: sometimes it is OK for requests to sit in the queue without active consumers. Replies, on the other hand,assume an active consumer and existing replies queue, so if routing or immediate delivery do not succeed,server application will log returned messages. More on this in the <a href="/articles/working_with_exchanges/">Working With Exchanges</a> guide.</p>
+<h3>Related patterns</h3>
+<p>Request/Reply demonstrates two common techniques that are sometimes referred to as messaging patterns of its own:</p>
+<ul>
+	<li><a href="http://www.eaipatterns.com/CorrelationIdentifier.html">Correlation Identifier</a> (for identifying what request incoming response is for)  * <a href="http://www.eaipatterns.com/ReturnAddress.html">Return Address</a> (for identifying where replies should be sent)</li>
+</ul>
+<p>Other related patterns are</p>
+<ul>
+	<li>Scatter/Gather</li>
+	<li>Smart Proxy</li>
+</ul>
+<h2>Command pattern</h2>
+<h3>Description &amp; Use cases</h3>
+<p>Command pattern is very similar to Request/Reply, except that there is no reply and messages are typed. For example, most modern Webapplications have at least one &#8220;background task processor&#8221; that carries out a number of operations asynchronously,without sending any responses back. Command pattern usually assumes 1:1 communication.</p>
+<p>Some specific examples of Command pattern are:</p>
+<ul>
+	<li>Account termination in a Web app triggers information archiving (or deletion) that is done by a separate app &#8220;in the background&#8221;.  * After a document or profile update, a Web app sends out commands to a search indexer application.  * Virtual machines control dashboard app sends virtual machine controller application a command to reboot.</li>
+</ul>
+<h3><span class="caps">AMQP</span>-based implementation</h3>
+<p>Implementation of Command pattern on top of <span class="caps">AMQP</span> 0.9.1 involves well-known durable queues. Application that issues the commandthen can use default exchange to publish messages to well-known services directly. Request message :type attribute then indicatescommand type and message body (or body and headers) carry additional information consumer needs to carry it out.</p>
+<h4>Request message attributes</h4>
+<dl>
+  <dt>:type</dt>
+  <dd>Message type as a string. For example: gems.install or commands.shutdown</dd>
+</dl>
+<h3>Code example</h3>
+<h4>Producer (Sender)</h4>
+<pre>require "rubygems"
+require "amqp"
+require "yaml"
+
+t = Thread.new { EventMachine.run }
+sleep(0.5)
+
+
+connection = AMQP.connect
+channel    = AMQP::Channel.new(connection, :auto_recovery =&gt; true)
+
+channel.prefetch(1)
+
+# Acknowledgements are good for letting the server know
+# that the task is finished. If the consumer doesn't send
+# the acknowledgement, then the task is considered to be unfinished
+# and will be requeued when consumer closes AMQP connection (because of a crash, for example).
+channel.queue("amqpgem.examples.patterns.command", :durable =&gt; true, :auto_delete =&gt; false).subscribe(:ack =&gt; true) do |metadata, payload|
+  case metadata.type
+  when "gems.install"
+    data = YAML.load(payload)
+    puts "[gems.install] Received a 'gems.install' request with #{data.inspect}"
+
+    # just to demonstrate a realistic example
+    shellout = "gem install #{data[:gem]} --version '#{data[:version]}'"
+    puts "[gems.install] Executing #{shellout}"; system(shellout)
+    puts "[gems.install] Done"
+    puts
+  else
+    puts "[commands] Unknown command: #{metadata.type}"
+  end
+
+  # message is processed, acknowledge it so that broker discards it
+  metadata.ack
+end
+
+puts "[boot] Ready. Will be publishing commands every 10 seconds."
+Signal.trap("INT") { connection.close { EventMachine.stop } }
+t.join
+</pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1207758">gist</a>)</span></p>
+<h4>Consumer (Recipient)</h4>
+<pre>require "amqp"
+require "yaml"
+
+t = Thread.new { EventMachine.run }
+sleep(0.5)
+
+connection = AMQP.connect
+channel    = AMQP::Channel.new(connection)
+
+# publish new commands every 3 seconds
+EventMachine.add_periodic_timer(10.0) do
+  puts "Publishing a command (gems.install)"
+  payload = { :gem =&gt; "rack", :version =&gt; "~&gt; 1.3.0" }.to_yaml
+
+  channel.default_exchange.publish(payload,
+                                   :type        =&gt; "gems.install",
+                                   :routing_key =&gt; "amqpgem.examples.patterns.command")
+end
+
+puts "[boot] Ready"
+Signal.trap("INT") { connection.close { EventMachine.stop } }
+t.join
+</pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1207761">gist</a>)</span></p>
+<h3>Related patterns</h3>
+<ul>
+	<li>Event</li>
+	<li>Request/Reply</li>
+</ul>
+<h2>Event pattern</h2>
+<h3>Description &amp; Use cases</h3>
+<p>Event pattern is a version of the Command pattern, but with 1 or more receivers (1:N communication).The world we live in is full of events, so applications of this pattern are endless.</p>
+<p>Some specific use cases of Event pattern are</p>
+<ul>
+	<li>Event logging (one application asks event collector to record certain event and possibly take action)</li>
+	<li>Event propagation in <span class="caps">MMO</span> games</li>
+	<li>Live sport score updates</li>
+	<li>Various &#8220;push notifications&#8221; for mobile applications</li>
+</ul>
+<p>The Event pattern is very similar to the Command pattern, however, there is typically certain differences between the two:</p>
+<ul>
+	<li>Event listeners often do not respond back to event producers</li>
+	<li>Event listeners are often concerned with data collection: they update counters, persist event information and so on</li>
+	<li>There may be more than event listener in the system. Commands are often carried out by one particular application</li>
+</ul>
+<h3><span class="caps">AMQP</span>-based implementation</h3>
+<p>Because Event pattern is a 1:N communication pattern, it typically uses a fanout exchange. Event listenersthen use server-named exclusive queues and all bind to that exchange. Event messages use :type messageattribute to indicate event type and message body (plus, possibly, message headers) to pass eventcontext information.</p>
+<h4>Request message attributes</h4>
+<dl>
+  <dt>:type</dt>
+  <dd>Message type as a string. For example: files.created, files.indexed or pages.viewed</dd>
+</dl>
+<p><span class="note">Due to misconfiguration or different upgrade time/policy, applications may receive events they do not know how to handle.It is important for developers to handle such cases, otherwise it is likely that consumers may crash.</span></p>
+<p>More on fanout exchange type in the <a href="/articles/working_with_exchanges/">Working With Exchanges</a> guide.</p>
+<h3>Code example</h3>
+<h4>Producer (Sender)</h4>
+<pre># encoding: utf-8
+
+$LOAD_PATH.unshift File.expand_path("../../../../lib", __FILE__)
+
+require "amqp"
+require "yaml"
+
+t = Thread.new { EventMachine.run }
+sleep(0.5)
+
+connection = AMQP.connect
+channel    = AMQP::Channel.new(connection)
+exchange   = channel.fanout("amqpgem.patterns.events", :durable =&gt; true, :auto_delete =&gt; false)
+
+
+EVENTS     = {
+  "pages.show" =&gt; {
+    :url      =&gt; "https://mysite.local/widgets/81772",
+    :referrer =&gt; "http://www.google.com/search?client=safari&amp;rls=en&amp;q=widgets&amp;ie=UTF-8&amp;oe=UTF-8"
+  },
+  "widgets.created" =&gt; {
+    :id       =&gt; 10,
+    :shape    =&gt; "round",
+    :owner_id =&gt; 1000
+  },
+  "widgets.destroyed" =&gt; {
+    :id        =&gt; 10,
+    :person_id =&gt; 1000
+  },
+  "files.created" =&gt; {
+    :sha1      =&gt; "1a62429f47bc8b405d17e84b648f2fbebc555ee5",
+    :filename  =&gt; "document.pdf"
+  },
+  "files.indexed" =&gt; {
+    :sha1      =&gt; "1a62429f47bc8b405d17e84b648f2fbebc555ee5",
+    :filename  =&gt; "document.pdf",
+    :runtime   =&gt; 1.7623,
+    :shared    =&gt; "shard02"
+  }
+}
+
+def generate_event
+  n       = (EVENTS.size * Kernel.rand).floor
+  type    = EVENTS.keys[n]
+  payload = EVENTS[type]
+
+  [type, payload]
+end
+
+# broadcast events
+EventMachine.add_periodic_timer(2.0) do
+  event_type, payload = generate_event
+
+  puts "Publishing a new event of type #{event_type}"
+  exchange.publish(payload.to_yaml, :type =&gt; event_type)
+end
+
+puts "[boot] Ready. Will be publishing events every few seconds."
+Signal.trap("INT") { connection.close { EventMachine.stop } }
+t.join
+</pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1207750">gist</a>)</span></p>
+<h4>Consumer (Handler)</h4>
+<pre># encoding: utf-8
+
+$LOAD_PATH.unshift File.expand_path("../../../../lib", __FILE__)
+
+require "amqp"
+require "yaml"
+
+t = Thread.new { EventMachine.run }
+sleep(0.5)
+
+
+connection = AMQP.connect
+channel    = AMQP::Channel.new(connection, :auto_recovery =&gt; true)
+channel.on_error do |ch, channel_close|
+  raise "Channel-level exception: #{channel_close.reply_text}"
+end
+
+channel.prefetch(1)
+
+channel.queue("", :durable =&gt; false, :auto_delete =&gt; true).bind("amqpgem.patterns.events").subscribe do |metadata, payload|
+  begin
+    body = YAML.load(payload)
+
+    case metadata.type
+    when "widgets.created"   then
+      puts "A widget #{body[:id]} was created"
+    when "widgets.destroyed" then
+      puts "A widget #{body[:id]} was destroyed"
+    when "files.created"     then
+      puts "A new file (#{body[:filename]}, #{body[:sha1]}) was uploaded"
+    when "files.indexed"     then
+      puts "A new file (#{body[:filename]}, #{body[:sha1]}) was indexed"
+    else
+      puts "[warn] Do not know how to handle event of type #{metadata.type}"
+    end
+  rescue Exception =&gt; e
+    puts "[error] Could not handle event of type #{metadata.type}: #{e.inspect}"
+  end
+end
+
+puts "[boot] Ready"
+Signal.trap("INT") { connection.close { EventMachine.stop } }
+t.join
+</pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1207749">gist</a>)</span></p>
+<h3>Related patterns</h3>
+<ul>
+	<li>Command</li>
+	<li>Publish/Subscribe</li>
+</ul>
+<h2>Document Message pattern</h2>
+<h3>Description &amp; Use cases</h3>
+<p>Document Message pattern is very similar to Command and Event patterns. The difference is in the intent: whereas a Command message tellsthe receiver to invoke certain behavior, a Document Message just passes data and lets the receiver decide what, if anything, to do with the data.</p>
+<p>Message payload is a single logical entity, for example, one (or a group of closely related) database rows or documents.</p>
+<p>Use cases for the Document Message pattern often have something to do with processing of documents:</p>
+<ul>
+	<li>Indexing</li>
+	<li>Archiving</li>
+	<li>Content extraction</li>
+	<li>Transformation (translation, transcoding and so on) of document data</li>
+</ul>
+<h2>Competing Consumers pattern</h2>
+<h3>Description &amp; Use cases</h3>
+<p><a href="http://www.eaipatterns.com/CompetingConsumers.html">Competing Consumers</a> are multiple consumers that process messages from a shared queue.<br />
+<span class="caps">TBD</span></p>
+<h3><span class="caps">AMQP</span>-based implementation</h3>
+<p><span class="caps">TBD</span></p>
+<h3>Code example</h3>
+<p><span class="caps">TBD</span></p>
+<h2>Publish/Subscribe pattern</h2>
+<h3>Description &amp; Use cases</h3>
+<p><span class="caps">TBD</span></p>
+<h3><span class="caps">AMQP</span>-based implementation</h3>
+<p><span class="caps">TBD</span></p>
+<h3>Code example</h3>
+<p><span class="caps">TBD</span></p>
+<h2>Scatter/Gather pattern</h2>
+<h3>Description &amp; Use cases</h3>
+<p><span class="caps">TBD</span></p>
+<h3><span class="caps">AMQP</span>-based implementation</h3>
+<p><span class="caps">TBD</span></p>
+<h3>Code example</h3>
+<p><span class="caps">TBD</span></p>
+<h2>Smart Proxy pattern</h2>
+<h3>Description &amp; Use cases</h3>
+<p><span class="caps">TBD</span></p>
+<h3><span class="caps">AMQP</span>-based implementation</h3>
+<p><span class="caps">TBD</span></p>
+<h3>Code example</h3>
+<p><span class="caps">TBD</span></p>
+<h2>Multistep Processing (Routing Slip) pattern</h2>
+<h3>Description &amp; Use cases</h3>
+<p><span class="caps">TBD</span></p>
+<h3><span class="caps">AMQP</span>-based implementation</h3>
+<p><span class="caps">TBD</span></p>
+<h3>Code example</h3>
+<p><span class="caps">TBD</span></p>
+<h2>Authors</h2>
+This guide was written by
+<a href='http://twitter.com/michaelklishin'>
+  Michael Klishin
+</a>
+and edited by
+<a href='https://twitter.com/celldee'>
+  Chris Duncan
+</a>
+<h2>Tell us what you think!</h2>
+<p>
+  Please take a moment to tell us what you think about this guide
+  <a href='http://twitter.com/rubyamqp'>
+    on Twitter or the
+  </a>
+  <a href='http://groups.google.com/group/ruby-amqp.'>
+    Ruby AMQP mailing list
+  </a>
+</p>
+<p>
+  Let us know what was unclear or what has not been covered. Maybe you do not like the guide style or grammar or discover spelling mistakes. Reader feedback is key to making the documentation better.
+</p>
+<p>
+  If, for some reason, you cannot use the communication channels mentioned above, you can
+  <a href='mailto:michaelklishin@me.com?subject=amqp%20gem%20documentation'>
+    contact the author of the guides directly
+  </a>
+</p></article></section></body></html>

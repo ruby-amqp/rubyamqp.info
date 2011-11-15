@@ -1,5 +1,5 @@
 -----
-title: "Using TLS"
+title: "Using TLS (SSL) with Ruby amqp gem and RabbitMQ"
 layout: article
 -----
 

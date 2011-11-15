@@ -75,26 +75,20 @@ h2. Testing network connection with AMQP broker using Telnet
 
 One simple way to check network connection between a particular network node and a node running AMQP broker is to use `telnet`:
 
-<code>
-telnet [host or ip] 5672
-</code>
+<code>telnet [host or ip] 5672</code>
 
 then enter any random string of text and hit Enter. AMQP broker should immediately close down the connection. Here is an example session:
 
-<code>
-telnet localhost 5672
+<code>telnet localhost 5672
 Connected to localhost.
 Escape character is '^]'.
 adjasd
-AMQP    Connection closed by foreign host.
-</code>
+AMQP    Connection closed by foreign host.</code>
 
 If instead Telnet exits after printing
 
-<code>
-telnet: connect to address [host or ip]: Connection refused
-telnet: Unable to connect to remote host
-</pre>
+<code>telnet: connect to address [host or ip]: Connection refused
+telnet: Unable to connect to remote host</code>
 
 then connection from the machine you are running Telnet tests on and AMQP broker fails. This can be due to many different reasons, but it is a good idea to check these two things first:
 
@@ -107,8 +101,6 @@ h3. Missing erlang-os-mon on Debian and Ubuntu
 
 The following error on RabbitMQ startup on Debian or Ubuntu
 
-<code>
-ERROR: failed to load application os_mon: {"no such file or directory","os_mon.app"}
-</code>
+<code>ERROR: failed to load application os_mon: {"no such file or directory","os_mon.app"}</code>
 
 suggests that *erlang-os-mon* package is not installed.

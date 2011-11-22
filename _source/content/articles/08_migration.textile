@@ -53,7 +53,7 @@ h2. Why developers should upgrade to 0.8.0
 
 h2. AMQP protocol version change
 
-amqp gem before 0.8.0 (0.6.x, 0.7.x) series implemented (most of) AMQP 0.8 specification. amqp gem 0.8.0 implements AMQP 0.9.1 and thus *requires RabbitMQ version 2.0 or later*. See {file:docs/RabbitMQVersions.textile RabbitMQ versions} for more information about RabbitMQ versions support and how obtain up-todate packages for your operating system.
+amqp gem before 0.8.0 (0.6.x, 0.7.x) series implemented (most of) AMQP 0.8 specification. amqp gem 0.8.0 implements AMQP 0.9.1 and thus *requires RabbitMQ version 2.0 or later*. See "RabbitMQ versions":/articles/rabbitmq_versions/ for more information about RabbitMQ versions support and how obtain up-todate packages for your operating system.
 
 <span class="note">
 amqp gem 0.8.0 and later versions implement AMQP 0.9.1 and thus *requires RabbitMQ version 2.0 or later*
@@ -92,7 +92,7 @@ MQ class and class methods that use implicit connection (MQ.queue and so on) wil
 
 h2. MQ class is now AMQP::Channel
 
-MQ class was renamed to AMQP::Channel to follow established {file:docs/AMQP091ModelExplained.textile AMQP 0.9.1 terminology}. Implicit per-thread channels are deprecated so code like this:
+MQ class was renamed to AMQP::Channel to follow established "AMQP 0.9.1 terminology":/articles/amqp_9_1_model_explained/. Implicit per-thread channels are deprecated so code like this:
 
 <pre># amqp gem 0.6.x code style: connection is implicit, channel is implicit. Error handling & recovery are thus
 # not possible.
@@ -145,7 +145,7 @@ MQ::Header is now AMQP::Header. If you code has any type checks or case matches 
 
 h2. AMQP.error is deprecated
 
-Catch-all solutions for error handling are very difficult to use. Automatic recovery and fine-grained event handling is also not possible. amqp gem 0.8.0.RC14 and later includes fine-grained {file:docs/ErrorHandling.textile Error Handling and Recovery API} that is both significantly easier to use in real-world cases but also makes automatic recovery mode possible.
+Catch-all solutions for error handling are very difficult to use. Automatic recovery and fine-grained event handling is also not possible. amqp gem 0.8.0.RC14 and later includes fine-grained "Error Handling and Recovery API":/articles/error_handling/ that is both significantly easier to use in real-world cases but also makes automatic recovery mode possible.
 
 <span class="note">
 AMQP.error method will be removed before 1.0 release.

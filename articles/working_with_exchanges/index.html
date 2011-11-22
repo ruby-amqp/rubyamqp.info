@@ -11,7 +11,17 @@
 <script src='/assets/javascripts/code_highlight.js'></script>
 <link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
 <script src='/assets/javascripts/mode/ruby.js'></script>
-<link href='/assets/stylesheets/theme/default.css' rel='stylesheet' /><body><div class='topbar'>
+<link href='/assets/stylesheets/theme/default.css' rel='stylesheet' />
+<script type='text/javascript'>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-27153041-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script><body><div class='topbar'>
   <div class='topbar-inner'>
     <div class='container'>
       <ul class='nav'>
@@ -69,7 +79,7 @@
 <p>An <span class="highlight">exchange</span> accepts messages from a producer application and routes them to message queues. They can be thought of as the &#8220;mailboxes&#8221; of the <span class="caps">AMQP</span> world. Unlike some other messaging middleware products and protocols, in <span class="caps">AMQP</span>, messages are <strong>not</strong> published directly to queues. Messages are published to exchanges that route them to queue(s) using pre-arranged criteria called <span class="highlight">bindings</span>.</p>
 <p>There are multiple exchange types in the <span class="caps">AMQP</span> v0.9.1 specification, each with its own routing semantics. Custom exchange types can be created to deal with sophisticated routing scenarios (e.g. routing based on geolocation data or edge cases) or just for convenience.</p>
 <h3>Concept of bindings</h3>
-<p>A <span class="highlight">binding</span> is an association between a queue and an exchange. A queue must be bound to at least one exchange in order to receive messages from publishers. Learn more about bindings in the {file:docs/Bindings.textile Bindings guide}.</p>
+<p>A <span class="highlight">binding</span> is an association between a queue and an exchange. A queue must be bound to at least one exchange in order to receive messages from publishers. Learn more about bindings in the <a href="/articles/bindings/">Bindings guide</a>.</p>
 <h3>Exchange attributes</h3>
 <p>Exchanges have several attributes associated with them:</p>
 <ul>
@@ -255,7 +265,7 @@ end
 <h3>Direct exchanges and load balancing of messages</h3>
 <p>Direct exchanges are often used to distribute tasks between multiple workers (instances of the same application) in a round robin manner. When doing so, it is important to understand that, in <span class="caps">AMQP</span> v0.9.1, <strong>messages are load balanced between consumers and not between queues</strong>.</p>
 <p>The Ruby amqp gem historically has a limitation that only one consumer (message handler) is allowed per <span class="highlight"><span class="caps">AMQP</span>::Queue</span> instance, however, this limitation will be addressed in the future. With the amqp gem v0.8.x, if you want to load balance messages between multiple consumers in the same application/OS process, then you need to use a separate channel for each of the consumers.</p>
-<p>The {file:docs/Queues.textile Working With Queues} and {file:docs/PatternsAndUseCases.textile Patterns and Use Cases} guides provide more information on this subject.</p>
+<p>The <a href="/articles/working_with_queues/">Working With Queues</a> and <a href="/articles/patterns_and_use_cases/">Patterns and Use Cases</a> guides provide more information on this subject.</p>
 <h3>Pre-declared direct exchanges</h3>
 <p><span class="caps">AMQP</span> v0.9.1 brokers must implement a direct exchange type and pre-declare two instances:</p>
 <ul>
@@ -664,7 +674,7 @@ end</pre>
 <p><span class="help-block"><br />
 Note that in order to survive a broker crash, both the message and the queue that it was routed to must be persistent/durable.<br />
 </span></p>
-<p>{file:docs/Durability.textile Durability and Message Persistence} provides more information on the subject.</p>
+<p><a href="/articles/durability/">Durability and Message Persistence</a> provides more information on the subject.</p>
 <h3>Publishing In Multi-threaded Environments</h3>
 <p>When using amqp gem in multi-threaded environments, the rule of thumb is: avoid sharing <span class="highlight"><span class="caps">AMQP</span>::Channel</span> instances across threads.</p>
 <p>Starting with 0.8.0.RC14, <span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span> synchronizes data delivery on the channel object associated with exchange. This protects application developers from the most common problems related to publishing messages on a shared channel from multiple threads, however, by no means protects from every possible concurrency hazard.</p>
@@ -822,9 +832,9 @@ end
 <p>The <a href="https://github.com/videlalvaro/rabbitmq-recent-history-exchange">x-recent-history <span class="caps">AMQP</span> exchange type</a> is a customer exchange type implemented as a RabbitMQ plugin by Alvaro Videla, one of the authors of <a href="http://bit.ly/rabbitmq">RabbitMQ in action</a>.</p>
 <p>This plugin is licensed under the <a href="https://github.com/videlalvaro/rabbitmq-recent-history-exchange/blob/master/LICENSE.md"><span class="caps">MIT</span> license</a>.</p>
 <h2>Using the Publisher Confirms extension to <span class="caps">AMQP</span> v0.9.1</h2>
-<p>Please refer to {file:docs/VendorSpecificExtensions.textile Vendor-specific extensions to <span class="caps">AMQP</span> 0.9.1 spec}</p>
+<p>Please refer to <a href="/articles/broker_specific_extensions/">Vendor-specific extensions to <span class="caps">AMQP</span> 0.9.1 spec</a></p>
 <h3>Message acknowledgements and their relationship to transactions and publisher confirms</h3>
-<p>Consumer applications (applications that receive and process messages) may occasionally fail to process individual messages, or might just crash. Additionally, network issues might be experienced. This raises a question &#8211; &#8220;when should the <span class="caps">AMQP</span> broker remove messages from queues?&#8221; This topic is covered in depth in the {file:docs/Queues.textile Working With Queues} guide, including prefetching and examples.</p>
+<p>Consumer applications (applications that receive and process messages) may occasionally fail to process individual messages, or might just crash. Additionally, network issues might be experienced. This raises a question &#8211; &#8220;when should the <span class="caps">AMQP</span> broker remove messages from queues?&#8221; This topic is covered in depth in the <a href="/articles/working_with_queues/">Working With Queues</a> guide, including prefetching and examples.</p>
 <p>In this guide, we will only mention how message acknowledgements are related to <span class="caps">AMQP</span> transactions and the Publisher Confirms extension. Let us consider a publisher application (P) that communications with a consumer &#169; using <span class="caps">AMQP</span> v0.9.1. Their communication can be graphically represented like this:</p>
 <p><code>
 -----       -----       -----
@@ -838,9 +848,9 @@ end
 <h2>Using <span class="caps">AMQP</span> transactions</h2>
 <p><span class="caps">TBD</span></p>
 <h2>Binding queues to exchanges</h2>
-<p>Queues are bound to exchanges using the <span class="highlight"><span class="caps">AMQP</span>::Queue#bind</span> method. This topic is described in detail in the {file:docs/Queues.textile Working with queues} documentation guide.</p>
+<p>Queues are bound to exchanges using the <span class="highlight"><span class="caps">AMQP</span>::Queue#bind</span> method. This topic is described in detail in the <a href="/articles/working_with_queues/">Working with queues</a> documentation guide.</p>
 <h2>Unbinding queues from exchanges</h2>
-<p>Queues are unbound from exchanges using the <span class="highlight"><span class="caps">AMQP</span>::Queue#unbind</span> method. This topic is described in detail in the {file:docs/Queues.textile Working with queues} documentation guide.</p>
+<p>Queues are unbound from exchanges using the <span class="highlight"><span class="caps">AMQP</span>::Queue#unbind</span> method. This topic is described in detail in the <a href="/articles/working_with_queues/">Working with queues</a> documentation guide.</p>
 <h2>Deleting exchange</h2>
 <h3>Explicitly deleting an exchange</h3>
 <p>Exchanges are deleted using the <span class="highlight"><span class="caps">AMQP</span>::Exchange#delete</span> method:</p>
@@ -985,8 +995,9 @@ and edited by
 <p>
   Please take a moment to tell us what you think about this guide
   <a href='http://twitter.com/rubyamqp'>
-    on Twitter or the
+    on Twitter
   </a>
+  or the
   <a href='http://groups.google.com/group/ruby-amqp.'>
     Ruby AMQP mailing list
   </a>

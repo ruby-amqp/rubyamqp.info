@@ -11,7 +11,17 @@
 <script src='/assets/javascripts/code_highlight.js'></script>
 <link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
 <script src='/assets/javascripts/mode/ruby.js'></script>
-<link href='/assets/stylesheets/theme/default.css' rel='stylesheet' /><body><div class='topbar'>
+<link href='/assets/stylesheets/theme/default.css' rel='stylesheet' />
+<script type='text/javascript'>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-27153041-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script><body><div class='topbar'>
   <div class='topbar-inner'>
     <div class='container'>
       <ul class='nav'>
@@ -96,7 +106,7 @@
 	<li>Applications that do not use depricated <span class="caps">API</span> features &amp; behaviors will have very seamless upgrade path to the amqp gem 0.9.0 and beyond</li>
 </ul>
 <h2><span class="caps">AMQP</span> protocol version change</h2>
-<p>amqp gem before 0.8.0 (0.6.x, 0.7.x) series implemented (most of) <span class="caps">AMQP</span> 0.8 specification. amqp gem 0.8.0 implements <span class="caps">AMQP</span> 0.9.1 and thus <strong>requires RabbitMQ version 2.0 or later</strong>. See {file:docs/RabbitMQVersions.textile RabbitMQ versions} for more information about RabbitMQ versions support and how obtain up-todate packages for your operating system.</p>
+<p>amqp gem before 0.8.0 (0.6.x, 0.7.x) series implemented (most of) <span class="caps">AMQP</span> 0.8 specification. amqp gem 0.8.0 implements <span class="caps">AMQP</span> 0.9.1 and thus <strong>requires RabbitMQ version 2.0 or later</strong>. See <a href="/articles/rabbitmq_versions/">RabbitMQ versions</a> for more information about RabbitMQ versions support and how obtain up-todate packages for your operating system.</p>
 <p><span class="note"><br />
 amqp gem 0.8.0 and later versions implement <span class="caps">AMQP</span> 0.9.1 and thus <strong>requires RabbitMQ version 2.0 or later</strong><br />
 </span></p>
@@ -119,7 +129,7 @@ mq.rb will be removed before 1.0 release.<br />
 MQ class and class methods that use implicit connection (MQ.queue and so on) will be removed before 1.0 release.<br />
 </span></p>
 <h2>MQ class is now <span class="caps">AMQP</span>::Channel</h2>
-<p>MQ class was renamed to <span class="caps">AMQP</span>::Channel to follow established {file:docs/AMQP091ModelExplained.textile <span class="caps">AMQP</span> 0.9.1 terminology}. Implicit per-thread channels are deprecated so code like this:</p>
+<p>MQ class was renamed to <span class="caps">AMQP</span>::Channel to follow established <a href="/articles/amqp_9_1_model_explained/"><span class="caps">AMQP</span> 0.9.1 terminology</a>. Implicit per-thread channels are deprecated so code like this:</p>
 <pre># amqp gem 0.6.x code style: connection is implicit, channel is implicit. Error handling &amp; recovery are thus
 # not possible.
 # Deprecated, do not use.
@@ -160,7 +170,7 @@ MQ::Exchange alias will be removed before 1.0 release. Please switch to <span cl
 <h2>MQ::Header is now <span class="caps">AMQP</span>::Header</h2>
 <p>MQ::Header is now <span class="caps">AMQP</span>::Header. If you code has any type checks or case matches on MQ::Header, it needs to change to <span class="caps">AMQP</span>::Header.</p>
 <h2><span class="caps">AMQP</span>.error is deprecated</h2>
-<p>Catch-all solutions for error handling are very difficult to use. Automatic recovery and fine-grained event handling is also not possible. amqp gem 0.8.0.RC14 and later includes fine-grained {file:docs/ErrorHandling.textile Error Handling and Recovery API} that is both significantly easier to use in real-world cases but also makes automatic recovery mode possible.</p>
+<p>Catch-all solutions for error handling are very difficult to use. Automatic recovery and fine-grained event handling is also not possible. amqp gem 0.8.0.RC14 and later includes fine-grained <a href="/articles/error_handling/">Error Handling and Recovery <span class="caps">API</span></a> that is both significantly easier to use in real-world cases but also makes automatic recovery mode possible.</p>
 <p><span class="note"><br />
 <span class="caps">AMQP</span>.error method will be removed before 1.0 release.<br />
 </span></p>
@@ -207,8 +217,9 @@ and edited by
 <p>
   Please take a moment to tell us what you think about this guide
   <a href='http://twitter.com/rubyamqp'>
-    on Twitter or the
+    on Twitter
   </a>
+  or the
   <a href='http://groups.google.com/group/ruby-amqp.'>
     Ruby AMQP mailing list
   </a>

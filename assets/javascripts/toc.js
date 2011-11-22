@@ -40,6 +40,10 @@ jQuery.fn.toc = function () {
 // $($(".highlight")[2]).text().match(/(.*)\.(.*)/)
 // "AMQP::Channel.direct".match(/(.*)\.(.*)/)
 // "AMQP::Channel#direct".match(/(.*)#(.*)/)
+jQuery.fn.yardLink = function () {
+  var class_method = /(.*)\.(.*)/;
+  var instance_method = /(.*)#(.*)/;
+};
 
 $(document).ready(function() {
   $(".toc").toc();

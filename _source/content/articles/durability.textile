@@ -31,7 +31,7 @@ Durability of a queue does not make _messages_ that are routed to that queue dur
 
 h3. Persistence of messages
 
-The concept of messages persistence is separate: messages may be published as persistent. That makesAMQP broker persist them to disk. If the server is restarted, the system ensures that received persistent messagesare not lost. Simply publishing message to a durable exchange or the fact that queue(s) they are routed tois durable doesn't make messages persistent: it all depends on persistence mode of the messages itself.Publishing messages as persistent affects performance (just like with data stores, durability comes at a certain costin performance and vise versa). Pass :persistent => true to {AMQP::Exchange#publish} to publish your message as persistent.
+The concept of messages persistence is separate: messages may be published as persistent. That makesAMQP broker persist them to disk. If the server is restarted, the system ensures that received persistent messagesare not lost. Simply publishing message to a durable exchange or the fact that queue(s) they are routed tois durable doesn't make messages persistent: it all depends on persistence mode of the messages itself.Publishing messages as persistent affects performance (just like with data stores, durability comes at a certain costin performance and vise versa). Pass :persistent => true to {% yard_link AMQP::Exchange#publish %} to publish your message as persistent.
 
 h3. Transactions
 
@@ -39,13 +39,13 @@ TBD
 
 h3. Publisher confirms
 
-Because transactions carry certain (for some applications, significant) overhead, RabbitMQ introduced an extension to AMQP 0.9.1called {http://www.rabbitmq.com/blog/2011/02/10/introducing-publisher-confirms/ publisher confirms} ({http://www.rabbitmq.com/extensions.html#confirms documentation}).
+Because transactions carry certain (for some applications, significant) overhead, RabbitMQ introduced an extension to AMQP 0.9.1 called {http://www.rabbitmq.com/blog/2011/02/10/introducing-publisher-confirms/ publisher confirms} ({http://www.rabbitmq.com/extensions.html#confirms documentation}).
 
 amqp gem implements support for this extension, but it is not loaded by default when you require "amqp". To load it, use
 
 <pre>require "amqp/extensions/rabbitmq"</pre>
 
-and then define a callback for publisher confirms using {AMQP::Channel#confirm}:
+and then define a callback for publisher confirms using {% yard_link AMQP::Channel#confirm %}:
 
 <pre># enable publisher acknowledgements for this channel
 channel.confirm_select

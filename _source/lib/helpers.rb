@@ -84,5 +84,11 @@ class LiquidFilter < Nanoc3::Filter
 
   def run(content, params={})
     Liquid::Template.parse(content).render
+  rescue Exception => e
+    puts "================================================================================================"
+    puts "Error Message: #{e}"
+    puts "================================================================================================"
+    puts "Content (only beginning): \n #{content[0..1000]}"
+    puts "================================================================================================"
   end
 end

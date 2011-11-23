@@ -82,7 +82,7 @@ mq.rb will be removed before 1.0 release.
 
 h3. MQ class is deprecated
 
-Please use {AMQP::Channel} instead. MQ class & its methods are implemented in amqp gem 0.8.x for backwards compatibility, but only for transition period (that will end after 0.9 release).
+Please use {% yard_link AMQP::Channel %} instead. MQ class & its methods are implemented in amqp gem 0.8.x for backwards compatibility, but only for transition period (that will end after 0.9 release).
 
 Why is it deprecated? Because it was a poor name choice all along. Both mq.rb and MQ class step away from AMQP terminology and make 8 out of 10 engineers think it has something to do with AMQP queues (in fact, MQ should have been called Channel all along). No other AMQP client library we know of invents its own terminology when it comes to AMQP entities, and amqp gem shouldn't, too.
 

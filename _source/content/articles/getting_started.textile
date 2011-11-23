@@ -131,7 +131,7 @@ instantiates an _exchange_. Exchanges receive messages that are sent by producer
   connection.close { EventMachine.stop }
 end</pre>
 
-{AMQP::Queue#subscribe} takes a block that will be called every time a message arrives. {AMQP::Session#close} closes the AMQP connection and runs a callback that stops the EventMachine reactor.
+{% yard_link AMQP::Queue#subscribe %} takes a block that will be called every time a message arrives. {% yard_link AMQP::Session#close %} closes the AMQP connection and runs a callback that stops the EventMachine reactor.
 
 Finally, we publish our message
 
@@ -160,12 +160,12 @@ A very well-known broadcast example is Twitter: every time a person tweets, foll
 
 The first line has a few differences from the "Hello, world" example above:
 
- * We use {AMQP.start} instead of {AMQP.connect}
+ * We use {% yard_link AMQP.start %} instead of {% yard_link AMQP.connect %}
  * Instead of return values, we pass a block to the connection method and it yields a connection
    object back as soon as the connection is established.
  * Instead of passing connection parameters as a hash, we use a URI string.
 
-{AMQP.start} is just a convenient way to do
+{% yard_link AMQP.start %} is just a convenient way to do
 
 <pre>EventMachine.run do
   AMQP.connect(options) do |connection|
@@ -173,15 +173,15 @@ The first line has a few differences from the "Hello, world" example above:
   end
 end</pre>
 
-The {AMQP.start} call blocks the current thread which means that its use is limited to scripts and small command line applications. Blabbr is just that.
+The {% yard_link AMQP.start %} call blocks the current thread which means that its use is limited to scripts and small command line applications. Blabbr is just that.
 
-{AMQP.connect}, when invoked with a block, will yield a connection object as soon as the AMQP connection is open. Finally, connection parameters may be supplied as a Hash or as a connection string. The {AMQP.connect} method documentation contains all of the details.
+{% yard_link AMQP.connect %}, when invoked with a block, will yield a connection object as soon as the AMQP connection is open. Finally, connection parameters may be supplied as a Hash or as a connection string. The {AMQP.connect} method documentation contains all of the details.
 
 In this example, opening a channel is no different to opening a channel in the previous example, however, the exchange is declared differently
 
 <pre>exchange = channel.fanout("nba.scores")</pre>
 
-The exchange that we declare above using {AMQP::Channel#fanout} is a _fanout exchange_. A fanout exchange delivers messages to all of the queues that are bound to it: exactly what we want in the case of Blabbr!
+The exchange that we declare above using {% yard_link AMQP::Channel#fanout %} is a _fanout exchange_. A fanout exchange delivers messages to all of the queues that are bound to it: exactly what we want in the case of Blabbr!
 
 This piece of code
 
@@ -189,11 +189,11 @@ This piece of code
   puts "#{payload} => joe"
 end</pre>
 
-is similar to the subscription code that we used for message delivery previously, but what does that {AMQP::Queue#bind} method do? It sets up a binding between the queue and the exchange that you pass to it. We need to do this to make sure that our fanout exchange routes messages to the queues of any subscribed followers.
+is similar to the subscription code that we used for message delivery previously, but what does that {% yard_link AMQP::Queue#bind %} method do? It sets up a binding between the queue and the exchange that you pass to it. We need to do this to make sure that our fanout exchange routes messages to the queues of any subscribed followers.
 
 <pre>exchange.publish("BOS 101, NYK 89").publish("ORL 85, ALT 88")</pre>
 
-demonstrates {AMQP::Exchange#publish} call chaining. Blabbr members use a fanout exchange for publishing, so there is no need to specify a message routing key because every queue that is bound to the exchange will get its own copy of all messages, regardless of the queue name and routing key used.
+demonstrates {% yard_link AMQP::Exchange#publish %} call chaining. Blabbr members use a fanout exchange for publishing, so there is no need to specify a message routing key because every queue that is bound to the exchange will get its own copy of all messages, regardless of the queue name and routing key used.
 
 A diagram for Blabbr looks like this:
 
@@ -207,7 +207,7 @@ Next we use EventMachine's {http://eventmachine.rubyforge.org/EventMachine.html#
   connection.close { EventMachine.stop }
 end</pre>
 
-The code that we want to run deletes the exchange that we declared earlier using {AMQP::Exchange#delete} and closes the AMQP connection with {AMQP::Session#close}. Finally, we stop the EventMachine event loop and exit.
+The code that we want to run deletes the exchange that we declared earlier using {% yard_link AMQP::Exchange#delete %} and closes the AMQP connection with {% yard_link AMQP::Session#close %}. Finally, we stop the EventMachine event loop and exit.
 
 Blabbr is pretty unlikely to secure hundreds of millions of dollars in funding, but it does a pretty good job of demonstrating how one can use AMQP fanout exchanges to do broadcasting.
 
@@ -233,7 +233,7 @@ We use a topic exchange here. Topic exchanges are used for "multicast":http://en
   puts "An update for South America: #{payload}, routing key is #{headers.routing_key}"
 end</pre>
 
-Here we bind a queue with the name of "americas.south" to the topic exchange declared earlier using the {AMQP::Queue#bind} method.  This means that only messages with a routing key matching "americas.south.#" will be routed to that queue. A routing pattern consists of several words separated by dots, in a similar way to URI path segments joined by slashes. Here are a few examples:
+Here we bind a queue with the name of "americas.south" to the topic exchange declared earlier using the {% yard_link AMQP::Queue#bind %} method.  This means that only messages with a routing key matching "americas.south.#" will be routed to that queue. A routing pattern consists of several words separated by dots, in a similar way to URI path segments joined by slashes. Here are a few examples:
 
  * asia.southeast.thailand.bangkok
  * sports.basketball
@@ -267,7 +267,7 @@ A (very simplistic) diagram to demonstrate topic exchange in action:
 !https://github.com/ruby-amqp/amqp/raw/master/docs/diagrams/003_weathr_example_routing.png!
 
 
-One more thing that is different from previous examples is that the block we pass to {AMQP::Queue#subscribe} now takes two arguments: a _header_ and a _body_ (often called the _payload_). Long story short, the header parameter lets you access metadata associated with the message. Some examples of message metadata attributes are:
+One more thing that is different from previous examples is that the block we pass to {% yard_link AMQP::Queue#subscribe %} now takes two arguments: a _header_ and a _body_ (often called the _payload_). Long story short, the header parameter lets you access metadata associated with the message. Some examples of message metadata attributes are:
 
  * message content type
  * message content encoding
@@ -293,18 +293,18 @@ For this example the publishing of messages is no different from that of previou
   end
 end</pre>
 
-The name of the server-named queue is generated by the broker and sent back to the client with a queue declaration confirmation. Because the queue name is not known before the reply arrives, we pass {AMQP::Channel#queue} a callback and it yields us back a queue object once confirmation has arrived.
+The name of the server-named queue is generated by the broker and sent back to the client with a queue declaration confirmation. Because the queue name is not known before the reply arrives, we pass {% yard_link AMQP::Channel#queue %} a callback and it yields us back a queue object once confirmation has arrived.
 
 
 h3. Avoid race conditions
 
-A word of warning: you may find examples on the Web of {AMQP::Channel#queue} usage that do not use callbacks. We *recommend that you use a callback for server-named queues*, otherwise your code may be subject to "race conditions":http://en.wikipedia.org/wiki/Race_condition. Even though the amqp gem tries to be reasonably smart and protect you from most common problems (for example, binding operations will be delayed until after queue name is received from the broker), there is no way it can do so for every case. The primary reason for supporting {AMQP::Channel#queue} usage without a callback for server-named queues is backwards compatibility with earlier versions.
+A word of warning: you may find examples on the Web of {% yard_link AMQP::Channel#queue %} usage that do not use callbacks. We *recommend that you use a callback for server-named queues*, otherwise your code may be subject to "race conditions":http://en.wikipedia.org/wiki/Race_condition. Even though the amqp gem tries to be reasonably smart and protect you from most common problems (for example, binding operations will be delayed until after queue name is received from the broker), there is no way it can do so for every case. The primary reason for supporting {% yard_link AMQP::Channel#queue %} usage without a callback for server-named queues is backwards compatibility with earlier versions.
 
 h2. Integration with objects
 
 Since Ruby is a genuine object-oriented language, it is important to demonstrate how the Ruby amqp gem can be integrated into rich object-oriented code.
 
-The {AMQP::Queue#subscribe} callback does not have to be a block. It can be any Ruby object that responds to `call`. A common technique is to combine {http://rubydoc.info/stdlib/core/1.8.7/Object:method Object#method} and {http://rubydoc.info/stdlib/core/1.8.7/Method:to_proc Method#to_proc} and use object methods as message handlers.
+The {% yard_link AMQP::Queue#subscribe %} callback does not have to be a block. It can be any Ruby object that responds to `call`. A common technique is to combine {http://rubydoc.info/stdlib/core/1.8.7/Object:method Object#method} and {http://rubydoc.info/stdlib/core/1.8.7/Method:to_proc Method#to_proc} and use object methods as message handlers.
 
 An example to demonstrate this technique:
 
@@ -365,7 +365,7 @@ Ampersand (&) preceding an object is equivalent to calling the #to_proc method o
 
 <pre>@consumer.method(:handle_message)</pre>
 
-and then the ampersand calls #to_proc on it. {AMQP::Queue#subscribe} then will be using this Proc instance to handle incoming messages.
+and then the ampersand calls #to_proc on it. {% yard_link AMQP::Queue#subscribe %} then will be using this Proc instance to handle incoming messages.
 
 Note that the `Consumer` class above can be easily tested in isolation, without spinning up any AMQP connections.
 Here is one example using "RSpec":http://relishapp.com/rspec

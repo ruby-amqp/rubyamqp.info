@@ -29,9 +29,9 @@ require "amqp/extensions/rabbitmq"</pre>
 
 h2. Per-queue Message Time-to-Live
 
-Per-queue Message Time-to-Live (TTL) is a RabbitMQ extension to AMQP 0.9.1 that lets developers control for how longa message published to a queue can live before it is discarded. A message that has been in the queue for longer than theconfigured TTL is said to be dead. Dead messages will not be delivered to consumers and cannot be fetched using*basic.get* operation ({AMQP::Queue#pop}).
+Per-queue Message Time-to-Live (TTL) is a RabbitMQ extension to AMQP 0.9.1 that lets developers control for how longa message published to a queue can live before it is discarded. A message that has been in the queue for longer than theconfigured TTL is said to be dead. Dead messages will not be delivered to consumers and cannot be fetched using*basic.get* operation ({% yard_link AMQP::Queue#pop %}).
 
-Message TTL is specified using *x-message-ttl* argument on declaration. With amqp gem, you pass it to {AMQP::Queue#initialize} or{AMQP::Channel#queue}:
+Message TTL is specified using *x-message-ttl* argument on declaration. With amqp gem, you pass it to {% yard_link AMQP::Queue#initialize %} or{% yard_link AMQP::Channel#queue %}:
 
 <pre>
 # 1000 millisecondschannel.queue("", :arguments => { "x-message-ttl" => 1000 })</code>
@@ -41,7 +41,7 @@ When a published messages is routed to multiple queues, each of the queues gets 
 
 h3. Example
 
-The example below sets message TTL for a new server-named queue to be 1000 milliseconds. It then publishes several messages thatare routed to the queue and tries to fetch messages using *basic.get* AMQP method ({AMQP::Queue#pop} after 0.7 and 1.5 seconds:
+The example below sets message TTL for a new server-named queue to be 1000 milliseconds. It then publishes several messages thatare routed to the queue and tries to fetch messages using *basic.get* AMQP method ({% yard_link AMQP::Queue#pop %} after 0.7 and 1.5 seconds:
 
 {% example broker_specific_extensions/per_queue_message_ttl.rb, 1113127 %}
 
@@ -61,12 +61,12 @@ Publisher confirms are similar to message acknowledgements documented in the "Wo
 
 h3. Public API
 
-To use publisher confirmations, first put channel into confirmation mode using {AMQP::Channel#confirm_select}:
+To use publisher confirmations, first put channel into confirmation mode using {% yard_link AMQP::Channel#confirm_select %}:
 
 <pre>channel.confirm_select</pre>
 
-From this moment on, every message published on this channel will cause channel's _publisher index_ (message counter) to be incremented. It is possible to accessusing {AMQP::Channel#publisher_index} method. To check whether channel is in the confirmation mode, use {AMQP::Channel#uses_publisher_confirmations?} predicate.
-To handle AMQP broker acknowledgements, define a handler using {AMQP::Channel#on_ack}, for example:
+From this moment on, every message published on this channel will cause channel's _publisher index_ (message counter) to be incremented. It is possible to accessusing {% yard_link AMQP::Channel#publisher_index %} method. To check whether channel is in the confirmation mode, use {% yard_link AMQP::Channel#uses_publisher_confirmations? %} predicate.
+To handle AMQP broker acknowledgements, define a handler using {% yard_link AMQP::Channel#on_ack %}, for example:
 
 <pre>channel.on_ack do |basic_ack|
  puts "Received basic_ack: multiple = #{basic_ack.multiple}, delivery_tag = #{basic_ack.delivery_tag}"
@@ -90,7 +90,7 @@ To solve this, RabbitMQ supports the basic.nack method that provides all the fun
 
 h3. Public API
 
-When RabbitMQ extensions are loaded, {AMQP::Channel#reject} method is overriden via mixin to take one additional argument: multi (defaults to false).When it is given and is true, amqp gem will use basic.nack AMQP method instead of basic.reject, to reject multiple messages at once.Otherwise, basic.reject is used as usual.
+When RabbitMQ extensions are loaded, {% yard_link AMQP::Channel#reject %} method is overriden via mixin to take one additional argument: multi (defaults to false).When it is given and is true, amqp gem will use basic.nack AMQP method instead of basic.reject, to reject multiple messages at once.Otherwise, basic.reject is used as usual.
 
 h3. Learn More
 

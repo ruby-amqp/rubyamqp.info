@@ -35,7 +35,7 @@ If application wants to connect a queue to an exchange, it needs to _bind_ them.
 
 h2. Binding queues to exchanges
 
-In order to receive messages, a queue needs to be bound to at least one exchange. Most of the time binding is explcit(done by applications). To bind a queue to an exchange, use {AMQP::Queue#bind} where the argument passed can beeither an {AMQP::Exchange} instance or a string.
+In order to receive messages, a queue needs to be bound to at least one exchange. Most of the time binding is explcit(done by applications). To bind a queue to an exchange, use {% yard_link AMQP::Queue#bind %} where the argument passed can beeither an {% yard_link AMQP::Exchange %} instance or a string.
 
 <pre>queue.bind(exchange) do |bind_ok|
   puts "Just bound #{queue.name} to #{exchange.name}"
@@ -51,7 +51,7 @@ The same example using a string without callback:
 
 h2. Unbinding queues from exchanges
 
-To unbind a queue from an exchange use {AMQP::Queue#unbind}:
+To unbind a queue from an exchange use {% yard_link AMQP::Queue#unbind %}:
 
 <pre>queue.unbind(exchange)</pre>
 

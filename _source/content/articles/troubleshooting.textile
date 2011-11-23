@@ -59,7 +59,7 @@ A broad range of problems result in AMQP channel exceptions: an indication by th
  * Queue is re-declared with attributes different from the original declaration. For example, an autodeletable queue is being re-declared as non-autodeletable.
  * Queue is bound to an exchange that does not exist.
 
-and so on. When troubleshooting AMQP applications, it is recommended that you detect and handle channel-level exceptions on all channels your application may use. For that, use {AMQP::Channel#on_error} method as demonstrated below:
+and so on. When troubleshooting AMQP applications, it is recommended that you detect and handle channel-level exceptions on all channels your application may use. For that, use {% yard_link AMQP::Channel#on_error %} method as demonstrated below:
 
 <pre>events_channel.on_error do |ch, channel_close|
   puts "Channel-level exception on the events channel: #{channel_close.reply_text}"

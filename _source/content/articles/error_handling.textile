@@ -47,7 +47,7 @@ Full example:
 
 {% example error_handling/initial_connection_recovery.rb, 1016238 %}
 
-{AMQP.connect} (and {AMQP.start}) will raise {AMQP::TCPConnectionFailed} if connection fails. Code that catches it can write to logabout the issue or use retry to execute begin block one more time. Because initial connection failures are due to misconfiguration or network outage, reconnectionto the same endpoint (hostname, port, vhost combination) will result in the same issue over and over. TBD: failover, connection to the cluster.
+{% yard_link AMQP.connect %} (and {% yard_link AMQP.start %}) will raise {% yard_link AMQP::TCPConnectionFailed %} if connection fails. Code that catches it can write to logabout the issue or use retry to execute begin block one more time. Because initial connection failures are due to misconfiguration or network outage, reconnectionto the same endpoint (hostname, port, vhost combination) will result in the same issue over and over. TBD: failover, connection to the cluster.
 
 Alternative way of handling connection failure is with an errback (a callback for specific kind of error):
 
@@ -79,7 +79,7 @@ Another reason why connection may fail is authentication failure. Handling authe
 
 h4. Default handler
 
-default handler raises {AMQP::PossibleAuthenticationFailureError}:
+default handler raises {% yard_link AMQP::PossibleAuthenticationFailureError %}:
 
 {% example error_handling/auth_failure_rescue.rb, 1016234 %}
 
@@ -102,7 +102,7 @@ The Shutdown protocol revolves around two events:
  * Network connection fails
  * Broker closes AMQP connection (or channel)
 
-In this section, we concentrate only on the former. When network connection fails, the underlying networking library detects it andruns a piece of code on {AMQP::Session} to handle it. That, in turn, propagates this event to channels, channels propagate it toexchanges and queues, queues propagate it to their consumers (if any). Each of these entities in the object graph can reactto network interruption by executing application-defined callbacks.
+In this section, we concentrate only on the former. When network connection fails, the underlying networking library detects it andruns a piece of code on {% yard_link AMQP::Session %} to handle it. That, in turn, propagates this event to channels, channels propagate it toexchanges and queues, queues propagate it to their consumers (if any). Each of these entities in the object graph can reactto network interruption by executing application-defined callbacks.
 
 h3. Shutdown Protocol methods on AMQP::Session
 
@@ -134,9 +134,9 @@ end
 handler = ConnectionInterruptionHandler.new
 connection.on_connection_interruption(&handler.method(:handle))</pre>
 
-Note that {AMQP::Session#on_connection_interruption} callback is called *before* this event is propagated to channels, queues and so on.
+Note that {% yard_link AMQP::Session#on_connection_interruption %} callback is called *before* this event is propagated to channels, queues and so on.
 
-Different applications handle connection failures differently. It is very common to use <span class="highlight">AMQP::Session#reconnect</span> methodto schedule a reconnection to the same host, or use {AMQP::Session#reconnect_to} to connect to a different one.
+Different applications handle connection failures differently. It is very common to use <span class="highlight">AMQP::Session#reconnect</span> methodto schedule a reconnection to the same host, or use {% yard_link AMQP::Session#reconnect_to %} to connect to a different one.
 For some applications it is OK to simply exit and wait to be restarted at a later point in time, for example, by a processmonitoring system like Nagios or Monit.
 
 h3. Shutdown Protocol methods on AMQP::Channel
@@ -368,7 +368,7 @@ h4. 406 Precondition Failed
   <dd>
     <ul>
       <li>AMQP entity (a queue or exchange) was re-declared with attributes different from original declaration. Maybe two applications or pieces of code declare the same entity with different attributes. Note that different AMQP client libraries historically use slightly different defaults for entities and this may cause attribute mismatches.</li>
-      <li>{AMQP::Channel#tx_commit} or {AMQP::Channel#tx_rollback} might be run on a channel that wasn't previously made transactional with {AMQP::Channel#tx_select}</li>
+      <li>{% yard_link AMQP::Channel#tx_commit %} or {% yard_link AMQP::Channel#tx_rollback %} might be run on a channel that wasn't previously made transactional with {% yard_link AMQP::Channel#tx_select %}</li>
     </ul>
   </dd>
   <dt>Example RabbitMQ error message</dt>

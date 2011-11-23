@@ -221,7 +221,7 @@ connection_settings = {
 AMQP.start(connection_settings) do |connection, open_ok|
   raise "This should not be reachable"
 end</pre>
-<p>the <span class="note">:on_tcp_connection_failure</span> option accepts any object that responds to #call.</p>
+<p>the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/:on_tcp_connection_failure">:on_tcp_connection_failure</a> option accepts any object that responds to #call.</p>
 <p>If you connect to the broker from code in a class (as opposed to top-level scope in a script), Object#method can be used to pass an object method as a handler instead of a Proc.</p>
 <p><span class="caps">TBD</span>: provide an example</p>
 <h3>Detecting authentication failures</h3>

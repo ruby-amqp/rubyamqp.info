@@ -76,11 +76,11 @@
 <p>This guide covers v0.8.0 and later of the <a href="http://github.com/ruby-amqp/amqp">Ruby amqp gem</a>.</p>
 <h2>Queues in <span class="caps">AMQP</span> v0.9.1 &#8211; overview</h2>
 <h3>What are <span class="caps">AMQP</span> queues?</h3>
-<p><span class="note">Queues</span> store and forward messages to consumers. They are similar to mailboxes in <span class="caps">SMTP</span>. Messages flow from producing applications to <a href="/articles/working_with_exchanges/">exchanges</a> that route them to queues and finally queues deliver the messages to consumer applications (or consumer applications fetch messages as needed).</p>
-<p>Note that unlike some other messaging protocols/systems, messages are not delivered directly to queues. They are delivered to exchanges that route messages to queues using rules known as <span class="note">bindings</span>.</p>
+<p><span class="highlight">Queues</span> store and forward messages to consumers. They are similar to mailboxes in <span class="caps">SMTP</span>. Messages flow from producing applications to <a href="/articles/working_with_exchanges/">exchanges</a> that route them to queues and finally queues deliver the messages to consumer applications (or consumer applications fetch messages as needed).</p>
+<p>Note that unlike some other messaging protocols/systems, messages are not delivered directly to queues. They are delivered to exchanges that route messages to queues using rules known as <span class="highlight">bindings</span>.</p>
 <p><span class="caps">AMQP</span> is a programmable protocol, so queues and bindings alike are declared by applications.</p>
 <h3>Concept of bindings</h3>
-<p>A <span class="note">binding</span> is an association between a queue and an exchange. Queues must be bound to at least one exchange in order to receive messages from publishers. Learn more about bindings in the <a href="/articles/bindings/">Bindings guide</a>.</p>
+<p>A <span class="highlight">binding</span> is an association between a queue and an exchange. Queues must be bound to at least one exchange in order to receive messages from publishers. Learn more about bindings in the <a href="/articles/bindings/">Bindings guide</a>.</p>
 <h3>Queue attributes</h3>
 <p>Queues have several attributes associated with them:</p>
 <ul>
@@ -88,10 +88,10 @@
 	<li>Exclusivity</li>
 	<li>Durability</li>
 	<li>Whether the queue is auto-deleted when no longer used</li>
-	<li>Other metadata (sometimes called <span class="note">X-arguments</span>)</li>
+	<li>Other metadata (sometimes called <span class="highlight">X-arguments</span>)</li>
 </ul>
 <p>These attributes define how queues can be used, what their life-cycle is like and other aspects of queue behavior.</p>
-<p>The amqp gem represents queues as instances of <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue"><span class="caps">AMQP</span>::Queue</a>.</p>
+<p>The amqp gem represents queues as instances of <span class="highlight"><span class="caps">AMQP</span>::Queue</span>.</p>
 <h2>Queue names and declaring queues</h2>
 <p>Every <span class="caps">AMQP</span> queue has a name that identifies it. Queue names often contain several segments separated by a dot &#8220;.&#8221;, in a similar fashion to <span class="caps">URI</span> path segments being separated by a slash &#8220;/&#8221;, although almost any string can represent a segment (with some limitations &#8211; see below).</p>
 <p>Before a queue can be used, it has to be <strong>declared</strong>. Declaring a queue will cause it to be created if it does not already exist. The declaration will have no effect if the queue does already exist and its attributes are the <strong>same as those in the declaration</strong>. When the existing queue attributes are not the same as those in the declaration a channel-level exception is raised. This case is explained later in this guide.</p>
@@ -144,7 +144,7 @@ end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998720">gist</a>)</span></p>
 <p>The amqp gem allows server-named queues to be declared without callbacks:</p>
 <pre>queue = AMQP::Queue.new(channel, "", :auto_delete =&gt; true)</pre>
-<p>In this case, as soon as the <span class="caps">AMQP</span> broker reply (`queue.declare-ok` <span class="caps">AMQP</span> method) arrives, the queue object name will be assigned to the value that the broker generated. Many <span class="caps">AMQP</span> operations require a queue name, so before an <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue"><span class="caps">AMQP</span>::Queue</a> instance receives its name, those operations are delayed. This example demonstrates this:</p>
+<p>In this case, as soon as the <span class="caps">AMQP</span> broker reply (`queue.declare-ok` <span class="caps">AMQP</span> method) arrives, the queue object name will be assigned to the value that the broker generated. Many <span class="caps">AMQP</span> operations require a queue name, so before an <span class="highlight"><span class="caps">AMQP</span>::Queue</span> instance receives its name, those operations are delayed. This example demonstrates this:</p>
 <pre>queue = channel.queue("")
 queue.bind("builds").subscribe do |metadata, payload|
   # message handling implementation...
@@ -189,7 +189,7 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
   }
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998723">gist</a>)</span></p>
-<p>the same example rewritten to use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#queue-instance_method"><span class="caps">AMQP</span>::Channel#queue</a>:</p>
+<p>the same example rewritten to use <span class="highlight"><span class="caps">AMQP</span>::Channel#queue</span>:</p>
 <pre>channel.queue("images.resize", :durable =&gt; true) do |queue, declare_ok|
   puts "#{queue.name} is ready to go."
 end</pre>
@@ -235,7 +235,7 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
   end
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998725">gist</a>)</span></p>
-<p>The same example can be rewritten to use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#queue-instance_method"><span class="caps">AMQP</span>::Channel#queue</a>:</p>
+<p>The same example can be rewritten to use <span class="highlight"><span class="caps">AMQP</span>::Channel#queue</span>:</p>
 <pre>channel.queue("", :auto_delete =&gt; true, :exclusive =&gt; true) do |queue, declare_ok|
   puts "#{queue.name} is ready to go."
 end</pre>
@@ -296,7 +296,7 @@ EventMachine.run do
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1008529">gist</a>)</span></p>
 <h2>Binding queues to exchanges</h2>
-<p>In order to receive messages, a queue needs to be bound to at least one exchange. Most of the time binding is explcit (done by applications). To bind a queue to an exchange, use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#bind-instance_method"><span class="caps">AMQP</span>::Queue#bind</a> where the argument passed can be either an <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange"><span class="caps">AMQP</span>::Exchange</a> instance or a string.</p>
+<p>In order to receive messages, a queue needs to be bound to at least one exchange. Most of the time binding is explcit (done by applications). To bind a queue to an exchange, use <span class="highlight"><span class="caps">AMQP</span>::Queue#bind</span> where the argument passed can be either an <span class="highlight"><span class="caps">AMQP</span>::Exchange</span> instance or a string.</p>
 <pre>queue.bind(exchange) do |bind_ok|
   puts "Just bound #{queue.name} to #{exchange.name}"
 end</pre>
@@ -348,7 +348,7 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998729">gist</a>)</span></p>
 <h2>Subscribing to receive messages (&#8220;push <span class="caps">API</span>&#8221;)</h2>
-<p>To set up a queue subscription to enable an application to receive messages as they arrive in a queue, one uses the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a> method. Then when a message arrives, the message header (metadata) and body (payload) are passed to the handler:</p>
+<p>To set up a queue subscription to enable an application to receive messages as they arrive in a queue, one uses the <span class="highlight"><span class="caps">AMQP</span>::Queue#subscribe</span> method. Then when a message arrives, the message header (metadata) and body (payload) are passed to the handler:</p>
 <pre>queue.subscribe do |metadata, payload|
   puts "Received a message: #{payload.inspect}."
 end</pre>
@@ -377,10 +377,10 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
   end
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998731">gist</a>)</span></p>
-<p>Subscriptions for message delivery are usually referred to as <span class="note">consumers</span> in the <span class="caps">AMQP</span> v0.9.1 specification, client library documentation and books. Consumers last as long as the channel that they were declared on, or until  client cancels them (unsubscribes).</p>
-<p>Consumers are identified by <span class="note">consumer tags</span>. If you need to obtain the consumer tag of a subscribed queue then use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#consumer_tag-instance_method"><span class="caps">AMQP</span>::Queue#consumer_tag</a>.</p>
+<p>Subscriptions for message delivery are usually referred to as <span class="highlight">consumers</span> in the <span class="caps">AMQP</span> v0.9.1 specification, client library documentation and books. Consumers last as long as the channel that they were declared on, or until  client cancels them (unsubscribes).</p>
+<p>Consumers are identified by <span class="highlight">consumer tags</span>. If you need to obtain the consumer tag of a subscribed queue then use <span class="highlight"><span class="caps">AMQP</span>::Queue#consumer_tag</span>.</p>
 <h3>Accessing message metadata</h3>
-<p>The <span class="note">header</span> object in the example above provides access to message metadata and delivery information:</p>
+<p>The <span class="highlight">header</span> object in the example above provides access to message metadata and delivery information:</p>
 <ul>
 	<li>Message content type</li>
 	<li>Message content encoding</li>
@@ -490,7 +490,7 @@ end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998739">gist</a>)</span></p>
 <h3>Exclusive consumers</h3>
 <p>Consumers can request exclusive access to the queue (meaning only this consumer can access the queue). This is useful when you want a long-lived shared queue to be temporarily accessible by just one application (or thread, or process). If the application employing the exclusive consumer crashes or loses the <span class="caps">TCP</span> connection to the broker, then the channel is closed and the exclusive consumer is cancelled.</p>
-<p>To exclusively receive messages from the queue, pass the &#8220;:exclusive&#8221; option to <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a>:</p>
+<p>To exclusively receive messages from the queue, pass the &#8220;:exclusive&#8221; option to <span class="highlight"><span class="caps">AMQP</span>::Queue#subscribe</span>:</p>
 <pre>queue.subscribe(:exclusive =&gt; true) do |metadata, payload|
   # message handling logic...
 end</pre>
@@ -507,18 +507,18 @@ consumer2 = AMQP::Consumer.new(channel, queue, "#{queue.name}-consumer-#{rand}-#
 
 # exclusive consumer, consumer tag is generated
 consumer3 = AMQP::Consumer.new(channel, queue, nil, true)</pre>
-<p>Instantiated consumers do not begin consuming messages immediately. This is because in certain cases, it is useful to add a consumer but make it active at a later time. To consume messages, use the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Consumer#consume-instance_method"><span class="caps">AMQP</span>::Consumer#consume</a> method in combination with <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Consumer#on_delivery-instance_method"><span class="caps">AMQP</span>::Consumer#on_delivery</a>:</p>
+<p>Instantiated consumers do not begin consuming messages immediately. This is because in certain cases, it is useful to add a consumer but make it active at a later time. To consume messages, use the <span class="highlight"><span class="caps">AMQP</span>::Consumer#consume</span> method in combination with </p>
 <pre>consumer1.consume.on_delivery do |metadata, payload|
   @consumer1_mailbox &lt;&lt; payload
 end</pre>
-<p><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Consumer#on_delivery-instance_method"><span class="caps">AMQP</span>::Consumer#on_delivery</a> takes a block that is used exactly like the block passed to <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a>. In fact, <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a> uses <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Consumer"><span class="caps">AMQP</span>::Consumer</a> under the hood, adding a <span class="note">default consumer</span> to the queue.</p>
+<p><span class="highlight"><span class="caps">AMQP</span>::Consumer#on_delivery</span> takes a block that is used exactly like the block passed to <span class="highlight"><span class="caps">AMQP</span>::Queue#subscribe</span>. In fact, <span class="highlight"><span class="caps">AMQP</span>::Queue#subscribe</span> uses <span class="highlight"><span class="caps">AMQP</span>::Consumer</span> under the hood, adding a <span class="highlight">default consumer</span> to the queue.</p>
 <p><span class="help-block"><br />
 Default consumers do not have any special properties, they just provide a convenient way for application developers to register multiple consumers and a means of preserving backwards compatibility. Application developers are always free to use <span class="caps">AMQP</span>::Consumer instances directly, or intermix them with <span class="caps">AMQP</span>::Queue#subscribe.<br />
 </span></p>
-<p>Most of the public <span class="caps">API</span> methods on <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Consumer"><span class="caps">AMQP</span>::Consumer</a> return self, so it is possible to use method chaining extensively. An example from <a href="https://github.com/ruby-amqp/amqp/tree/master/spec">amqp gem spec suite</a>:</p>
+<p>Most of the public <span class="caps">API</span> methods on <span class="highlight"><span class="caps">AMQP</span>::Consumer</span> return self, so it is possible to use method chaining extensively. An example from <a href="https://github.com/ruby-amqp/amqp/tree/master/spec">amqp gem spec suite</a>:</p>
 <pre>consumer1 = AMQP::Consumer.new(@channel, @queue).consume.on_delivery { |metadata, payload| mailbox1 &lt;&lt; payload }
 consumer2 = AMQP::Consumer.new(@channel, @queue).consume.on_delivery { |metadata, payload| mailbox2 &lt;&lt; payload }</pre>
-<p>To cancel a particular consumer, use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Consumer#cancel-instance_method"><span class="caps">AMQP</span>::Consumer#cancel</a> method. To cancel a default queue consumer, use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#unsubscribe-instance_method"><span class="caps">AMQP</span>::Queue#unsubscribe</a>.</p>
+<p>To cancel a particular consumer, use <span class="highlight"><span class="caps">AMQP</span>::Consumer#cancel</span> method. To cancel a default queue consumer, use <span class="highlight"><span class="caps">AMQP</span>::Queue#unsubscribe</span>.</p>
 <h3>Message acknowledgements</h3>
 <p>Consumer applications &#8211; applications that receive and process messages &#8211; may occasionally fail to process individual messages, or will just crash. There is also the possibility of network issues causing problems. This raises a question &#8211; &#8220;When should the <span class="caps">AMQP</span> broker remove messages from queues?&#8221; The <span class="caps">AMQP</span> v0.9.1 specification proposes two choices:</p>
 <ul>
@@ -528,7 +528,7 @@ consumer2 = AMQP::Consumer.new(@channel, @queue).consume.on_delivery { |metadata
 <p>The former choice is called the <strong>automatic acknowledgement model</strong>, while the latter is called the <strong>explicit acknowledgement model</strong>. With the explicit model, the application chooses when it is time to send an acknowledgement. It can be right after receiving a message, or after persisting it to a data store before processing, or after fully processing the message (for example, successfully fetching a Web page, processing and storing it into some persistent data store).</p>
 <p><img src="https://github.com/ruby-amqp/amqp/raw/master/docs/diagrams/006_amqp_091_message_acknowledgements.png" alt="" /></p>
 <p>If a consumer dies without sending an acknowledgement, the <span class="caps">AMQP</span> broker will redeliver it to another consumer, or, if none are available at the time, the broker will wait until at least one consumer is registered for the same queue before attempting redelivery.</p>
-<p>The acknowledgement model is chosen when a new consumer is registered for a queue. By default, <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a> will use the <strong>automatic</strong> model. To switch to the <strong>explicit</strong> model, the &#8220;:ack&#8221; option should<br />
+<p>The acknowledgement model is chosen when a new consumer is registered for a queue. By default, <span class="highlight"><span class="caps">AMQP</span>::Queue#subscribe</span>} will use the <strong>automatic</strong> model. To switch to the <strong>explicit</strong> model, the &#8220;:ack&#8221; option should<br />
 be used:</p>
 <pre>queue.subscribe(:ack =&gt; true) do |metadata, payload|
   # message handling logic...
@@ -651,7 +651,7 @@ channel2.on_error(&amp;channel_exception_handler)
 # app 3 will just publish messages
 channel3    = AMQP::Channel.new(connection3)
 channel3.on_error(&amp;channel_exception_handler)</pre>
-<p>The consumers share a queue and the producer publishes messages to the queue periodically using an <span class="note">`amq.direct`</span> exchange. Both &#8220;applications&#8221; subscribe to receive messages using the explicit acknowledgement model. The <span class="caps">AMQP</span> broker by default will send each message to the next consumer in sequence (this kind of load balancing is known as <strong>round-robin</strong>). This means that some messages will be delivered to consumer #1 and some to consumer #2.</p>
+<p>The consumers share a queue and the producer publishes messages to the queue periodically using an <span class="highlight">`amq.direct`</span> exchange. Both &#8220;applications&#8221; subscribe to receive messages using the explicit acknowledgement model. The <span class="caps">AMQP</span> broker by default will send each message to the next consumer in sequence (this kind of load balancing is known as <strong>round-robin</strong>). This means that some messages will be delivered to consumer #1 and some to consumer #2.</p>
 <pre>exchange = channel3.direct("amq.direct")
 
 # ...
@@ -734,9 +734,9 @@ end</pre>
 [consumer2] Received Message #5, redelivered = true, ack-ed
 [consumer2] Received Message #1, redelivered = true, ack-ed
 [consumer2] Received Message #2, redelivered = true, ack-ed </code></p>
-<p>To acknowledge a message use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#acknowledge-instance_method"><span class="caps">AMQP</span>::Channel#acknowledge</a>:</p>
+<p>To acknowledge a message use <span class="highlight"><span class="caps">AMQP</span>::Channel#acknowledge</span>:</p>
 <pre>channel1.acknowledge(metadata.delivery_tag, false)</pre>
-<p><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#acknowledge-instance_method"><span class="caps">AMQP</span>::Channel#acknowledge</a> takes two arguments: message <strong>delivery tag</strong> and a flag that indicates whether or not we want to acknowledge multiple messages at once. Delivery tag is simply a channel-specific increasing number that the server uses to identify deliveries.</p>
+<p><span class="highlight"><span class="caps">AMQP</span>::Channel#acknowledge</span> takes two arguments: message <strong>delivery tag</strong> and a flag that indicates whether or not we want to acknowledge multiple messages at once. Delivery tag is simply a channel-specific increasing number that the server uses to identify deliveries.</p>
 <p>When acknowledging multiple messages at once, the delivery tag is treated as &#8220;up to and including&#8221;. For example, if delivery tag = 5 that would mean &#8220;acknowledge messages 1, 2, 3, 4 and 5&#8221;.</p>
 <p>As a shortcut, it is possible to acknowledge messages using the {AMQP::Header#ack} method:</p>
 <pre>queue2.subscribe(:ack =&gt; true) do |metadata, payload|
@@ -745,12 +745,12 @@ end</pre>
 <p><span class="help-block"><br />
 Acknowledgements are channel-specific. Applications must not receive messages on one channel and acknowledge them on another.<br />
 </span></p>
-<p><span class="help-block"><br />
+<p><span class="note"><br />
 A message <span class="caps">MUST</span> not be acknowledged more than once. Doing so will result in a channel-level exception (PRECONDITION_FAILED) with an error message like this: &#8220;PRECONDITION_FAILED &#8211; unknown delivery tag&#8221;<br />
 </span></p>
 <h3>Rejecting messages</h3>
 <p>When a consumer application receives a message, processing of that message may or may not succeed. An application can indicate to the broker that message processing has failed (or cannot be accomplished at the time) by rejecting a message. When rejecting a message, an application can ask the broker to discard or requeue it.</p>
-<p>To reject a message use the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#reject-instance_method"><span class="caps">AMQP</span>::Channel#reject</a> method:</p>
+<p>To reject a message use the <span class="highlight"><span class="caps">AMQP</span>::Channel#reject</span> method:</p>
 <pre>queue.bind(exchange).subscribe do |metadata, payload|
   # reject but do not requeue (simply discard)
   channel.reject(metadata.delivery_tag)
@@ -774,7 +774,7 @@ end</pre>
   metadata.reject(:requeue =&gt; true)
 end</pre>
 <h3>Negative acknowledgements</h3>
-<p>Messages are rejected with the <span class="note">`basic.reject`</span> <span class="caps">AMQP</span> method. There is one limitation that <span class="note">`basic.reject`</span> has: there is no way to reject multiple messages, as you can do with acknowledgements. However, if you are using <a href="http://rabbitmq.com">RabbitMQ</a>, then there is a solution. RabbitMQ provides an <span class="caps">AMQP</span> v0.9.1 extension known as <a href="http://www.rabbitmq.com/extensions.html#negative-acknowledgements">negative acknowledgements</a> (nacks) and the amqp gem supports this extension. For more information, please refer to the <a href="/articles/broker_specific_extensions/">Vendor-specific Extensions guide</a>.</p>
+<p>Messages are rejected with the <span class="highlight">`basic.reject`</span> <span class="caps">AMQP</span> method. There is one limitation that <span class="highlight">`basic.reject`</span> has: there is no way to reject multiple messages, as you can do with acknowledgements. However, if you are using <a href="http://rabbitmq.com">RabbitMQ</a>, then there is a solution. RabbitMQ provides an <span class="caps">AMQP</span> v0.9.1 extension known as <a href="http://www.rabbitmq.com/extensions.html#negative-acknowledgements">negative acknowledgements</a> (nacks) and the amqp gem supports this extension. For more information, please refer to the <a href="/articles/broker_specific_extensions/">Vendor-specific Extensions guide</a>.</p>
 <h3>QoS &#8211; Prefetching messages</h3>
 <p>For cases when multiple consumers share a queue, it is useful to be able to specify how many messages each consumer can be sent at once before sending the next acknowledgement. This can be used as a simple load balancing technique  to improve throughput if messages tend to be published in batches. For example, if a producing application sends messages every minute because of the nature of the work it is doing.</p>
 <p>Imagine a website that takes data from social media sources like Twitter or Facebook during the Champions League final (or the Superbowl), and then calculates how many tweets mention a particular team during the last minute. The site could be structured as 3 applications:</p>
@@ -832,7 +832,7 @@ The prefetching setting is ignored for consumers that do not use explicit acknow
 <p>We have two network segments, S1 and S2. Each of them may fail. P is concerned with making sure that messages cross S1, while broker (B) and C are concerned with ensuring that messages cross S2 and are only removed from the queue when they are processed successfully.</p>
 <p>Message acknowledgements cover reliable delivery over S2 as well as successful processing. For S1, P has to use transactions (a heavyweight solution) or the more lightweight Publisher Confirms RabbitMQ extension.</p>
 <h2>Fetching messages when needed (&#8220;pull <span class="caps">API</span>&#8221;)</h2>
-<p>The <span class="caps">AMQP</span> v0.9.1 specification also provides a way for applications to fetch (pull) messages from the queue only when necessary. For that, use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#pop-instance_method"><span class="caps">AMQP</span>::Queue#pop</a>:</p>
+<p>The <span class="caps">AMQP</span> v0.9.1 specification also provides a way for applications to fetch (pull) messages from the queue only when necessary. For that, use <span class="highlight"><span class="caps">AMQP</span>::Queue#pop</span>:</p>
 <pre>queue.pop do |metadata, payload|
   if payload
     puts "Fetched a message: #{payload.inspect}, content_type: #{metadata.content_type}. Shutting down..."
@@ -870,11 +870,11 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
   end
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998732">gist</a>)</span></p>
-<p>If the queue is empty, then the `payload` argument will be nil, otherwise arguments are identical to those of the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a> callback.</p>
+<p>If the queue is empty, then the `payload` argument will be nil, otherwise arguments are identical to those of the <span class="highlight"><span class="caps">AMQP</span>::Queue#subscribe</span> callback.</p>
 <h2>Unsubscribing from messages</h2>
-<p>Sometimes it is necessary to unsubscribe from messages without deleting a queue. To do that, use the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#unsubscribe-instance_method"><span class="caps">AMQP</span>::Queue#unsubscribe</a> method:</p>
+<p>Sometimes it is necessary to unsubscribe from messages without deleting a queue. To do that, use the <span class="highlight"><span class="caps">AMQP</span>::Queue#unsubscribe<span> method:</p>
 <pre>queue.unsubscribe</pre>
-<p>By default <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#unsubscribe-instance_method"><span class="caps">AMQP</span>::Queue#unsubscribe</a> uses the &#8220;:noack&#8221; option to inform the broker that there is no need to send a confirmation. In other words, it does not expect you to pass in a callback, because the consumer tag on the  instance and the registered callback for messages are cleared immediately.</p>
+<p>By default <span class="highlight"><span class="caps">AMQP</span>::Queue#unsubscribe</span> uses the &#8220;:noack&#8221; option to inform the broker that there is no need to send a confirmation. In other words, it does not expect you to pass in a callback, because the consumer tag on the  instance and the registered callback for messages are cleared immediately.</p>
 <p>If an application needs to execute a piece of code after the broker response arrives, {AMQP::Queue#unsubscribe} takes an optional callback:</p>
 <pre>queue.unsubscribe do |unbind_ok|
   # server response arrived, handle it if necessary...
@@ -905,9 +905,9 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998734">gist</a>)</span></p>
 <p>In <span class="caps">AMQP</span> parlance, unsubscribing from messages is often referred to as &#8220;cancelling a consumer&#8221;. Once a consumer is cancelled, messages will no longer be delivered to it, however, due to the asynchronous nature of the protocol, it is possible for &#8220;in flight&#8221; messages to be received after this call completes.</p>
-<p>Fetching messages with <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#pop-instance_method"><span class="caps">AMQP</span>::Queue#pop</a> is still possible even after a consumer is cancelled.</p>
+<p>Fetching messages with <span class="highlight"><span class="caps">AMQP</span>::Queue#pop</span> is still possible even after a consumer is cancelled.</p>
 <h2>Unbinding queues from exchanges</h2>
-<p>To unbind a queue from an exchange use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#unbind-instance_method"><span class="caps">AMQP</span>::Queue#unbind</a>:</p>
+<p>To unbind a queue from an exchange use <span class="highlight"><span class="caps">AMQP</span>::Queue#unbind</span>:</p>
 <pre>queue.unbind(exchange)</pre>
 <p>Full example:</p>
 <pre>#!/usr/bin/env ruby
@@ -939,7 +939,7 @@ end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998742">gist</a>)</span></p>
 <p>Note that trying to unbind a queue from an exchange that the queue was never bound to will result in a channel-level exception.</p>
 <h2>Querying the number of messages in a queue</h2>
-<p>It is possible to query the number of messages sitting in the queue by declaring the queue with the &#8220;:passive&#8221; attribute set. The response (`queue.declare-ok` <span class="caps">AMQP</span> method) will include the number of messages along with other attributes. However, the amqp gem provides a convenience method, <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#status-instance_method"><span class="caps">AMQP</span>::Queue#status</a>:</p>
+<p>It is possible to query the number of messages sitting in the queue by declaring the queue with the &#8220;:passive&#8221; attribute set. The response (`queue.declare-ok` <span class="caps">AMQP</span> method) will include the number of messages along with other attributes. However, the amqp gem provides a convenience method, <span class="highlight"><span class="caps">AMQP</span>::Queue#status<span>:</p>
 <pre>queue.status do |number_of_messages, number_of_consumers|
   puts
   puts "# of messages in the queue #{queue.name} = #{number_of_messages}"
@@ -984,7 +984,7 @@ AMQP.start(:host =&gt; 'localhost') do |connection|
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1068363">gist</a>)</span></p>
 <h2>Querying the number of consumers on a queue</h2>
-<p>It is possible to query the number of consumers on a queue by declaring the queue with the &#8220;:passive&#8221; attribute set. The response (`queue.declare-ok` <span class="caps">AMQP</span> method) will include the number of consumers along with other attributes. However, the amqp gem provides a convenience method, <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#status-instance_method"><span class="caps">AMQP</span>::Queue#status</a>:</p>
+<p>It is possible to query the number of consumers on a queue by declaring the queue with the &#8220;:passive&#8221; attribute set. The response (`queue.declare-ok` <span class="caps">AMQP</span> method) will include the number of consumers along with other attributes. However, the amqp gem provides a convenience method, <span class="highlight"><span class="caps">AMQP</span>::Queue#status</span>:</p>
 <pre>queue.status do |number_of_messages, number_of_consumers|
   puts
   puts "# of consumers on the queue #{queue.name} = #{number_of_consumers}"
@@ -1029,7 +1029,7 @@ AMQP.start(:host =&gt; 'localhost') do |connection|
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1068377">gist</a>)</span></p>
 <h2>Purging queues</h2>
-<p>It is possible to purge a queue (remove all of the messages from it) using <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#purge-instance_method"><span class="caps">AMQP</span>::Queue#purge</a>:</p>
+<p>It is possible to purge a queue (remove all of the messages from it) using </p>
 <pre>queue.purge</pre>
 <p>This method takes an optional callback. However, remember that this operation is performed asynchronously. To run a piece of code when the <span class="caps">AMQP</span> broker confirms that a queue has been purged, use a callback that {AMQP::Queue#purge} takes:</p>
 <pre>queue.purge do |_|
@@ -1062,9 +1062,9 @@ end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998743">gist</a>)</span></p>
 <p>Note that this example purges a newly declared queue with a unique server-generated name. When a queue is declared, it is empty, so for server-named queues, there is no need to purge them before they are used.</p>
 <h2>Deleting queues</h2>
-<p>To delete a queue, use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#delete-instance_method"><span class="caps">AMQP</span>::Queue#delete</a>. When a queue is deleted, all of the messages in it are deleted as well.</p>
+<p>To delete a queue, use <span class="highlight"><span class="caps">AMQP</span>::Queue#delete</span>. When a queue is deleted, all of the messages in it are deleted as well.</p>
 <pre>queue.delete</pre>
-<p>This method takes an optional callback. However, remember that this operation is performed asynchronously. To run a piece of code when the <span class="caps">AMQP</span> broker confirms that a queue has been deleted, use a callback that <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#delete-instance_method"><span class="caps">AMQP</span>::Queue#delete</a> takes:</p>
+<p>This method takes an optional callback. However, remember that this operation is performed asynchronously. To run a piece of code when the <span class="caps">AMQP</span> broker confirms that a queue has been deleted, use a callback that </p>
 <pre>queue.delete do |_|
   puts "Deleted #{queue.name}"
 end</pre>
@@ -1094,7 +1094,7 @@ end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998744">gist</a>)</span></p>
 <h2>Objects as message consumers and unit testing consumers in isolation</h2>
 <p>Since Ruby is a genuine object-oriented language, it is important to demonstrate how the Ruby amqp gem can be integrated into rich object-oriented code. This part of the guide focuses on queues and the problems/solutions concerning consumer applications (applications that primarily receive and process messages, as opposed to producers that publish them).</p>
-<p>An <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a> callback does not have to be a block. It can be any Ruby object that responds to the `call` method. A common technique is to combine {http://rubydoc.info/stdlib/core/1.8.7/Object:method Object#method} and {http://rubydoc.info/stdlib/core/1.8.7/Method:to_proc Method#to_proc} and use object methods as message handlers.</p>
+<p>An <span class="highlight"><span class="caps">AMQP</span>::Queue#subscribe</span> callback does not have to be a block. It can be any Ruby object that responds to the `call` method. A common technique is to combine {http://rubydoc.info/stdlib/core/1.8.7/Object:method Object#method} and {http://rubydoc.info/stdlib/core/1.8.7/Method:to_proc Method#to_proc} and use object methods as message handlers.</p>
 <p>An example to demonstrate this technique:</p>
 <pre>class Consumer
 
@@ -1203,7 +1203,7 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
   EventMachine.add_timer(2.0) { connection.close { EventMachine.stop } }
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1009425">gist</a>)</span></p>
-<p>In this example, <span class="note">Consumer</span> instances have to be instantiated with an <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel"><span class="caps">AMQP</span>::Channel</a> instance. If the message handling was done by an aggregated object, it would completely separate the handling logic and would be make it easy to unit test in isolation:</p>
+<p>In this example, <span class="highlight">Consumer</span> instances have to be instantiated with an <span class="highlight"><span class="caps">AMQP</span>::Channel</span> instance. If the message handling was done by an aggregated object, it would completely separate the handling logic and would be make it easy to unit test in isolation:</p>
 <pre>class Consumer
 
   #
@@ -1337,7 +1337,7 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
   EventMachine.add_timer(2.0) { connection.close { EventMachine.stop } }
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1009447">gist</a>)</span></p>
-<p>Note that the <span class="note">Consumer</span> class demonstrated above can be easily tested in isolation without spinning up any <span class="caps">AMQP</span> connections:</p>
+<p>Note that the </p>
 <pre>require "ostruct"
 require "json"
 

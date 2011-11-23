@@ -89,7 +89,7 @@
 <p>Some exchange types use routing key while some others do not (and route messages unconditionally or based on message metadata).If <span class="caps">AMQP</span> message cannot be routed to any queue (for example, because there are no bindings for the exchange it was published to), it is eitherdropped or returned to the publisher, depending on message attributes the publisher has set.</p>
 <p>If application wants to connect a queue to an exchange, it needs to <em>bind</em> them. The opposite operation is called <em>unbinding</em>.</p>
 <h2>Binding queues to exchanges</h2>
-<p>In order to receive messages, a queue needs to be bound to at least one exchange. Most of the time binding is explcit(done by applications). To bind a queue to an exchange, use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#bind-instance_method"><span class="caps">AMQP</span>::Queue#bind</a> where the argument passed can beeither an <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange"><span class="caps">AMQP</span>::Exchange</a> instance or a string.</p>
+<p>In order to receive messages, a queue needs to be bound to at least one exchange. Most of the time binding is explcit(done by applications). To bind a queue to an exchange, use {AMQP::Queue#bind} where the argument passed can beeither an {AMQP::Exchange} instance or a string.</p>
 <pre>queue.bind(exchange) do |bind_ok|
   puts "Just bound #{queue.name} to #{exchange.name}"
 end</pre>
@@ -137,7 +137,7 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998729">gist</a>)</span></p>
 <h2>Unbinding queues from exchanges</h2>
-<p>To unbind a queue from an exchange use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#unbind-instance_method"><span class="caps">AMQP</span>::Queue#unbind</a>:</p>
+<p>To unbind a queue from an exchange use {AMQP::Queue#unbind}:</p>
 <pre>queue.unbind(exchange)</pre>
 
 <pre>#!/usr/bin/env ruby

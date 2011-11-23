@@ -170,7 +170,7 @@ end</pre>
   puts "Received a message: #{payload}. Disconnecting..."
   connection.close { EventMachine.stop }
 end</pre>
-<p><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a> takes a block that will be called every time a message arrives. <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Session#close-instance_method"><span class="caps">AMQP</span>::Session#close</a> closes the <span class="caps">AMQP</span> connection and runs a callback that stops the EventMachine reactor.</p>
+<p>{AMQP::Queue#subscribe} takes a block that will be called every time a message arrives. {AMQP::Session#close} closes the <span class="caps">AMQP</span> connection and runs a callback that stops the EventMachine reactor.</p>
 <p>Finally, we publish our message</p>
 <pre>exchange.publish "Hello, world!", :routing_key =&gt; queue.name</pre>
 <p>Routing key is one of the <em>message attributes</em>. The default exchange will route the message to a queue that has the same name as the message&#8217;s routing key. This is how our message ends up in the &#8220;amqpgem.examples.helloworld&#8221; queue.</p>
@@ -206,29 +206,29 @@ end
 <p>Liquid error: No such file or directory &#8211; ./content/articles/examples/getting_started/blabbr.rb</p>
 <p>The first line has a few differences from the &#8220;Hello, world&#8221; example above:</p>
 <ul>
-	<li>We use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#start-class_method"><span class="caps">AMQP</span>.start</a> instead of <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#connect-class_method"><span class="caps">AMQP</span>.connect</a></li>
+	<li>We use {AMQP.start} instead of {AMQP.connect}</li>
 	<li>Instead of return values, we pass a block to the connection method and it yields a connection<br />
    object back as soon as the connection is established.</li>
 	<li>Instead of passing connection parameters as a hash, we use a <span class="caps">URI</span> string.</li>
 </ul>
-<p><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#start-class_method"><span class="caps">AMQP</span>.start</a> is just a convenient way to do</p>
+<p>{AMQP.start} is just a convenient way to do</p>
 <pre>EventMachine.run do
   AMQP.connect(options) do |connection|
     # ...
   end
 end</pre>
-<p>The <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#start-class_method"><span class="caps">AMQP</span>.start</a> call blocks the current thread which means that its use is limited to scripts and small command line applications. Blabbr is just that.</p>
-<p><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#connect-class_method"><span class="caps">AMQP</span>.connect</a>, when invoked with a block, will yield a connection object as soon as the <span class="caps">AMQP</span> connection is open. Finally, connection parameters may be supplied as a Hash or as a connection string. The {AMQP.connect} method documentation contains all of the details.</p>
+<p>The {AMQP.start} call blocks the current thread which means that its use is limited to scripts and small command line applications. Blabbr is just that.</p>
+<p>{AMQP.connect}, when invoked with a block, will yield a connection object as soon as the <span class="caps">AMQP</span> connection is open. Finally, connection parameters may be supplied as a Hash or as a connection string. The {AMQP.connect} method documentation contains all of the details.</p>
 <p>In this example, opening a channel is no different to opening a channel in the previous example, however, the exchange is declared differently</p>
 <pre>exchange = channel.fanout("nba.scores")</pre>
-<p>The exchange that we declare above using <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#fanout-instance_method"><span class="caps">AMQP</span>::Channel#fanout</a> is a <em>fanout exchange</em>. A fanout exchange delivers messages to all of the queues that are bound to it: exactly what we want in the case of Blabbr!</p>
+<p>The exchange that we declare above using {AMQP::Channel#fanout} is a <em>fanout exchange</em>. A fanout exchange delivers messages to all of the queues that are bound to it: exactly what we want in the case of Blabbr!</p>
 <p>This piece of code</p>
 <pre>channel.queue("joe", :auto_delete =&gt; true).bind(exchange).subscribe do |payload|
   puts "#{payload} =&gt; joe"
 end</pre>
-<p>is similar to the subscription code that we used for message delivery previously, but what does that <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#bind-instance_method"><span class="caps">AMQP</span>::Queue#bind</a> method do? It sets up a binding between the queue and the exchange that you pass to it. We need to do this to make sure that our fanout exchange routes messages to the queues of any subscribed followers.</p>
+<p>is similar to the subscription code that we used for message delivery previously, but what does that {AMQP::Queue#bind} method do? It sets up a binding between the queue and the exchange that you pass to it. We need to do this to make sure that our fanout exchange routes messages to the queues of any subscribed followers.</p>
 <pre>exchange.publish("BOS 101, NYK 89").publish("ORL 85, ALT 88")</pre>
-<p>demonstrates <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> call chaining. Blabbr members use a fanout exchange for publishing, so there is no need to specify a message routing key because every queue that is bound to the exchange will get its own copy of all messages, regardless of the queue name and routing key used.</p>
+<p>demonstrates {AMQP::Exchange#publish} call chaining. Blabbr members use a fanout exchange for publishing, so there is no need to specify a message routing key because every queue that is bound to the exchange will get its own copy of all messages, regardless of the queue name and routing key used.</p>
 <p>A diagram for Blabbr looks like this:</p>
 <p><img src="https://github.com/ruby-amqp/amqp/raw/master/docs/diagrams/002_blabbr_example_routing.png" alt="" /></p>
 <p>Next we use EventMachine&#8217;s {http://eventmachine.rubyforge.org/EventMachine.html#M000466 add_timer} method to run a piece of code in 1 second from now:</p>
@@ -236,7 +236,7 @@ end</pre>
   exchange.delete
   connection.close { EventMachine.stop }
 end</pre>
-<p>The code that we want to run deletes the exchange that we declared earlier using <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#delete-instance_method"><span class="caps">AMQP</span>::Exchange#delete</a> and closes the <span class="caps">AMQP</span> connection with <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Session#close-instance_method"><span class="caps">AMQP</span>::Session#close</a>. Finally, we stop the EventMachine event loop and exit.</p>
+<p>The code that we want to run deletes the exchange that we declared earlier using {AMQP::Exchange#delete} and closes the <span class="caps">AMQP</span> connection with {AMQP::Session#close}. Finally, we stop the EventMachine event loop and exit.</p>
 <p>Blabbr is pretty unlikely to secure hundreds of millions of dollars in funding, but it does a pretty good job of demonstrating how one can use <span class="caps">AMQP</span> fanout exchanges to do broadcasting.</p>
 <h2>Weathr: many-to-many topic routing example</h2>
 <p>So far, we have seen point-to-point communication and broadcasting. Those two communication styles are possible with many protocols, for instance, <span class="caps">HTTP</span> handles these scenarios just fine. You may ask &#8220;what differentiates <span class="caps">AMQP</span>?&#8221; Well, next we are going to introduce you to <em>topic exchanges</em> and routing with patterns, one of the features that makes <span class="caps">AMQP</span> very powerful.</p>
@@ -304,7 +304,7 @@ end
 <pre>channel.queue("americas.south").bind(exchange, :routing_key =&gt; "americas.south.#").subscribe do |headers, payload|
   puts "An update for South America: #{payload}, routing key is #{headers.routing_key}"
 end</pre>
-<p>Here we bind a queue with the name of &#8220;americas.south&#8221; to the topic exchange declared earlier using the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#bind-instance_method"><span class="caps">AMQP</span>::Queue#bind</a> method.  This means that only messages with a routing key matching &#8220;americas.south.#&#8221; will be routed to that queue. A routing pattern consists of several words separated by dots, in a similar way to <span class="caps">URI</span> path segments joined by slashes. Here are a few examples:</p>
+<p>Here we bind a queue with the name of &#8220;americas.south&#8221; to the topic exchange declared earlier using the {AMQP::Queue#bind} method.  This means that only messages with a routing key matching &#8220;americas.south.#&#8221; will be routed to that queue. A routing pattern consists of several words separated by dots, in a similar way to <span class="caps">URI</span> path segments joined by slashes. Here are a few examples:</p>
 <ul>
 	<li>asia.southeast.thailand.bangkok</li>
 	<li>sports.basketball</li>
@@ -333,7 +333,7 @@ end</pre>
 <p>so &#8220;*&#8221; only matches a single word. The <span class="caps">AMQP</span> v0.9.1 specification says that topic segments (words) may contain the letters A-Z and a-z and digits 0-9.</p>
 <p>A (very simplistic) diagram to demonstrate topic exchange in action:</p>
 <p><img src="https://github.com/ruby-amqp/amqp/raw/master/docs/diagrams/003_weathr_example_routing.png" alt="" /></p>
-<p>One more thing that is different from previous examples is that the block we pass to <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a> now takes two arguments: a <em>header</em> and a <em>body</em> (often called the <em>payload</em>). Long story short, the header parameter lets you access metadata associated with the message. Some examples of message metadata attributes are:</p>
+<p>One more thing that is different from previous examples is that the block we pass to {AMQP::Queue#subscribe} now takes two arguments: a <em>header</em> and a <em>body</em> (often called the <em>payload</em>). Long story short, the header parameter lets you access metadata associated with the message. Some examples of message metadata attributes are:</p>
 <ul>
 	<li>message content type</li>
 	<li>message content encoding</li>
@@ -354,12 +354,12 @@ end</pre>
     puts "An update for North America: #{payload}, routing key is #{headers.routing_key}"
   end
 end</pre>
-<p>The name of the server-named queue is generated by the broker and sent back to the client with a queue declaration confirmation. Because the queue name is not known before the reply arrives, we pass <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#queue-instance_method"><span class="caps">AMQP</span>::Channel#queue</a> a callback and it yields us back a queue object once confirmation has arrived.</p>
+<p>The name of the server-named queue is generated by the broker and sent back to the client with a queue declaration confirmation. Because the queue name is not known before the reply arrives, we pass {AMQP::Channel#queue} a callback and it yields us back a queue object once confirmation has arrived.</p>
 <h3>Avoid race conditions</h3>
-<p>A word of warning: you may find examples on the Web of <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#queue-instance_method"><span class="caps">AMQP</span>::Channel#queue</a> usage that do not use callbacks. We <strong>recommend that you use a callback for server-named queues</strong>, otherwise your code may be subject to <a href="http://en.wikipedia.org/wiki/Race_condition">race conditions</a>. Even though the amqp gem tries to be reasonably smart and protect you from most common problems (for example, binding operations will be delayed until after queue name is received from the broker), there is no way it can do so for every case. The primary reason for supporting <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#queue-instance_method"><span class="caps">AMQP</span>::Channel#queue</a> usage without a callback for server-named queues is backwards compatibility with earlier versions.</p>
+<p>A word of warning: you may find examples on the Web of {AMQP::Channel#queue} usage that do not use callbacks. We <strong>recommend that you use a callback for server-named queues</strong>, otherwise your code may be subject to <a href="http://en.wikipedia.org/wiki/Race_condition">race conditions</a>. Even though the amqp gem tries to be reasonably smart and protect you from most common problems (for example, binding operations will be delayed until after queue name is received from the broker), there is no way it can do so for every case. The primary reason for supporting {AMQP::Channel#queue} usage without a callback for server-named queues is backwards compatibility with earlier versions.</p>
 <h2>Integration with objects</h2>
 <p>Since Ruby is a genuine object-oriented language, it is important to demonstrate how the Ruby amqp gem can be integrated into rich object-oriented code.</p>
-<p>The <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a> callback does not have to be a block. It can be any Ruby object that responds to `call`. A common technique is to combine {http://rubydoc.info/stdlib/core/1.8.7/Object:method Object#method} and {http://rubydoc.info/stdlib/core/1.8.7/Method:to_proc Method#to_proc} and use object methods as message handlers.</p>
+<p>The {AMQP::Queue#subscribe} callback does not have to be a block. It can be any Ruby object that responds to `call`. A common technique is to combine {http://rubydoc.info/stdlib/core/1.8.7/Object:method Object#method} and {http://rubydoc.info/stdlib/core/1.8.7/Method:to_proc Method#to_proc} and use object methods as message handlers.</p>
 <p>An example to demonstrate this technique:</p>
 <pre>class Consumer
 
@@ -500,7 +500,7 @@ end
 <pre>@queue.subscribe(&amp;@consumer.method(:handle_message))</pre>
 <p>Ampersand (&amp;) preceding an object is equivalent to calling the #to_proc method on it. We obtain a Consumer#handle_message method reference with</p>
 <pre>@consumer.method(:handle_message)</pre>
-<p>and then the ampersand calls #to_proc on it. <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a> then will be using this Proc instance to handle incoming messages.</p>
+<p>and then the ampersand calls #to_proc on it. {AMQP::Queue#subscribe} then will be using this Proc instance to handle incoming messages.</p>
 <p>Note that the `Consumer` class above can be easily tested in isolation, without spinning up any <span class="caps">AMQP</span> connections.<br />
 Here is one example using <a href="http://relishapp.com/rspec">RSpec</a></p>
 <pre>require "ostruct"

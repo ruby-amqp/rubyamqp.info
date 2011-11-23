@@ -123,7 +123,7 @@ require "mq"</pre>
 mq.rb will be removed before 1.0 release.<br />
 </span></p>
 <h3>MQ class is deprecated</h3>
-<p>Please use {AMQP::Channel} instead. MQ class &amp; its methods are implemented in amqp gem 0.8.x for backwards compatibility, but only for transition period (that will end after 0.9 release).</p>
+<p>Please use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel"><span class="caps">AMQP</span>::Channel</a> instead. MQ class &amp; its methods are implemented in amqp gem 0.8.x for backwards compatibility, but only for transition period (that will end after 0.9 release).</p>
 <p>Why is it deprecated? Because it was a poor name choice all along. Both mq.rb and MQ class step away from <span class="caps">AMQP</span> terminology and make 8 out of 10 engineers think it has something to do with <span class="caps">AMQP</span> queues (in fact, MQ should have been called Channel all along). No other <span class="caps">AMQP</span> client library we know of invents its own terminology when it comes to <span class="caps">AMQP</span> entities, and amqp gem shouldn&#8217;t, too.</p>
 <p><span class="note"><br />
 MQ class and class methods that use implicit connection (MQ.queue and so on) will be removed before 1.0 release.<br />

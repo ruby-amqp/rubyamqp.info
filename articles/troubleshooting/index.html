@@ -107,7 +107,7 @@ exception on TCP connection &lt;0.4201.62&gt; from 10.8.0.30:57990
 	<li>Queue is re-declared with attributes different from the original declaration. For example, an autodeletable queue is being re-declared as non-autodeletable.</li>
 	<li>Queue is bound to an exchange that does not exist.</li>
 </ul>
-<p>and so on. When troubleshooting <span class="caps">AMQP</span> applications, it is recommended that you detect and handle channel-level exceptions on all channels your application may use. For that, use {AMQP::Channel#on_error} method as demonstrated below:</p>
+<p>and so on. When troubleshooting <span class="caps">AMQP</span> applications, it is recommended that you detect and handle channel-level exceptions on all channels your application may use. For that, use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#on_error-instance_method"><span class="caps">AMQP</span>::Channel#on_error</a> method as demonstrated below:</p>
 <pre>events_channel.on_error do |ch, channel_close|
   puts "Channel-level exception on the events channel: #{channel_close.reply_text}"
 end

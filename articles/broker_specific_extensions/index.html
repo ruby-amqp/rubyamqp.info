@@ -89,14 +89,14 @@ with<br />
 <pre>require &#8220;amqp&#8221;<br />
 require &#8220;amqp/extensions/rabbitmq&#8221;</pre></p>
 <h2>Per-queue Message Time-to-Live</h2>
-<p>Per-queue Message Time-to-Live (<span class="caps">TTL</span>) is a RabbitMQ extension to <span class="caps">AMQP</span> 0.9.1 that lets developers control for how longa message published to a queue can live before it is discarded. A message that has been in the queue for longer than theconfigured <span class="caps">TTL</span> is said to be dead. Dead messages will not be delivered to consumers and cannot be fetched using*basic.get* operation ({AMQP::Queue#pop}).</p>
-<p>Message <span class="caps">TTL</span> is specified using <strong>x-message-ttl</strong> argument on declaration. With amqp gem, you pass it to {AMQP::Queue#initialize} or{AMQP::Channel#queue}:</p>
+<p>Per-queue Message Time-to-Live (<span class="caps">TTL</span>) is a RabbitMQ extension to <span class="caps">AMQP</span> 0.9.1 that lets developers control for how longa message published to a queue can live before it is discarded. A message that has been in the queue for longer than theconfigured <span class="caps">TTL</span> is said to be dead. Dead messages will not be delivered to consumers and cannot be fetched using*basic.get* operation (<a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#pop-instance_method"><span class="caps">AMQP</span>::Queue#pop</a>).</p>
+<p>Message <span class="caps">TTL</span> is specified using <strong>x-message-ttl</strong> argument on declaration. With amqp gem, you pass it to <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#initialize-instance_method"><span class="caps">AMQP</span>::Queue#initialize</a> or<a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#queue-instance_method"><span class="caps">AMQP</span>::Channel#queue</a>:</p>
 <pre>
 # 1000 millisecondschannel.queue("", :arguments =&gt; { "x-message-ttl" =&gt; 1000 })</code>
 </pre>
 <p>When a published messages is routed to multiple queues, each of the queues gets a <em>copy of the message</em>. If then the message dies inone of the queues, it has no effect on copies of the message in other queues.</p>
 <h3>Example</h3>
-<p>The example below sets message <span class="caps">TTL</span> for a new server-named queue to be 1000 milliseconds. It then publishes several messages thatare routed to the queue and tries to fetch messages using <strong>basic.get</strong> <span class="caps">AMQP</span> method ({AMQP::Queue#pop} after 0.7 and 1.5 seconds:</p>
+<p>The example below sets message <span class="caps">TTL</span> for a new server-named queue to be 1000 milliseconds. It then publishes several messages thatare routed to the queue and tries to fetch messages using <strong>basic.get</strong> <span class="caps">AMQP</span> method (<a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#pop-instance_method"><span class="caps">AMQP</span>::Queue#pop</a> after 0.7 and 1.5 seconds:</p>
 <pre>require 'amqp'
 require "amqp/extensions/rabbitmq"
 
@@ -154,10 +154,10 @@ end
 <p><img src="https://github.com/ruby-amqp/amqp/raw/master/docs/diagrams/006_amqp_091_message_acknowledgements.png" alt="" /></p>
 <p><img src="https://github.com/ruby-amqp/amqp/raw/master/docs/diagrams/007_rabbitmq_publisher_confirms.png" alt="" /></p>
 <h3>Public <span class="caps">API</span></h3>
-<p>To use publisher confirmations, first put channel into confirmation mode using {AMQP::Channel#confirm_select}:</p>
+<p>To use publisher confirmations, first put channel into confirmation mode using <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#confirm_select-instance_method"><span class="caps">AMQP</span>::Channel#confirm_select</a>:</p>
 <pre>channel.confirm_select</pre>
-<p>From this moment on, every message published on this channel will cause channel&#8217;s <em>publisher index</em> (message counter) to be incremented. It is possible to accessusing {AMQP::Channel#publisher_index} method. To check whether channel is in the confirmation mode, use {AMQP::Channel#uses_publisher_confirmations?} predicate.<br />
-To handle <span class="caps">AMQP</span> broker acknowledgements, define a handler using {AMQP::Channel#on_ack}, for example:</p>
+<p>From this moment on, every message published on this channel will cause channel&#8217;s <em>publisher index</em> (message counter) to be incremented. It is possible to accessusing <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#publisher_index-instance_method"><span class="caps">AMQP</span>::Channel#publisher_index</a> method. To check whether channel is in the confirmation mode, use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#uses_publisher_confirmations?-instance_method"><span class="caps">AMQP</span>::Channel#uses_publisher_confirmations?</a> predicate.<br />
+To handle <span class="caps">AMQP</span> broker acknowledgements, define a handler using <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#on_ack-instance_method"><span class="caps">AMQP</span>::Channel#on_ack</a>, for example:</p>
 <pre>channel.on_ack do |basic_ack|
  puts "Received basic_ack: multiple = #{basic_ack.multiple}, delivery_tag = #{basic_ack.delivery_tag}"
 end</pre>
@@ -214,7 +214,7 @@ end
 <p>The <span class="caps">AMQP</span> specification defines the basic.reject method that allows clients to reject individual, delivered messages, instructing the brokerto either discard them or requeue them. Unfortunately, basic.reject provides no support for negatively acknowledging messages in bulk.</p>
 <p>To solve this, RabbitMQ supports the basic.nack method that provides all the functionality of basic.reject whilst alsoallowing for bulk processing of messages.</p>
 <h3>Public <span class="caps">API</span></h3>
-<p>When RabbitMQ extensions are loaded, {AMQP::Channel#reject} method is overriden via mixin to take one additional argument: multi (defaults to false).When it is given and is true, amqp gem will use basic.nack <span class="caps">AMQP</span> method instead of basic.reject, to reject multiple messages at once.Otherwise, basic.reject is used as usual.</p>
+<p>When RabbitMQ extensions are loaded, <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#reject-instance_method"><span class="caps">AMQP</span>::Channel#reject</a> method is overriden via mixin to take one additional argument: multi (defaults to false).When it is given and is true, amqp gem will use basic.nack <span class="caps">AMQP</span> method instead of basic.reject, to reject multiple messages at once.Otherwise, basic.reject is used as usual.</p>
 <h3>Learn More</h3>
 <p>See also rabbitmq.com section on <a href="http://www.rabbitmq.com/extensions.html#negative-acknowledgements">Confirms aka Publisher Acknowledgements</a></p>
 <h2>Alternate Exchanges</h2>

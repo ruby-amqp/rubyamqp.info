@@ -76,10 +76,10 @@
 <p>This guide covers v0.8.0 and later of the <a href="http://github.com/ruby-amqp/amqp">Ruby amqp gem</a>.</p>
 <h2>Exchanges in <span class="caps">AMQP</span> v0.9.1 &#8211; overview</h2>
 <h3>What are <span class="caps">AMQP</span> exchanges?</h3>
-<p>An <span class="highlight">exchange</span> accepts messages from a producer application and routes them to message queues. They can be thought of as the &#8220;mailboxes&#8221; of the <span class="caps">AMQP</span> world. Unlike some other messaging middleware products and protocols, in <span class="caps">AMQP</span>, messages are <strong>not</strong> published directly to queues. Messages are published to exchanges that route them to queue(s) using pre-arranged criteria called <span class="highlight">bindings</span>.</p>
+<p>An <span class="note">exchange</span> accepts messages from a producer application and routes them to message queues. They can be thought of as the &#8220;mailboxes&#8221; of the <span class="caps">AMQP</span> world. Unlike some other messaging middleware products and protocols, in <span class="caps">AMQP</span>, messages are <strong>not</strong> published directly to queues. Messages are published to exchanges that route them to queue(s) using pre-arranged criteria called <span class="note">bindings</span>.</p>
 <p>There are multiple exchange types in the <span class="caps">AMQP</span> v0.9.1 specification, each with its own routing semantics. Custom exchange types can be created to deal with sophisticated routing scenarios (e.g. routing based on geolocation data or edge cases) or just for convenience.</p>
 <h3>Concept of bindings</h3>
-<p>A <span class="highlight">binding</span> is an association between a queue and an exchange. A queue must be bound to at least one exchange in order to receive messages from publishers. Learn more about bindings in the <a href="/articles/bindings/">Bindings guide</a>.</p>
+<p>A <span class="note">binding</span> is an association between a queue and an exchange. A queue must be bound to at least one exchange in order to receive messages from publishers. Learn more about bindings in the <a href="/articles/bindings/">Bindings guide</a>.</p>
 <h3>Exchange attributes</h3>
 <p>Exchanges have several attributes associated with them:</p>
 <ul>
@@ -87,7 +87,7 @@
 	<li>Type (direct, fanout, topic, headers or some custom type)</li>
 	<li>Durability</li>
 	<li>Whether the exchange is auto-deleted when no longer used</li>
-	<li>Other metadata (sometimes known as </li>
+	<li>Other metadata (sometimes known as <span class="note">X-arguments</span>)</li>
 </ul>
 <h2>Exchange types</h2>
 <p>There are 4 built-in exchange types in <span class="caps">AMQP</span> v0.9.1:</p>
@@ -99,8 +99,8 @@
 </ul>
 <p>As stated previously, each exchange type has its own routing semantics and new exchange types can be added by extending brokers with plugins. Custom exchange types begin with &#8220;x-&#8221;, much like custom <span class="caps">HTTP</span> headers, e.g. <a href="https://github.com/videlalvaro/rabbitmq-recent-history-exchange">x-recent-history exchange</a> or <a href="https://github.com/jbrisbin/random-exchange">x-random exchange</a>.</p>
 <h2>Message attributes</h2>
-<p>Before we start looking at various exchange types and their routing semantics, we need to introduce message attributes. Every <span class="caps">AMQP</span> message has a number of </p>
-<p>Every <span class="caps">AMQP</span> v0.9.1 message has an attribute called &lt;span class=&quot;highlight&gt;routing key</span>. The routing key is an &#8220;address&#8221; that the exchange may use to decide how to route the message . This is similar to, but more generic than, a <span class="caps">URL</span> in <span class="caps">HTTP</span>. Most exchange types use the routing key to implement routing logic, but some ignore it and use other criteria (e.g. message content).</p>
+<p>Before we start looking at various exchange types and their routing semantics, we need to introduce message attributes. Every <span class="caps">AMQP</span> message has a number of <span class="note">attributes</span>. Some attributes are important and used very often, others are rarely used. <span class="caps">AMQP</span> message attributes are metadata and are similar in purpose to <span class="caps">HTTP</span> request and response headers.</p>
+<p>Every <span class="caps">AMQP</span> v0.9.1 message has an attribute called <span class="note">routing key</span>. The routing key is an &#8220;address&#8221; that the exchange may use to decide how to route the message . This is similar to, but more generic than, a <span class="caps">URL</span> in <span class="caps">HTTP</span>. Most exchange types use the routing key to implement routing logic, but some ignore it and use other criteria (e.g. message content).</p>
 <h2>Fanout exchanges</h2>
 <h3>How fanout exchanges route messages</h3>
 <p>A fanout exchange routes messages to all of the queues that are bound to it and the routing key is ignored. If N queues are bound to a fanout exchange, when a new message is published to that exchange a <strong>copy of the message</strong> is delivered to all N queues. Fanout exchanges are ideal for the <a href="http://en.wikipedia.org/wiki/Broadcasting_%28computing%29">broadcast routing</a> of messages.</p>
@@ -109,14 +109,14 @@
 <h3>Declaring a fanout exchange</h3>
 <p>There are two ways to declare a fanout exchange:</p>
 <ul>
-	<li>By instantiating an <span class="highlight"><span class="caps">AMQP</span>::Exchange</span>and specifying the type as &#8220;:fanout&#8221;</li>
-	<li>By using the <span class="highlight"><span class="caps">AMQP</span>::Channel#fanout</span> method</li>
+	<li>By instantiating an <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange"><span class="caps">AMQP</span>::Exchange</a> and specifying the type as &#8220;:fanout&#8221;</li>
+	<li>By using the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#fanout-instance_method"><span class="caps">AMQP</span>::Channel#fanout</a>  method</li>
 </ul>
 <p>Here are two examples to demonstrate:</p>
 <pre>exchange = AMQP::Exchange.new(channel, :fanout, "nodes.metadata")</pre>
 
 <pre>exchange = channel.fanout("nodes.metadata")</pre>
-<p>Both methods asynchronously declare a queue. Because the declaration necessitates a network round-trip, publishing operations on <span class="highlight"><span class="caps">AMQP</span>::Exchange</span> instances are delayed until the broker reply (`exchange.declare-ok`) is received.</p>
+<p>Both methods asynchronously declare a queue. Because the declaration necessitates a network round-trip, publishing operations on <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange"><span class="caps">AMQP</span>::Exchange</a> instances are delayed until the broker reply (`exchange.declare-ok`) is received.</p>
 <p>Also, both methods let you pass a block to run a piece of code when the broker responds with an `exchange.declare-ok` (meaning that the exchange has been successfully declared).</p>
 <pre>channel.fanout("nodes.metadata") do |exchange|
   # exchange is declared and ready to be used.
@@ -194,7 +194,7 @@ end
 <p>Applications can rely on that exchange always being available to them. Each vhost has a separate instance of that exchange, it is <strong>not shared across vhosts</strong> for obvious reasons.</p>
 <h2>Direct exchanges</h2>
 <h3>How direct exchanges route messages</h3>
-<p>A direct exchange delivers messages to queues based on a <span class="highlight">message routing key</span>, an attribute that every <span class="caps">AMQP</span> v0.9.1 message contains.</p>
+<p>A direct exchange delivers messages to queues based on a <span class="note">message routing key</span>, an attribute that every <span class="caps">AMQP</span> v0.9.1 message contains.</p>
 <p>Here is how it works:</p>
 <ul>
 	<li>A queue binds to the exchange with a routing key K</li>
@@ -206,14 +206,14 @@ end
 <h3>Declaring a direct exchange</h3>
 <p>There are two ways to declare a direct exchange:</p>
 <ul>
-	<li>By instantiating a <span class="highlight"><span class="caps">AMQP</span>::Exchange</span> and specifying its type as &#8220;:direct&#8221;</li>
-	<li>By using the <span class="highlight"><span class="caps">AMQP</span>::Channel#direct</span> method</li>
+	<li>By instantiating a <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange"><span class="caps">AMQP</span>::Exchange</a> and specifying its type as &#8220;:direct&#8221;</li>
+	<li>By using the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#direct-instance_method"><span class="caps">AMQP</span>::Channel#direct</a> method</li>
 </ul>
 <p>Here are two examples to demonstrate:</p>
 <pre>exchange = AMQP::Exchange.new(channel, :direct, "nodes.metadata")</pre>
 
 <pre>exchange = channel.direct("nodes.metadata")</pre>
-<p>Both methods asynchronously declare a queue. Because the declaration necessitates a network round trip, publishing operations on <span class="highlight"><span class="caps">AMQP</span>::Exchange</span> instances are delayed until a broker reply (`exchange.declare-ok`) is received.</p>
+<p>Both methods asynchronously declare a queue. Because the declaration necessitates a network round trip, publishing operations on <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange"><span class="caps">AMQP</span>::Exchange</a> instances are delayed until a broker reply (`exchange.declare-ok`) is received.</p>
 <p>Also, both methods let you pass a block to run a piece of code when the broker responds with `exchange.declare-ok` (meaning that the exchange has been successfully declared).</p>
 <pre>channel.direct("pages.content.extraction") do |exchange|
   # exchange is declared and ready to be used.
@@ -264,13 +264,13 @@ end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1041787">gist</a>)</span></p>
 <h3>Direct exchanges and load balancing of messages</h3>
 <p>Direct exchanges are often used to distribute tasks between multiple workers (instances of the same application) in a round robin manner. When doing so, it is important to understand that, in <span class="caps">AMQP</span> v0.9.1, <strong>messages are load balanced between consumers and not between queues</strong>.</p>
-<p>The Ruby amqp gem historically has a limitation that only one consumer (message handler) is allowed per <span class="highlight"><span class="caps">AMQP</span>::Queue</span> instance, however, this limitation will be addressed in the future. With the amqp gem v0.8.x, if you want to load balance messages between multiple consumers in the same application/OS process, then you need to use a separate channel for each of the consumers.</p>
+<p>The Ruby amqp gem historically has a limitation that only one consumer (message handler) is allowed per <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue"><span class="caps">AMQP</span>::Queue</a> instance, however, this limitation will be addressed in the future. With the amqp gem v0.8.x, if you want to load balance messages between multiple consumers in the same application/OS process, then you need to use a separate channel for each of the consumers.</p>
 <p>The <a href="/articles/working_with_queues/">Working With Queues</a> and <a href="/articles/patterns_and_use_cases/">Patterns and Use Cases</a> guides provide more information on this subject.</p>
 <h3>Pre-declared direct exchanges</h3>
 <p><span class="caps">AMQP</span> v0.9.1 brokers must implement a direct exchange type and pre-declare two instances:</p>
 <ul>
-	<li><span class="highlight">amq.direct</span></li>
-	<li><strong>&quot;&quot;</strong> exchange known as <span class="highlight">default exchange</span> (unnamed, referred to as an empty string by many clients including amqp Ruby gem)</li>
+	<li><span class="note">amq.direct</span></li>
+	<li><strong>&quot;&quot;</strong> exchange known as <span class="note">default exchange</span> (unnamed, referred to as an empty string by many clients including amqp Ruby gem)</li>
 </ul>
 <p>Applications can rely on those exchanges always being available to them. Each vhost has separate instances of those<br />
 exchanges, they are <strong>not shared across vhosts</strong> for obvious reasons.</p>
@@ -279,10 +279,10 @@ exchanges, they are <strong>not shared across vhosts</strong> for obvious reason
 <p>For example, when you declare a queue with the name of &#8220;search.indexing.online&#8221;, the <span class="caps">AMQP</span> broker will bind it to the default exchange using &#8220;search.indexing.online&#8221; as the routing key. Therefore a message published to the default exchange with routing key = &#8220;search.indexing.online&#8221; will be routed to the queue &#8220;search.indexing.online&#8221;. In other words, the default exchange makes it <strong>seem like it is possible to deliver messages directly to queues</strong>, even though that is not technically what is happening.</p>
 <p>The amqp gem offers two ways of obtaining a reference to the default exchange:</p>
 <ul>
-	<li>Using the <span class="highlight"><span class="caps">AMQP</span>::Channel#default_exchange</span> method</li>
-	<li>Using the <span class="highlight"><span class="caps">AMQP</span>::Channel#direct</span> method with an empty string as the exchange name</li>
+	<li>Using the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#default_exchange-instance_method"><span class="caps">AMQP</span>::Channel#default_exchange</a> method</li>
+	<li>Using the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#direct-instance_method"><span class="caps">AMQP</span>::Channel#direct</a> method with an empty string as the exchange name</li>
 </ul>
-<p><span class="highlight"><span class="caps">AMQP</span>::Exchange#initialize</span> can also be used, but requires more coding effort and it offers no benefits over instance methods on <span class="highlight"><span class="caps">AMQP</span>::Channel</span> in this particular case.</p>
+<p><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#initialize-instance_method"><span class="caps">AMQP</span>::Exchange#initialize</a> can also be used, but requires more coding effort and it offers no benefits over instance methods on <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel"><span class="caps">AMQP</span>::Channel</a> in this particular case.</p>
 <p>Some examples of usage:</p>
 <pre>exchange = AMQP::Exchange.new(channel, :direct, "")</pre>
 
@@ -330,11 +330,11 @@ end
 <p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Multicast.svg/500px-Multicast.svg.png" alt="" /></p>
 <p>Topic exchanges can be used for <a href="http://en.wikipedia.org/wiki/Broadcasting_%28computing%29">broadcast routing</a>, but fanout exchanges are usually more efficient for this use case.</p>
 <h3>Topic exchange routing example</h3>
-<p>Two classic examples of topic-based routing are stock price updates and location-specific data (for instance, weather broadcasts). Consumers indicate which topics they are interested in (think of it like subscribing to a feed for an individual tag of your favourite blog as opposed to the full feed). The routing is enabled by specifying a routing pattern_ to the <span class="highlight"><span class="caps">AMQP</span>::Queue#bind</span> method, for example:</p>
+<p>Two classic examples of topic-based routing are stock price updates and location-specific data (for instance, weather broadcasts). Consumers indicate which topics they are interested in (think of it like subscribing to a feed for an individual tag of your favourite blog as opposed to the full feed). The routing is enabled by specifying a routing pattern_ to the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#bind-instance_method"><span class="caps">AMQP</span>::Queue#bind</a> method, for example:</p>
 <pre>channel.queue("americas.south").bind(exchange, :routing_key =&gt; "americas.south.#").subscribe do |headers, payload|
   puts "An update for South America: #{payload}, routing key is #{headers.routing_key}"
 end</pre>
-<p>In the example above we bind a queue with the name of &#8220;americas.south&#8221; to the topic exchange declared earlier using the <span class="highlight"><span class="caps">AMQP</span>::Queue#bind</span> method. This means that only messages with a routing key matching &#8220;americas.south.#&#8221; will be routed to the &#8220;americas.south&#8221; queue.</p>
+<p>In the example above we bind a queue with the name of &#8220;americas.south&#8221; to the topic exchange declared earlier using the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#bind-instance_method"><span class="caps">AMQP</span>::Queue#bind</a> method. This means that only messages with a routing key matching &#8220;americas.south.#&#8221; will be routed to the &#8220;americas.south&#8221; queue.</p>
 <p>A routing pattern consists of several words separated by dots, in a similar way to <span class="caps">URI</span> path segments being joined by slash. A few of examples:</p>
 <ul>
 	<li>asia.southeast.thailand.bangkok</li>
@@ -428,21 +428,21 @@ end
 <h2>Declaring/Instantiating exchanges</h2>
 <p>With the Ruby amqp gem, exchanges can be declared in two ways:</p>
 <ul>
-	<li>By using the <span class="highlight"><span class="caps">AMQP</span>::Exchange#initialize</span> method that takes an optional callback</li>
-	<li>By using a number of convenience methods on <span class="highlight"><span class="caps">AMQP</span>::Channel</span> instances:</li>
+	<li>By using the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#initialize-instance_method"><span class="caps">AMQP</span>::Exchange#initialize</a> method that takes an optional callback</li>
+	<li>By using a number of convenience methods on <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel"><span class="caps">AMQP</span>::Channel</a> instances:</li>
 </ul>
 
 	<ul>
-		<li>{AMQP::Channel#direct}</li>
-		<li>{AMQP::Channel#default_exchange}</li>
-		<li>{AMQP::Channel#topic}</li>
-		<li>{AMQP::Channel#fanout}</li>
-		<li>{AMQP::Channel#headers}</li>
+		<li><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#direct-instance_method"><span class="caps">AMQP</span>::Channel#direct</a></li>
+		<li><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#default_exchange-instance_method"><span class="caps">AMQP</span>::Channel#default_exchange</a></li>
+		<li><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#topic-instance_method"><span class="caps">AMQP</span>::Channel#topic</a></li>
+		<li><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#fanout-instance_method"><span class="caps">AMQP</span>::Channel#fanout</a></li>
+		<li><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#headers-instance_method"><span class="caps">AMQP</span>::Channel#headers</a></li>
 	</ul><p>The previous sections on specific exchange types (direct, fanout, headers, etc.) provide plenty of examples of how these methods can be used.</p>
 <h2>Publishing messages</h2>
-<p>To publish a message to an <span class="caps">AMQP</span> exchange, use <span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span>:</p>
+<p>To publish a message to an <span class="caps">AMQP</span> exchange, use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a>:</p>
 <pre>exchange.publish("Some payload")</pre>
-<p><span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span> can accept any object that responds to the `to_s` method, not just string instances:</p>
+<p><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> can accept any object that responds to the `to_s` method, not just string instances:</p>
 <pre>class Message
 
   #
@@ -473,7 +473,7 @@ exchange.publish(Message.new)
 	<li>Thrift: <a href="https://github.com/fauna/thrift_client">thrift-client</a></li>
 </ul>
 <h3>Message metadata</h3>
-<p><span class="caps">AMQP</span> messages have various metadata attributes that can be set when a message is published. Some of the attributes are well-known and mentioned in the <span class="caps">AMQP</span> v0.9.1 specification, others are specific to a particular application. Well-known attributes are listed here as options that <span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span> takes:</p>
+<p><span class="caps">AMQP</span> messages have various metadata attributes that can be set when a message is published. Some of the attributes are well-known and mentioned in the <span class="caps">AMQP</span> v0.9.1 specification, others are specific to a particular application. Well-known attributes are listed here as options that <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> takes:</p>
 <ul>
 	<li>:routing_key</li>
 	<li>:persistent</li>
@@ -491,8 +491,8 @@ exchange.publish(Message.new)
 	<li>:timestamp</li>
 	<li>:expiration</li>
 </ul>
-<p>All other attributes can be added to a <em>headers table</em> (in Ruby parlance, headers hash) that <span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span> accepts as the &#8220;:headers&#8221; argument.</p>
-<p>An example to show how message metadata attributes are passed to <span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span>:</p>
+<p>All other attributes can be added to a <em>headers table</em> (in Ruby parlance, headers hash) that <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> accepts as the &#8220;:headers&#8221; argument.</p>
+<p>An example to show how message metadata attributes are passed to <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a>:</p>
 <pre>exchange.publish("Hey, what a great view!",
                  :app_id         =&gt; "amqpgem.example",
                  :priority       =&gt; 8,
@@ -566,14 +566,14 @@ Sender&#8217;s identifier. Note that RabbitMQ will check that the <a href="http:
 <h3>Validated user_id</h3>
 <p>In some scenarios it is useful for consumers to be able to know the identity of the user who published a message. RabbitMQ implements a feature known as <a href="http://www.rabbitmq.com/extensions.html#validated-user-id">validated User ID</a>. If this property is set by a publisher, its value must be the same as the name of the user used to open the connection. If the user-id property is not set, the publisher&#8217;s identity is not validated and remains private.</p>
 <h3>Publishing callback and reliable delivery in distributed environments</h3>
-<p>Sometimes it is convenient to execute an operation after publishing a message. For this, <span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span> provides an optional callback. It is important to clear up some expectations of when exactly it is run and how it is related to topics of message  delivery reliability and so on.</p>
+<p>Sometimes it is convenient to execute an operation after publishing a message. For this, <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> provides an optional callback. It is important to clear up some expectations of when exactly it is run and how it is related to topics of message  delivery reliability and so on.</p>
 <pre>exchange.publish(payload, :persistent =&gt; true, :type =&gt; "reports.done") do
   # ...
 end</pre>
 <p>A common expectation of the code above is that it is run after the message &#8220;has been sent&#8221;, or even &#8220;has been delivered&#8221;. Unfortunately, neither of these expectations can be met by the Ruby amqp gem alone. Message publishing happens in several steps:</p>
 <ul>
-	<li><span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span> takes a message and various metadata attributes</li>
-	<li><span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span> internally calls #to_s on the message argument to get message payload</li>
+	<li><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> takes a message and various metadata attributes</li>
+	<li><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> internally calls #to_s on the message argument to get message payload</li>
 	<li>Resulting payload is staged for writing</li>
 	<li>On the next event loop tick, data is transferred to the OS kernel using one of the underlying system calls (<a href="http://en.wikipedia.org/wiki/Epoll">epoll</a>, <a href="http://en.wikipedia.org/wiki/Kqueue">kqueue</a> and so on) or <span class="caps">NIO</span> channels (in the case of JRuby)</li>
 	<li>OS kernel buffers data before sending it</li>
@@ -582,9 +582,9 @@ end</pre>
 <p><span class="help-block"><br />
 As you can see, &#8220;when data is sent&#8221; is a complicated issue and while methods to flush buffers certainly exist on various platforms, doing so in a cross-platform way that <strong>includes the <span class="caps">JVM</span></strong> (that EventMachine also runs on) is non-trivial. In addition, even flushing buffers does not guarantee that the data was received by the broker because it might have crashed while data was travelling down the wire. The only way to reliably know whether data was received by the broker or a peer application is to use message acknowledgements. This is how <span class="caps">TCP</span> works and this approach is proven to work at  enormous scale of the modern Internet. <span class="caps">AMQP</span> (the protocol) fully embraces this fact and the amqp gem follows.<br />
 </span></p>
-<p>Given all of this, you may ask &#8220;when does the &#8221;highlight&quot;&gt;AMQP::Exchange#publish</span> callback fire?&quot; The answer is on the next event loop tick. By then the data is pushed down to the OS kernel. As far as the Ruby library is concerned, it is reasonably safe behavior.</p>
-<p><span class="note"><br />
-The <span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span> callback is fired on the next event loop tick. Data is staged for delivery immediately. Applications <span class="caps">MUST</span> <span class="caps">NOT</span> assume that by the time the callback has fired, the data is guaranteed to leave the local machine networking stack, reach the <span class="caps">AMQP</span> broker or any peer applications that the message needs to be routed to.<br />
+<p>Given all of this, you may ask &#8220;when does the &#8221;highlight&quot; href=&#8220;http://rubydoc.info/github/ruby-amqp/amqp/master/<span class="caps">AMQP</span>/Exchange#publish-instance_method&#8221;&gt;AMQP::Exchange#publish</a> callback fire?&quot; The answer is on the next event loop tick. By then the data is pushed down to the OS kernel. As far as the Ruby library is concerned, it is reasonably safe behavior.</p>
+<p><span class="help-block"><br />
+The <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> callback is fired on the next event loop tick. Data is staged for delivery immediately. Applications <span class="caps">MUST</span> <span class="caps">NOT</span> assume that by the time the callback has fired, the data is guaranteed to leave the local machine networking stack, reach the <span class="caps">AMQP</span> broker or any peer applications that the message needs to be routed to.<br />
 </span></p>
 <p>In cases when you cannot afford to lose a single message, <span class="caps">AMQP</span> v0.9.1 applications can use one (or a combination of) the following protocol features:</p>
 <ul>
@@ -595,7 +595,7 @@ The <span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</sp
 <p>A more detailed overview of the pros and cons of each option can be found in a <a href="http://bit.ly/rabbitmq-publisher-confirms">blog post that introduces Publisher Confirms extension</a> by the RabbitMQ team. The next sections of this guide will describe how the features above can be used with the Ruby amqp gem.</p>
 <h3>Publishing messages as immediate</h3>
 <p>When publishing messages, it is possible to use the &#8220;:immediate&#8221; option to publish a message as &#8220;immediate&#8221;. When an immediate message cannot be delivered to any consumer (meaning that one or more queues to which the message was routed have no active consumers), then the message is returned to the producer.</p>
-<p>An example of <span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span> being used to publish an immediate message:</p>
+<p>An example of <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> being used to publish an immediate message:</p>
 <pre>exchange.publish("Message ##{i}", :immediate =&gt; true)</pre>
 <p>The following code example demonstrates a message that is published as immediate but cannot be immediately consumed (no consumers) and thus is returned back to the producer:</p>
 <pre>require 'rubygems'
@@ -662,27 +662,27 @@ end
 	<li>Publish it to a different destination</li>
 	<li>Log the event and discard the message</li>
 </ul>
-<p>Returned messages contain information about the exchange they were published to. For convenience, the amqp gem associates returned message callbacks with <span class="highlight"><span class="caps">AMQP</span>::Exchange</span> instances. To handle returned messages, use <span class="highlight"><span class="caps">AMQP</span>::Exchange#on_return</span>:</p>
+<p>Returned messages contain information about the exchange they were published to. For convenience, the amqp gem associates returned message callbacks with <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange"><span class="caps">AMQP</span>::Exchange</a> instances. To handle returned messages, use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#on_return-instance_method"><span class="caps">AMQP</span>::Exchange#on_return</a>:</p>
 <pre>exchange.on_return do |basic_return, metadata, payload|
   puts "#{payload} was returned! reply_code = #{basic_return.reply_code}, reply_text = #{basic_return.reply_text}"
 end</pre>
 <p>A returned message handler has access to <span class="caps">AMQP</span> method (basic.return) information, message metadata and payload. The metadata and message body are returned without modifications so that the application can store the message for later redelivery.</p>
 <h3>Publishing persistent messages</h3>
 <p>Messages potentially spend some time in the queues to which they were routed before they are consumed. During this period of time, the broker may crash or experience a restart. To survive it, messages must be persisted to disk. This has a negative effect on performance, especially with network attached storage like <span class="caps">NAS</span> devices and Amazon <span class="caps">EBS</span>. <span class="caps">AMQP</span> v0.9.1 lets applications trade off performance for durability, or vice versa, on a message-by-message basis.</p>
-<p>To publish a persistent message, use the &#8220;:persistent&#8221; option that <span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span> accepts:</p>
+<p>To publish a persistent message, use the &#8220;:persistent&#8221; option that <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> accepts:</p>
 <pre>exchange.publish(payload, :persistent =&gt; true)</pre>
 <p><span class="help-block"><br />
 Note that in order to survive a broker crash, both the message and the queue that it was routed to must be persistent/durable.<br />
 </span></p>
 <p><a href="/articles/durability/">Durability and Message Persistence</a> provides more information on the subject.</p>
 <h3>Publishing In Multi-threaded Environments</h3>
-<p>When using amqp gem in multi-threaded environments, the rule of thumb is: avoid sharing <span class="highlight"><span class="caps">AMQP</span>::Channel</span> instances across threads.</p>
-<p>Starting with 0.8.0.RC14, <span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span> synchronizes data delivery on the channel object associated with exchange. This protects application developers from the most common problems related to publishing messages on a shared channel from multiple threads, however, by no means protects from every possible concurrency hazard.</p>
+<p>When using amqp gem in multi-threaded environments, the rule of thumb is: avoid sharing <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel"><span class="caps">AMQP</span>::Channel</a> instances across threads.</p>
+<p>Starting with 0.8.0.RC14, <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> synchronizes data delivery on the channel object associated with exchange. This protects application developers from the most common problems related to publishing messages on a shared channel from multiple threads, however, by no means protects from every possible concurrency hazard.</p>
 <p><span class="help-block"><br />
-When using amqp gem in multi-threaded environments, the rule of thumb is: avoid sharing <span class="highlight"><span class="caps">AMQP</span>::Channel</span> instances across threads.<br />
+When using amqp gem in multi-threaded environments, the rule of thumb is: avoid sharing <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel"><span class="caps">AMQP</span>::Channel</a> instances across threads.<br />
 </span></p>
 <h3>Sending one-off messages</h3>
-<p>The following example publishes a message and <strong>safely</strong> closes the <span class="caps">AMQP</span> connection afterwards by passing a block to <span class="highlight"><span class="caps">AMQP</span>::Exchange#publish</span> :</p>
+<p>The following example publishes a message and <strong>safely</strong> closes the <span class="caps">AMQP</span> connection afterwards by passing a block to <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> :</p>
 <pre>require 'rubygems' # or use Bundler.setup
 require 'amqp'
 
@@ -706,7 +706,7 @@ EventMachine.run do
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1020425">gist</a>)</span></p>
 <h2>Headers exchanges</h2>
-<p>Now that message attributes and publishing have been introduced, it is time to take a look at one more core exchange type in <span class="caps">AMQP</span> v0.9.1. It is called <span class="highlight">headers</span> exchange type and is quite powerful.</p>
+<p>Now that message attributes and publishing have been introduced, it is time to take a look at one more core exchange type in <span class="caps">AMQP</span> v0.9.1. It is called <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/headers">headers</a> exchange type and is quite powerful.</p>
 <h3>How headers exchanges route messages</h3>
 <h4>An example problem definition</h4>
 <p>The best way to explain headers-based routing is with an example. Imagine a distributed <a href="http://martinfowler.com/articles/continuousIntegration.html">continuous integration</a> system that distributes builds across multiple machines with different hardware architectures (x86, IA-64, AMD64, <span class="caps">ARM</span> family and so on) and operating systems. It strives to provide a way for a community to contribute machines to run tests on and a nice build matrix like <a href="http://build.webkit.org/waterfall?category=core">the one WebKit uses</a>. One key problem such systems face is build distribution. It would be nice if a messaging broker could figure out which machine has which OS, architecture or combination of the two and route build request messages accordingly.</p>
@@ -747,14 +747,14 @@ exchange.publish "For nodes with Riak 0.14.2", :headers =&gt; { :package =&gt; {
 <h3>Declaring a headers exchange</h3>
 <p>There are two ways to declare a headers exchange:</p>
 <ul>
-	<li>By instantiating <span class="highlight"><span class="caps">AMQP</span>::Exchange</span> and specifying type as &#8220;:headers&#8221;</li>
-	<li>By using the <span class="highlight"><span class="caps">AMQP</span>::Channel#headers</span> method</li>
+	<li>By instantiating <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange"><span class="caps">AMQP</span>::Exchange</a> and specifying type as &#8220;:headers&#8221;</li>
+	<li>By using the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#headers-instance_method"><span class="caps">AMQP</span>::Channel#headers</a> method</li>
 </ul>
 <p>Here are two examples to demonstrate:</p>
 <pre>exchange = AMQP::Exchange.new(channel, :headers, "builds")</pre>
 
 <pre>exchange = channel.headers("builds")</pre>
-<p>Both methods asynchronously declare a queue. Because declaration necessitates a network round trip, publishing operations on <span class="highlight"><span class="caps">AMQP</span>::Exchange</span> instances are delayed until the broker reply (`exchange.declare-ok`) is received.</p>
+<p>Both methods asynchronously declare a queue. Because declaration necessitates a network round trip, publishing operations on <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange"><span class="caps">AMQP</span>::Exchange</a> instances are delayed until the broker reply (`exchange.declare-ok`) is received.</p>
 <p>Both methods let you pass a block to run a piece of code when the broker responds with `exchange.declare-ok` (meaning that the exchange has been successfully declared).</p>
 <pre>channel.headers("builds") do |exchange|
   # exchange is declared and ready to be used.
@@ -848,14 +848,14 @@ end
 <h2>Using <span class="caps">AMQP</span> transactions</h2>
 <p><span class="caps">TBD</span></p>
 <h2>Binding queues to exchanges</h2>
-<p>Queues are bound to exchanges using the <span class="highlight"><span class="caps">AMQP</span>::Queue#bind</span> method. This topic is described in detail in the <a href="/articles/working_with_queues/">Working with queues</a> documentation guide.</p>
+<p>Queues are bound to exchanges using the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#bind-instance_method"><span class="caps">AMQP</span>::Queue#bind</a> method. This topic is described in detail in the <a href="/articles/working_with_queues/">Working with queues</a> documentation guide.</p>
 <h2>Unbinding queues from exchanges</h2>
-<p>Queues are unbound from exchanges using the <span class="highlight"><span class="caps">AMQP</span>::Queue#unbind</span> method. This topic is described in detail in the <a href="/articles/working_with_queues/">Working with queues</a> documentation guide.</p>
+<p>Queues are unbound from exchanges using the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#unbind-instance_method"><span class="caps">AMQP</span>::Queue#unbind</a> method. This topic is described in detail in the <a href="/articles/working_with_queues/">Working with queues</a> documentation guide.</p>
 <h2>Deleting exchange</h2>
 <h3>Explicitly deleting an exchange</h3>
-<p>Exchanges are deleted using the <span class="highlight"><span class="caps">AMQP</span>::Exchange#delete</span> method:</p>
+<p>Exchanges are deleted using the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#delete-instance_method"><span class="caps">AMQP</span>::Exchange#delete</a> method:</p>
 <pre>exchange.delete</pre>
-<p><span class="highlight"><span class="caps">AMQP</span>::Exchange#delete</span> takes an optional callback that is run when a `exchange.delete-ok` reply arrives from the broker.</p>
+<p><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#delete-instance_method"><span class="caps">AMQP</span>::Exchange#delete</a> takes an optional callback that is run when a `exchange.delete-ok` reply arrives from the broker.</p>
 <pre>exchange.delete do |delete_ok|
   # by now exchange is guaranteed to be deleted
 end</pre>

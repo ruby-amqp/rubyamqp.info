@@ -83,14 +83,14 @@
 <p>Note that <strong>only durable queues can be bound to durable exchanges</strong>. This guarantees that it is possible to restore bindingson broker restart.</p>
 <p>Durability of a queue does not make <em>messages</em> that are routed to that queue durable. If broker is taken down and thenbrought back up, durable queue will be re-declared during broker startup, however, only <em>persistent</em> messages will be recovered.</p>
 <h3>Persistence of messages</h3>
-<p>The concept of messages persistence is separate: messages may be published as persistent. That makesAMQP broker persist them to disk. If the server is restarted, the system ensures that received persistent messagesare not lost. Simply publishing message to a durable exchange or the fact that queue(s) they are routed tois durable doesn&#8217;t make messages persistent: it all depends on persistence mode of the messages itself.Publishing messages as persistent affects performance (just like with data stores, durability comes at a certain costin performance and vise versa). Pass :persistent =&gt; true to {AMQP::Exchange#publish} to publish your message as persistent.</p>
+<p>The concept of messages persistence is separate: messages may be published as persistent. That makesAMQP broker persist them to disk. If the server is restarted, the system ensures that received persistent messagesare not lost. Simply publishing message to a durable exchange or the fact that queue(s) they are routed tois durable doesn&#8217;t make messages persistent: it all depends on persistence mode of the messages itself.Publishing messages as persistent affects performance (just like with data stores, durability comes at a certain costin performance and vise versa). Pass :persistent =&gt; true to <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> to publish your message as persistent.</p>
 <h3>Transactions</h3>
 <p><span class="caps">TBD</span></p>
 <h3>Publisher confirms</h3>
-<p>Because transactions carry certain (for some applications, significant) overhead, RabbitMQ introduced an extension to <span class="caps">AMQP</span> 0.9.1called {http://www.rabbitmq.com/blog/2011/02/10/introducing-publisher-confirms/ publisher confirms} ({http://www.rabbitmq.com/extensions.html#confirms documentation}).</p>
+<p>Because transactions carry certain (for some applications, significant) overhead, RabbitMQ introduced an extension to <span class="caps">AMQP</span> 0.9.1 called {http://www.rabbitmq.com/blog/2011/02/10/introducing-publisher-confirms/ publisher confirms} ({http://www.rabbitmq.com/extensions.html#confirms documentation}).</p>
 <p>amqp gem implements support for this extension, but it is not loaded by default when you require &#8220;amqp&#8221;. To load it, use</p>
 <pre>require "amqp/extensions/rabbitmq"</pre>
-<p>and then define a callback for publisher confirms using {AMQP::Channel#confirm}:</p>
+<p>and then define a callback for publisher confirms using <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#confirm-instance_method"><span class="caps">AMQP</span>::Channel#confirm</a>:</p>
 <pre># enable publisher acknowledgements for this channel
 channel.confirm_select
 

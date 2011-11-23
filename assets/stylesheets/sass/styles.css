@@ -757,7 +757,7 @@ code, .CodeMirror {
 }
 
 /* line 184, content/assets/stylesheets/sass/bootstrap/type.scss */
-.highlight {
+.highlight, .note {
   background: ghostWhite;
   border: 1px solid #DEDEDE;
   font-size: 12px;
@@ -767,6 +767,11 @@ code, .CodeMirror {
   margin: 0;
   padding: .2em;
   color: #252519;
+}
+
+/* line 196, content/assets/stylesheets/sass/bootstrap/type.scss */
+.note {
+  background: #FEE9CC;
 }
 
 /* Forms.scss

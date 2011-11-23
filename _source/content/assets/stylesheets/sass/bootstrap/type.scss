@@ -181,7 +181,7 @@ code, .CodeMirror {
 }
 
 
-.highlight {
+.highlight, .note {
   background: ghostWhite;
   border: 1px solid #DEDEDE;
   font-size: 12px;
@@ -191,4 +191,8 @@ code, .CodeMirror {
   margin: 0;
   padding: .2em;
   color: #252519;
+}
+
+.note {
+  background: #FEE9CC;
 }

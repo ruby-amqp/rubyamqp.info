@@ -100,7 +100,32 @@ rescue AMQP::TCPConnectionFailed =&gt; e
   puts "Caught AMQP::TCPConnectionFailed =&gt; TCP connection failed, as expected."
 end</pre>
 <p>Full example:</p>
-<p>Liquid error: No such file or directory &#8211; ./content/articles/examples/error_handling/initial_connection_recovery.rb</p>
+<pre>#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+
+puts "=&gt; TCP connection failure handling with a rescue statement"
+puts
+
+connection_settings = {
+  :port     =&gt; 9689,
+  :vhost    =&gt; "/amq_client_testbed",
+  :user     =&gt; "amq_client_gem",
+  :password =&gt; "amq_client_gem_password",
+  :timeout        =&gt; 0.3
+}
+
+begin
+  AMQP.start(connection_settings) do |connection, open_ok|
+    raise "This should not be reachable"
+  end
+rescue AMQP::TCPConnectionFailed =&gt; e
+  puts "Caught AMQP::TCPConnectionFailed =&gt; TCP connection failed, as expected."
+end
+</pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1016238">gist</a>)</span></p>
 <p><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#connect-class_method"><span class="caps">AMQP</span>.connect</a> (and <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#start-class_method"><span class="caps">AMQP</span>.start</a>) will raise <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/TCPConnectionFailed"><span class="caps">AMQP</span>::TCPConnectionFailed</a> if connection fails. Code that catches it can write to logabout the issue or use retry to execute begin block one more time. Because initial connection failures are due to misconfiguration or network outage, reconnectionto the same endpoint (hostname, port, vhost combination) will result in the same issue over and over. <span class="caps">TBD</span>: failover, connection to the cluster.</p>
 <p>Alternative way of handling connection failure is with an errback (a callback for specific kind of error):</p>
 <pre>handler             = Proc.new { |settings| puts "Failed to connect, as expected"; EventMachine.stop }

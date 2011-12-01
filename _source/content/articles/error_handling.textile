@@ -45,7 +45,7 @@ end</pre>
 
 Full example:
 
-{% example error_handling/initial_connection_recovery.rb, 1016238 %}
+{% example error_handling/initial_connection_failures.rb, 1016238 %}
 
 {% yard_link AMQP.connect %} (and {% yard_link AMQP.start %}) will raise {% yard_link AMQP::TCPConnectionFailed %} if connection fails. Code that catches it can write to logabout the issue or use retry to execute begin block one more time. Because initial connection failures are due to misconfiguration or network outage, reconnectionto the same endpoint (hostname, port, vhost combination) will result in the same issue over and over. TBD: failover, connection to the cluster.
 

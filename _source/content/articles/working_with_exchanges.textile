@@ -234,7 +234,7 @@ The default exchange is used by the "Hello, World" example:
 
 Additionally, the routing example above can be rewritten to use the default exchange:
 
-{% example getting_started/round_robin_balancing_using_the_default_exchange.rb, 1041778 %}
+{% example working_with_exchanges/round_robin_balancing_using_the_default_exchange.rb, 1041778 %}
 
 h3. Direct exchange use cases
 

@@ -313,7 +313,40 @@ EventMachine.run do
 end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998691">gist</a>)</span></p>
 <p>Additionally, the routing example above can be rewritten to use the default exchange:</p>
-<p>Liquid error: No such file or directory &#8211; ./content/articles/examples/getting_started/round_robin_balancing_using_the_default_exchange.rb</p>
+<pre>#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+EventMachine.run do
+  AMQP.connect do |connection|
+    channel1  = AMQP::Channel.new(connection)
+    channel2  = AMQP::Channel.new(connection)
+    exchange = channel1.default_exchange
+
+    q1 = channel1.queue("amqpgem.examples.queues.shared", :auto_delete =&gt; true)
+    q1.subscribe do |payload|
+      puts "Queue #{q1.name} on channel 1 received #{payload}"
+    end
+
+    q2 = channel2.queue("amqpgem.examples.queues.shared", :auto_delete =&gt; true)
+    q2.subscribe do |payload|
+      puts "Queue #{q2.name} on channel 2 received #{payload}"
+    end
+
+    # Publish some test data in a bit, after queues are declared &amp; bound
+    EventMachine.add_timer(0.3) do
+      5.times { |i| exchange.publish("Hello #{i}, fanout exchanges world!", :routing_key =&gt; "amqpgem.examples.queues.shared") }
+    end
+
+
+    show_stopper = Proc.new { connection.close { EventMachine.stop } }
+    Signal.trap "TERM", show_stopper
+    EM.add_timer(3, show_stopper)
+  end
+end
+</pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1041778">gist</a>)</span></p>
 <h3>Direct exchange use cases</h3>
 <p>Direct exchanges can be used in a wide variety of cases:</p>
 <ul>

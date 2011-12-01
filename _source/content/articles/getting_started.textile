@@ -156,7 +156,7 @@ The previous example demonstrated how a connection to a broker is made and how t
 
 A very well-known broadcast example is Twitter: every time a person tweets, followers receive a notification. Blabbr, our imaginary information network, models this scenario: every network member has a separate queue and publishes blabs to a separate exchange. 3 Blabbr members, Joe, Aaron and Bob, follow the official NBA account on Blabbr to get updates about what is happening in the world of basketball. Here is the code:
 
-{% example getting_started/blabbr.rb, 998692 %}
+{% example getting_started/blabblr.rb, 998692 %}
 
 The first line has a few differences from the "Hello, world" example above:
 

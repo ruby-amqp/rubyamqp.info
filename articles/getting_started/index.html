@@ -203,7 +203,38 @@ end
 <h2>Blabblr: one-to-many publish/subscribe (pubsub) example</h2>
 <p>The previous example demonstrated how a connection to a broker is made and how to do 1:1 communication using the default exchange. Now let us take a look at another common scenario: broadcast, or multiple consumers and one producer.</p>
 <p>A very well-known broadcast example is Twitter: every time a person tweets, followers receive a notification. Blabbr, our imaginary information network, models this scenario: every network member has a separate queue and publishes blabs to a separate exchange. 3 Blabbr members, Joe, Aaron and Bob, follow the official <span class="caps">NBA</span> account on Blabbr to get updates about what is happening in the world of basketball. Here is the code:</p>
-<p>Liquid error: No such file or directory &#8211; ./content/articles/examples/getting_started/blabbr.rb</p>
+<pre>#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+AMQP.start("amqp://dev.rabbitmq.com:5672") do |connection|
+  channel  = AMQP::Channel.new(connection)
+  exchange = channel.fanout("nba.scores")
+
+  channel.queue("joe", :auto_delete =&gt; true).bind(exchange).subscribe do |payload|
+    puts "#{payload} =&gt; joe"
+  end
+
+  channel.queue("aaron", :auto_delete =&gt; true).bind(exchange).subscribe do |payload|
+    puts "#{payload} =&gt; aaron"
+  end
+
+  channel.queue("bob", :auto_delete =&gt; true).bind(exchange).subscribe do |payload|
+    puts "#{payload} =&gt; bob"
+  end
+
+  exchange.publish("BOS 101, NYK 89").publish("ORL 85, ALT 88")
+
+  # disconnect &amp; exit after 2 seconds
+  EventMachine.add_timer(2) do
+    exchange.delete
+
+    connection.close { EventMachine.stop }
+  end
+end
+</pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998692">gist</a>)</span></p>
 <p>The first line has a few differences from the &#8220;Hello, world&#8221; example above:</p>
 <ul>
 	<li>We use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#start-class_method"><span class="caps">AMQP</span>.start</a> instead of <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#connect-class_method"><span class="caps">AMQP</span>.connect</a></li>

@@ -74,12 +74,12 @@
 <p>This guide is a quick tutorial that helps you to get started with v0.9.1 of the <span class="caps">AMQP</span> specification in general and the <a href="http://github.com/ruby-amqp/amqp">Ruby amqp gem</a> in particular.<br />
 It should take about 20 minutes to read and study the provided code examples. This guide covers:</p>
 <ul>
-        <li>Installing RabbitMQ, a mature popular server implementation of the <span class="caps">AMQP</span> protocol.</li>
-        <li>Installing the amqp gem via <a href="http://rubygems.org">Rubygems</a> and <a href="http://gembundler.com">Bundler</a>.</li>
-        <li>Running a &#8220;Hello, world&#8221; messaging example that is a simple demonstration of 1:1 communication.</li>
-        <li>Creating a &#8220;Twitter-like&#8221; publish/subscribe example with 1 publisher and 4 subscribers that demonstrates 1:n communication.</li>
-        <li>Creating a topic routing example with 2 publishers and 8 subscribers showcasing n:m communication when subscribers only receive messages that they are interested in.</li>
-        <li>Learning how the amqp gem can be integrated with Ruby objects in a way that makes unit testing easy.</li>
+	<li>Installing RabbitMQ, a mature popular server implementation of the <span class="caps">AMQP</span> protocol.</li>
+	<li>Installing the amqp gem via <a href="http://rubygems.org">Rubygems</a> and <a href="http://gembundler.com">Bundler</a>.</li>
+	<li>Running a &#8220;Hello, world&#8221; messaging example that is a simple demonstration of 1:1 communication.</li>
+	<li>Creating a &#8220;Twitter-like&#8221; publish/subscribe example with 1 publisher and 4 subscribers that demonstrates 1:n communication.</li>
+	<li>Creating a topic routing example with 2 publishers and 8 subscribers showcasing n:m communication when subscribers only receive messages that they are interested in.</li>
+	<li>Learning how the amqp gem can be integrated with Ruby objects in a way that makes unit testing easy.</li>
 </ul>
 <p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images &amp; stylesheets). The source is available <a href="https://github.com/ruby-amqp/amqp/tree/master/docs">on Github</a>.</p>
 <h2>Which versions of the amqp gem does this guide cover?</h2>
@@ -99,11 +99,11 @@ On Mac OS X, the fastest way to install RabbitMQ is with <a href="http://mxcl.gi
 <h3>Make sure that you have Ruby and <a href="http://docs.rubygems.org/read/chapter/3">Rubygems</a> installed</h3>
 <p>This guide assumes that you have installed one of the following supported Ruby implementations:</p>
 <ul>
-        <li>Ruby v1.8.7</li>
-        <li>Ruby v1.9.2</li>
-        <li>JRuby (we recommend v1.6)</li>
-        <li>Rubinius v1.2 or higher</li>
-        <li>Ruby Enterprise Edition</li>
+	<li>Ruby v1.8.7</li>
+	<li>Ruby v1.9.2</li>
+	<li>JRuby (we recommend v1.6)</li>
+	<li>Rubinius v1.2 or higher</li>
+	<li>Ruby Enterprise Edition</li>
 </ul>
 <h3>You can use Rubygems to install the amqp gem</h3>
 <h4>On Microsoft Windows 7:</h4>
@@ -237,10 +237,10 @@ end
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/998692">gist</a>)</span></p>
 <p>The first line has a few differences from the &#8220;Hello, world&#8221; example above:</p>
 <ul>
-        <li>We use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#start-class_method"><span class="caps">AMQP</span>.start</a> instead of <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#connect-class_method"><span class="caps">AMQP</span>.connect</a></li>
-        <li>Instead of return values, we pass a block to the connection method and it yields a connection<br />
+	<li>We use <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#start-class_method"><span class="caps">AMQP</span>.start</a> instead of <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#connect-class_method"><span class="caps">AMQP</span>.connect</a></li>
+	<li>Instead of return values, we pass a block to the connection method and it yields a connection<br />
    object back as soon as the connection is established.</li>
-        <li>Instead of passing connection parameters as a hash, we use a <span class="caps">URI</span> string.</li>
+	<li>Instead of passing connection parameters as a hash, we use a <span class="caps">URI</span> string.</li>
 </ul>
 <p><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP#start-class_method"><span class="caps">AMQP</span>.start</a> is just a convenient way to do</p>
 <pre>EventMachine.run do
@@ -337,42 +337,42 @@ end
 end</pre>
 <p>Here we bind a queue with the name of &#8220;americas.south&#8221; to the topic exchange declared earlier using the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#bind-instance_method"><span class="caps">AMQP</span>::Queue#bind</a> method.  This means that only messages with a routing key matching &#8220;americas.south.#&#8221; will be routed to that queue. A routing pattern consists of several words separated by dots, in a similar way to <span class="caps">URI</span> path segments joined by slashes. Here are a few examples:</p>
 <ul>
-        <li>asia.southeast.thailand.bangkok</li>
-        <li>sports.basketball</li>
-        <li>usa.nasdaq.aapl</li>
-        <li>tasks.search.indexing.accounts</li>
+	<li>asia.southeast.thailand.bangkok</li>
+	<li>sports.basketball</li>
+	<li>usa.nasdaq.aapl</li>
+	<li>tasks.search.indexing.accounts</li>
 </ul>
 <p>Now let us take a look at a few routing keys that match the &#8220;americas.south.#&#8221; pattern:</p>
 <ul>
-        <li>americas.south</li>
-        <li>americas.south.<strong>brazil</strong></li>
-        <li>americas.south.<strong>brazil.saopaolo</strong></li>
-        <li>americas.south.<strong>chile.santiago</strong></li>
+	<li>americas.south</li>
+	<li>americas.south.<strong>brazil</strong></li>
+	<li>americas.south.<strong>brazil.saopaolo</strong></li>
+	<li>americas.south.<strong>chile.santiago</strong></li>
 </ul>
 <p>In other words, the &#8220;#&#8221; part of the pattern matches 0 or more words.</p>
 <p>For a pattern like &#8220;americas.south.*&#8221;, some matching routing keys would be:</p>
 <ul>
-        <li>americas.south.<strong>brazil</strong></li>
-        <li>americas.south.<strong>chile</strong></li>
-        <li>americas.south.<strong>peru</strong></li>
+	<li>americas.south.<strong>brazil</strong></li>
+	<li>americas.south.<strong>chile</strong></li>
+	<li>americas.south.<strong>peru</strong></li>
 </ul>
 <p>but not</p>
 <ul>
-        <li>americas.south</li>
-        <li>americas.south.chile.santiago</li>
+	<li>americas.south</li>
+	<li>americas.south.chile.santiago</li>
 </ul>
 <p>so &#8220;*&#8221; only matches a single word. The <span class="caps">AMQP</span> v0.9.1 specification says that topic segments (words) may contain the letters A-Z and a-z and digits 0-9.</p>
 <p>A (very simplistic) diagram to demonstrate topic exchange in action:</p>
 <p><img src="https://github.com/ruby-amqp/amqp/raw/master/docs/diagrams/003_weathr_example_routing.png" alt="" /></p>
 <p>One more thing that is different from previous examples is that the block we pass to <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a> now takes two arguments: a <em>header</em> and a <em>body</em> (often called the <em>payload</em>). Long story short, the header parameter lets you access metadata associated with the message. Some examples of message metadata attributes are:</p>
 <ul>
-        <li>message content type</li>
-        <li>message content encoding</li>
-        <li>message priority</li>
-        <li>message expiration time</li>
-        <li>message identifier</li>
-        <li>reply to (specifies which message this is a reply to)</li>
-        <li>application id (identifier of the application that produced the message)</li>
+	<li>message content type</li>
+	<li>message content encoding</li>
+	<li>message priority</li>
+	<li>message expiration time</li>
+	<li>message identifier</li>
+	<li>reply to (specifies which message this is a reply to)</li>
+	<li>application id (identifier of the application that produced the message)</li>
 </ul>
 <p>and so on.</p>
 <p>As the following binding demonstrates, &#8220;#&#8221; and &#8220;*&#8221; can also appear at the beginning of routing patterns:</p>
@@ -562,24 +562,24 @@ end</pre>
 <h2>Wrapping up</h2>
 <p>This is the end of the tutorial. Congratulations! You have learned quite a bit about both <span class="caps">AMQP</span> v0.9.1 and the amqp gem. This is only the tip of the iceberg. <span class="caps">AMQP</span> has many more features built into the protocol:</p>
 <ul>
-        <li>Reliable delivery of messages</li>
-        <li>Message confirmations (a way to tell broker that a message was or was not processed successfully)</li>
-        <li>Message redelivery when consumer applications fail or crash</li>
-        <li>Load balancing of messages between multiple consumers</li>
-        <li>Message metadata attributes</li>
+	<li>Reliable delivery of messages</li>
+	<li>Message confirmations (a way to tell broker that a message was or was not processed successfully)</li>
+	<li>Message redelivery when consumer applications fail or crash</li>
+	<li>Load balancing of messages between multiple consumers</li>
+	<li>Message metadata attributes</li>
 </ul>
 <p>and so on. Other guides explain these features in depth, as well as use cases for them. To stay up to date with amqp gem development, <a href="http://twitter.com/rubyamqp">follow @rubyamqp on Twitter</a> and <a href="http://groups.google.com/group/ruby-amqp">join our mailing list</a>.</p>
 <h2>What to read next</h2>
-<p>Documentation is organized as a number of <a href="/">documentation guides</a>, covering all kinds of topics from <a href="/articles/working_with_exchanges/">use cases for various exchange types</a> to <a href="/articles/error_handling/">error handling</a> and <a href="/articles/broker_specific_extensions/">Broker-specific <span class="caps">AMQP</span> 0.9.1 extensions</a>.</p>
+<p>Documentation is organized as a number of <a href="">documentation guides</a>, covering all kinds of topics from <a href="/articles/working_with_exchanges/">use cases for various exchange types</a> to <a href="/articles/error_handling/">error handling</a> and <a href="/articles/broker_specific_extensions/">Broker-specific <span class="caps">AMQP</span> 0.9.1 extensions</a>.</p>
 <p>We recommend that you read the following guides next, if possible, in this order:</p>
 <ul>
-        <li><a href="/articles/amqp_9_1_model_explained/"><span class="caps">AMQP</span> 0.9.1 Model Explained</a>. A simple 2 page long introduction to the <span class="caps">AMQP</span> Model concepts and features. Understanding the <span class="caps">AMQP</span> Model<br />
+	<li><a href="/articles/amqp_9_1_model_explained/"><span class="caps">AMQP</span> 0.9.1 Model Explained</a>. A simple 2 page long introduction to the <span class="caps">AMQP</span> Model concepts and features. Understanding the <span class="caps">AMQP</span> Model<br />
    will make a lot of other documentation, both for the Ruby amqp gem and RabbitMQ itself, easier to follow. With this guide, you don&#8217;t have to waste hours of time reading the whole specification.</li>
-        <li><a href="/articles/connecting_to_broker/">Connection to the broker</a>. This guide explains how to connect to an <span class="caps">AMQP</span> broker and how to integrate the amqp gem into standalone and Web applications.</li>
-        <li><a href="/articles/working_with_queues/">Working With Queues</a>. This guide focuses on features that consumer applications use heavily.</li>
-        <li><a href="/articles/working_with_exchanges/">Working With Exchanges</a>. This guide focuses on features that producer applications use heavily.</li>
-        <li><a href="/articles/patterns_and_use_cases/">Patterns &amp; Use Cases</a>. This guide focuses implementation of <a href="http://www.eaipatterns.com/">common messaging patterns</a> using <span class="caps">AMQP</span> Model features as building blocks.</li>
-        <li><a href="/articles/error_handling/">Error Handling &amp; Recovery</a>. This guide explains how to handle protocol errors, network failures and other things that may go wrong in real world projects.</li>
+	<li><a href="/articles/connecting_to_broker/">Connection to the broker</a>. This guide explains how to connect to an <span class="caps">AMQP</span> broker and how to integrate the amqp gem into standalone and Web applications.</li>
+	<li><a href="/articles/working_with_queues/">Working With Queues</a>. This guide focuses on features that consumer applications use heavily.</li>
+	<li><a href="/articles/working_with_exchanges/">Working With Exchanges</a>. This guide focuses on features that producer applications use heavily.</li>
+	<li><a href="/articles/patterns_and_use_cases/">Patterns &amp; Use Cases</a>. This guide focuses implementation of <a href="http://www.eaipatterns.com/">common messaging patterns</a> using <span class="caps">AMQP</span> Model features as building blocks.</li>
+	<li><a href="/articles/error_handling/">Error Handling &amp; Recovery</a>. This guide explains how to handle protocol errors, network failures and other things that may go wrong in real world projects.</li>
 </ul>
 <p>If you are migrating your application from earlier versions of the amqp gem (0.6.x and 0.7.x), to 0.8.x and later, there is the <a href="/articles/08_migration/">amqp gem 0.8 migration guide</a>.</p>
 <h2>Authors</h2>

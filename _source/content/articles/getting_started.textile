@@ -411,7 +411,7 @@ and so on. Other guides explain these features in depth, as well as use cases fo
 
 h2. What to read next
 
-Documentation is organized as a number of "documentation guides":/, covering all kinds of topics from "use cases for various exchange types":/articles/working_with_exchanges/ to "error handling":/articles/error_handling/ and "Broker-specific AMQP 0.9.1 extensions":/articles/broker_specific_extensions/.
+Documentation is organized as a number of <a href="/">documentation guides</a>, covering all kinds of topics from "use cases for various exchange types":/articles/working_with_exchanges/ to "error handling":/articles/error_handling/ and "Broker-specific AMQP 0.9.1 extensions":/articles/broker_specific_extensions/.
 
 We recommend that you read the following guides next, if possible, in this order:
 

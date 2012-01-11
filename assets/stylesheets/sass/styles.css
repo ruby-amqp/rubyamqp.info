@@ -3000,7 +3000,7 @@ input[type=submit].btn::-moz-focus-inner {
 /* line 1, content/assets/stylesheets/sass/partials/widgets/_grid.sass */
 section.content {
   margin: 0 auto;
-  max-width: 960px;
+  max-width: 1250px;
   padding-top: 4.5em;
 }
 

@@ -1,3 +1,4 @@
+require "effin_utf8"
 require 'liquid'
 
 module Helpers

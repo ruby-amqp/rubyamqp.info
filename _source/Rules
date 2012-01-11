@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
+require "effin_utf8"
+
 require 'compass'
 Compass.add_project_configuration 'config/compass.config'
 

@@ -213,7 +213,7 @@ h3. Automatic recovery
 
 Many applications use the same recovery strategy, that consists of the following steps:
  * Re-open channels
- * For each channel, re-declare exchanges
+ * For each channel, re-declare exchanges (except for predefined ones)
  * For each channel, re-declare queues
  * For each queue, recover all bindings
  * For each queue, recover all consumers

@@ -316,7 +316,7 @@ end</pre>
 <p>Many applications use the same recovery strategy, that consists of the following steps:</p>
 <ul>
 	<li>Re-open channels</li>
-	<li>For each channel, re-declare exchanges</li>
+	<li>For each channel, re-declare exchanges (except for predefined ones)</li>
 	<li>For each channel, re-declare queues</li>
 	<li>For each queue, recover all bindings</li>
 	<li>For each queue, recover all consumers</li>

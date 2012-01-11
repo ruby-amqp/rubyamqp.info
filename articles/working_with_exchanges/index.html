@@ -396,7 +396,7 @@ end</pre>
 </ul>
 <p>As you can see, the &#8220;*&#8221; part of the pattern matches 1 word only.</p>
 <p>Full example:</p>
-<pre># -*- coding: ascii-8bit -*-
+<pre># encoding: utf-8
 require "rubygems" # or use Bundler.setup
 require "amqp"
 
@@ -433,7 +433,7 @@ EventMachine.run do
         publish("Berkeley update",        :routing_key =&gt; "americas.north.us.ca.berkeley").
         publish("San Francisco update",    :routing_key =&gt; "americas.north.us.ca.sanfrancisco").
         publish("New York update",         :routing_key =&gt; "americas.north.us.ny.newyork").
-        publish("São Paolo update",        :routing_key =&gt; "americas.south.brazil.saopaolo").
+        publish("Sao Paolo update",        :routing_key =&gt; "americas.south.brazil.saopaolo").
         publish("Hong Kong update",        :routing_key =&gt; "asia.southeast.hk.hongkong").
         publish("Kyoto update",            :routing_key =&gt; "asia.southeast.japan.kyoto").
         publish("Shanghai update",         :routing_key =&gt; "asia.southeast.prc.shanghai").

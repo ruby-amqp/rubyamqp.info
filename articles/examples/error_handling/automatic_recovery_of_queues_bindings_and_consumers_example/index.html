@@ -1,9 +1,9 @@
-# -*- coding: ascii-8bit -*-
+# encoding: utf-8
 require "rubygems"
 require "amqp" # requires version >= 0.8.0.RC14
 
 puts "=> Example of automatic AMQP channel and queues recovery"
-puts
+
 AMQP.start(:host => "localhost") do |connection, open_ok|
   connection.on_error do |ch, connection_close|
     raise connection_close.reply_text
@@ -32,7 +32,7 @@ AMQP.start(:host => "localhost") do |connection, open_ok|
 
 
   show_stopper = Proc.new {
-    connection.disconnect { puts "Disconnected. Exiting…"; EventMachine.stop }
+    connection.disconnect { puts "Disconnected. Exiting..."; EventMachine.stop }
   }
 
   Signal.trap "TERM", show_stopper
@@ -42,3 +42,4 @@ AMQP.start(:host => "localhost") do |connection, open_ok|
 
   puts "Connected, authenticated. To really exercise this example, shut AMQP broker down for a few seconds. If you don't it will exit gracefully in 30 seconds."
 end
+

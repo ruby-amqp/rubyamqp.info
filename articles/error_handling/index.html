@@ -330,12 +330,12 @@ ch.auto_recovery = true</pre>
 <p>To find out whether channel uses automatic recovery mode, use <span class="highlight"><span class="caps">AMQP</span>::Channel#auto_recovering?</span>.</p>
 <p>Auto recovery mode can be turned on and off any number of times during channel life cycle, although very small percentage ofapplications really does this. Typically you decide what channels should be using automatic recovery at application designstage.</p>
 <p>Full example (run it, then shut down <span class="caps">AMQP</span> broker running on localhost, then bring it back up and use management tools such as `rabbitmqctl`to see that queues &amp; bindings &amp; consumer have all recovered):</p>
-<pre># -*- coding: ascii-8bit -*-
+<pre># encoding: utf-8
 require "rubygems"
 require "amqp" # requires version &gt;= 0.8.0.RC14
 
 puts "=&gt; Example of automatic AMQP channel and queues recovery"
-puts
+
 AMQP.start(:host =&gt; "localhost") do |connection, open_ok|
   connection.on_error do |ch, connection_close|
     raise connection_close.reply_text
@@ -364,7 +364,7 @@ AMQP.start(:host =&gt; "localhost") do |connection, open_ok|
 
 
   show_stopper = Proc.new {
-    connection.disconnect { puts "Disconnected. Exiting…"; EventMachine.stop }
+    connection.disconnect { puts "Disconnected. Exiting..."; EventMachine.stop }
   }
 
   Signal.trap "TERM", show_stopper
@@ -374,6 +374,7 @@ AMQP.start(:host =&gt; "localhost") do |connection, open_ok|
 
   puts "Connected, authenticated. To really exercise this example, shut AMQP broker down for a few seconds. If you don't it will exit gracefully in 30 seconds."
 end
+
 </pre><p><span class="help-block">(if the example above isn&#8217;t displayed, see this <a href="https://gist.github.com/1048076">gist</a>)</span></p>
 <p>Server-named queues, when recovered automatically, will get <strong>new server-generated names</strong> to guarantee there are no name collisions.</p>
 <p><span note="class">When in doubt, try using automatic recovery first. If it is not sufficient for you application, switch to manualrecovery using events and callbacks introduced in the &#8220;Manual recovery&#8221; section.</span></p>

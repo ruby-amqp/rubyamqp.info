@@ -26,6 +26,7 @@ compile '*' do
       filter :relativize_paths, :type => :css
     when 'js'
       # filter :minify
+    when 'rb'
   end
 end
 

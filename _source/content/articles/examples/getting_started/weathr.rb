@@ -36,7 +36,7 @@ EventMachine.run do
         publish("Berkeley update",         :routing_key => "americas.north.us.ca.berkeley").
         publish("San Francisco update",    :routing_key => "americas.north.us.ca.sanfrancisco").
         publish("New York update",         :routing_key => "americas.north.us.ny.newyork").
-        publish("São Paolo update",        :routing_key => "americas.south.brazil.saopaolo").
+        publish("Sao Paolo update",        :routing_key => "americas.south.brazil.saopaolo").
         publish("Hong Kong update",        :routing_key => "asia.southeast.hk.hongkong").
         publish("Kyoto update",            :routing_key => "asia.southeast.japan.kyoto").
         publish("Shanghai update",         :routing_key => "asia.southeast.prc.shanghai").

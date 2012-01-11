@@ -69,7 +69,7 @@ h4. On other OSes or JRuby:
 h3. You can also use Bundler to install the gem
 
 <pre>source :rubygems
-gem "amqp", "~> 0.8.0" # optionally: :git => "git://github.com/ruby-amqp/amqp.git", :branch => "0.8.x-stable"</pre>
+gem "amqp", "~> 0.9.0" # optionally: :git => "git://github.com/ruby-amqp/amqp.git", :branch => "0.9.x-stable"</pre>
 
 h3. Verifying your installation
 
@@ -79,7 +79,7 @@ Let us verify your installation with this quick irb session:
 :001 > require "amqp"
 => true
 :002 > AMQP::VERSION
-=> "0.8.0"</code>
+=> "0.9.0"</code>
 
 h2. "Hello, world" example
 

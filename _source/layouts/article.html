@@ -6,23 +6,27 @@
       = @item[:title]
     %link{ :href => "/assets/stylesheets/sass/styles.css", :rel => "stylesheet", :type => "text/css", :media => "screen" }
 
-  %script{ :src => "/assets/javascripts/jquery-1.7.min.js", :type => "text/javascript" }
-  %script{ :src => "/assets/javascripts/codemirror.js"}
-  %script{ :src => "/assets/javascripts/toc.js"}
-  %script{ :src => "/assets/javascripts/code_highlight.js"}
-  %link{ :rel => "stylesheet", :href => "/assets/stylesheets/codemirror.css" }
-  %script{ :src => "/assets/javascripts/mode/ruby.js" }
-  %link{ :rel => "stylesheet", :href => "/assets/stylesheets/theme/default.css" }
-  %script{:type => "text/javascript"}
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-27153041-1']);
-    _gaq.push(['_trackPageview']);
-    (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
+    %script{ :src => "/assets/javascripts/jquery-1.7.min.js", :type => "text/javascript" }
+    %script{ :src => "/assets/javascripts/codemirror.js"}
+    %script{ :src => "/assets/javascripts/toc.js"}
+    %script{ :src => "/assets/javascripts/code_highlight.js"}
+    %link{ :rel => "stylesheet", :href => "/assets/stylesheets/codemirror.css" }
+    %script{ :src => "/assets/javascripts/mode/ruby.js" }
 
+    %link{ :rel => "stylesheet", :href => "/assets/stylesheets/theme/default.css" }
+    :javascript
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27153041-1']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    %script{ :type => "text/javascript", :src => "http://use.typekit.com/zls3kso.js" }
+    :javascript
+      try{Typekit.load();}catch(e){}
 
   %body<>
     .topbar
@@ -105,8 +109,8 @@
             var disqus_shortname = 'rubyamqpdocs'; // required: replace example with your forum shortname
 
             var disqus_developer = 0; // set to 1 on local machine for testing comments
-            = "var disqus_identifier = '#{@item[:disqus_identifier]}';"
-            = "var disqus_url = '#{@item[:disqus_url]}';
+            var disqus_identifier = '#{@item[:disqus_identifier]}';
+            var disqus_url = '#{@item[:disqus_url]}';
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {

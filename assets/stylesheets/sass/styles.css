@@ -1764,23 +1764,19 @@ table .headerSortDown.purple {
 /* line 117, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar-inner,
 .topbar .fill {
-  background-color: #222;
-  background-color: #222222;
-  background-repeat: repeat-x;
-  background-image: -khtml-gradient(linear, left top, left bottom, from(#333333), to(#222222));
-  background-image: -moz-linear-gradient(top, #333333, #222222);
-  background-image: -ms-linear-gradient(top, #333333, #222222);
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #333333), color-stop(100%, #222222));
-  background-image: -webkit-linear-gradient(top, #333333, #222222);
-  background-image: -o-linear-gradient(top, #333333, #222222);
-  background-image: linear-gradient(top, #333333, #222222);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#333333', endColorstr='#222222', GradientType=0);
+  background-color: #3C4C55;
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  border-bottom: 5px solid black;
+}
+/* line 122, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+.topbar-inner a,
+.topbar .fill a {
+  color: #fff;
 }
 
-/* line 132, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 135, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul,
 .nav {
   display: block;
@@ -1789,13 +1785,13 @@ table .headerSortDown.purple {
   position: relative;
   left: 0;
 }
-/* line 138, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 141, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul > li,
 .nav > li {
   display: block;
   float: left;
 }
-/* line 142, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 145, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul a,
 .nav a {
   display: block;
@@ -1804,26 +1800,26 @@ table .headerSortDown.purple {
   line-height: 19px;
   text-decoration: none;
 }
-/* line 148, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 151, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul a:hover,
 .nav a:hover {
   color: white;
   text-decoration: none;
 }
-/* line 153, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 156, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul .active > a,
 .nav .active > a {
   background-color: #222;
   background-color: rgba(0, 0, 0, 0.5);
 }
-/* line 159, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 162, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul.secondary-nav,
 .nav.secondary-nav {
   float: right;
   margin-left: 10px;
   margin-right: 0;
 }
-/* line 165, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 168, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul.secondary-nav .menu-dropdown,
 .topbar div > ul.secondary-nav .dropdown-menu,
 .nav.secondary-nav .menu-dropdown,
@@ -1831,7 +1827,7 @@ table .headerSortDown.purple {
   right: 0;
   border: 0;
 }
-/* line 175, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 178, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul a.menu:hover,
 .topbar div > ul li.open .menu,
 .topbar div > ul .dropdown-toggle:hover,
@@ -1843,14 +1839,14 @@ table .headerSortDown.purple {
   background: #444;
   background: rgba(255, 255, 255, 0.05);
 }
-/* line 181, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 184, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul .menu-dropdown,
 .topbar div > ul .dropdown-menu,
 .nav .menu-dropdown,
 .nav .dropdown-menu {
   background-color: #333;
 }
-/* line 185, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 188, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul .menu-dropdown a.menu,
 .topbar div > ul .menu-dropdown .dropdown-toggle,
 .topbar div > ul .dropdown-menu a.menu,
@@ -1861,7 +1857,7 @@ table .headerSortDown.purple {
 .nav .dropdown-menu .dropdown-toggle {
   color: white;
 }
-/* line 187, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 190, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul .menu-dropdown a.menu.open,
 .topbar div > ul .menu-dropdown .dropdown-toggle.open,
 .topbar div > ul .dropdown-menu a.menu.open,
@@ -1873,7 +1869,7 @@ table .headerSortDown.purple {
   background: #444;
   background: rgba(255, 255, 255, 0.05);
 }
-/* line 192, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 195, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul .menu-dropdown li a,
 .topbar div > ul .dropdown-menu li a,
 .nav .menu-dropdown li a,
@@ -1881,7 +1877,7 @@ table .headerSortDown.purple {
   color: #999;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
 }
-/* line 195, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 198, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul .menu-dropdown li a:hover,
 .topbar div > ul .dropdown-menu li a:hover,
 .nav .menu-dropdown li a:hover,
@@ -1898,14 +1894,14 @@ table .headerSortDown.purple {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#292929', endColorstr='#191919', GradientType=0);
   color: white;
 }
-/* line 200, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 203, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul .menu-dropdown .active a,
 .topbar div > ul .dropdown-menu .active a,
 .nav .menu-dropdown .active a,
 .nav .dropdown-menu .active a {
   color: white;
 }
-/* line 203, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 206, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar div > ul .menu-dropdown .divider,
 .topbar div > ul .dropdown-menu .divider,
 .nav .menu-dropdown .divider,
@@ -1914,19 +1910,19 @@ table .headerSortDown.purple {
   border-color: #444;
 }
 
-/* line 212, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 215, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar ul .menu-dropdown li a,
 .topbar ul .dropdown-menu li a {
   padding: 4px 15px;
 }
 
-/* line 220, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 223, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 li.menu,
 .dropdown {
   position: relative;
 }
 
-/* line 226, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 229, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 a.menu:after,
 .dropdown-toggle:after {
   width: 0;
@@ -1946,7 +1942,7 @@ a.menu:after,
   opacity: 0.5;
 }
 
-/* line 243, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 246, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .menu-dropdown,
 .dropdown-menu {
   background-color: white;
@@ -1976,14 +1972,14 @@ a.menu:after,
   -moz-background-clip: padding-box;
   background-clip: padding-box;
 }
-/* line 266, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 269, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .menu-dropdown li,
 .dropdown-menu li {
   float: none;
   display: block;
   background-color: none;
 }
-/* line 272, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 275, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .menu-dropdown .divider,
 .dropdown-menu .divider {
   height: 1px;
@@ -1993,7 +1989,7 @@ a.menu:after,
   border-bottom: 1px solid white;
 }
 
-/* line 283, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 286, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar .dropdown-menu a, .dropdown-menu a {
   display: block;
   padding: 4px 15px;
@@ -2003,7 +1999,7 @@ a.menu:after,
   color: gray;
   text-shadow: 0 1px 0 white;
 }
-/* line 292, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 295, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .topbar .dropdown-menu a:hover, .dropdown-menu a:hover {
   background-color: #dddddd;
   background-repeat: repeat-x;
@@ -2022,7 +2018,7 @@ a.menu:after,
   box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.025), inset 0 -1px rgba(0, 0, 0, 0.025);
 }
 
-/* line 308, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 311, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .open .menu,
 .open .dropdown-toggle,
 .dropdown.open .menu,
@@ -2031,7 +2027,7 @@ a.menu:after,
   background: #ccc;
   background: rgba(0, 0, 0, 0.3);
 }
-/* line 315, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 318, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .open .menu-dropdown,
 .open .dropdown-menu,
 .dropdown.open .menu-dropdown,
@@ -2039,7 +2035,7 @@ a.menu:after,
   display: block;
 }
 
-/* line 323, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 326, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tabs,
 .pills {
   margin: 0 0 20px;
@@ -2061,29 +2057,29 @@ a.menu:after,
 .pills:after {
   clear: both;
 }
-/* line 328, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 331, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tabs > li,
 .pills > li {
   float: left;
 }
-/* line 330, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 333, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tabs > li > a,
 .pills > li > a {
   display: block;
 }
 
-/* line 337, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 340, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tabs {
   float: left;
   width: 100%;
   border-bottom: 1px solid #ddd;
 }
-/* line 341, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 344, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tabs > li {
   position: relative;
   top: 1px;
 }
-/* line 344, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 347, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tabs > li > a {
   padding: 0 15px;
   margin-right: 2px;
@@ -2093,20 +2089,20 @@ a.menu:after,
   -moz-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0;
 }
-/* line 350, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 353, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tabs > li > a:hover {
   text-decoration: none;
   background-color: #eee;
   border-color: #eee #eee #ddd;
 }
-/* line 356, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 359, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tabs > li.active > a {
   color: gray;
   background-color: white;
   border: 1px solid #ddd;
   border-bottom-color: transparent;
 }
-/* line 365, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 368, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tabs .menu-dropdown,
 .tabs .dropdown-menu {
   top: 35px;
@@ -2115,30 +2111,30 @@ a.menu:after,
   -moz-border-radius: 0 6px 6px 6px;
   border-radius: 0 6px 6px 6px;
 }
-/* line 372, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 375, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tabs a.menu:after,
 .tabs .dropdown-toggle:after {
   border-top-color: #999;
   margin-top: 15px;
   margin-left: 5px;
 }
-/* line 379, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 382, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tabs li.open.menu .menu,
 .tabs .open.dropdown .dropdown-toggle {
   border-color: #999;
 }
-/* line 384, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 387, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tabs li.open a.menu:after,
 .tabs .dropdown.open .dropdown-toggle:after {
   border-top-color: #555;
 }
 
-/* line 388, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 391, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tab-content {
   clear: both;
 }
 
-/* line 394, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 397, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .pills a {
   margin: 5px 3px 5px 0;
   padding: 0 15px;
@@ -2148,33 +2144,33 @@ a.menu:after,
   -moz-border-radius: 15px;
   border-radius: 15px;
 }
-/* line 400, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 403, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .pills a:hover {
   background: #00438a;
   color: white;
   text-decoration: none;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
 }
-/* line 407, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 410, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .pills .active a {
   background: #0069d6;
   color: white;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
 }
 
-/* line 415, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 418, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tab-content > *,
 .pill-content > * {
   display: none;
 }
 
-/* line 420, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 423, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .tab-content > .active,
 .pill-content > .active {
   display: block;
 }
 
-/* line 428, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 431, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .breadcrumb {
   margin: 0 0 22px;
   padding: 7px 14px;
@@ -2196,22 +2192,22 @@ a.menu:after,
   -moz-box-shadow: inset 0 1px 0 white;
   box-shadow: inset 0 1px 0 white;
 }
-/* line 435, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 438, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .breadcrumb li {
   display: inline;
   text-shadow: 0 1px 0 white;
 }
-/* line 439, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 442, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .breadcrumb .divider {
   padding: 0 5px;
   color: #bfbfbf;
 }
-/* line 445, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 448, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .breadcrumb .active a {
   color: #404040;
 }
 
-/* line 454, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 457, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .hero-unit {
   background-color: #f5f5f5;
   margin-top: 60px;
@@ -2221,27 +2217,27 @@ a.menu:after,
   -moz-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 460, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 463, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .hero-unit h1 {
   margin-bottom: 0;
   font-size: 60px;
   line-height: 1;
   letter-spacing: -1px;
 }
-/* line 466, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 469, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .hero-unit p {
   font-weight: 200;
   line-height: 22px;
 }
 
-/* line 471, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 474, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 footer {
   margin-top: 21px;
   padding-top: 21px;
   border-top: 1px solid #eee;
 }
 
-/* line 480, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 483, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .page-header {
   margin-bottom: 21px;
   border-bottom: 1px solid #ddd;
@@ -2249,12 +2245,12 @@ footer {
   -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
-/* line 484, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 487, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .page-header h1 {
   margin-bottom: 10px;
 }
 
-/* line 504, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 507, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn.danger, .btn.danger:hover, .btn.error, .btn.error:hover, .btn.success, .btn.success:hover, .btn.info, .btn.info:hover,
 .alert-message.danger,
 .alert-message.danger:hover,
@@ -2266,7 +2262,7 @@ footer {
 .alert-message.info:hover {
   color: white;
 }
-/* line 509, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 512, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn.danger, .btn.error,
 .alert-message.danger,
 .alert-message.error {
@@ -2284,7 +2280,7 @@ footer {
   border-color: #c43c35 #c43c35 #882a25;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
-/* line 513, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 516, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn.success,
 .alert-message.success {
   background-color: #57a957;
@@ -2301,7 +2297,7 @@ footer {
   border-color: #57a957 #57a957 #3d773d;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
-/* line 517, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 520, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn.info,
 .alert-message.info {
   background-color: #339bb9;
@@ -2319,7 +2315,7 @@ footer {
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
-/* line 523, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 526, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn {
   cursor: pointer;
   display: inline-block;
@@ -2351,17 +2347,17 @@ footer {
   -o-transition: 0.1s linear all;
   transition: 0.1s linear all;
 }
-/* line 539, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 542, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn:hover {
   background-position: 0 -15px;
   color: #333;
   text-decoration: none;
 }
-/* line 546, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 549, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn:focus {
   outline: 1px dotted #666;
 }
-/* line 551, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 554, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn.primary {
   color: white;
   background-color: #0064cd;
@@ -2378,13 +2374,13 @@ footer {
   border-color: #0064cd #0064cd #003f81;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
-/* line 560, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 563, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn:active {
   -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
-/* line 564, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 567, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn.disabled {
   cursor: default;
   background-image: none;
@@ -2397,7 +2393,7 @@ footer {
   -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 571, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 574, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn[disabled] {
   cursor: default;
   background-image: none;
@@ -2410,7 +2406,7 @@ footer {
   -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 582, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 585, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn.large {
   font-size: 17px;
   line-height: normal;
@@ -2419,26 +2415,26 @@ footer {
   -moz-border-radius: 6px;
   border-radius: 6px;
 }
-/* line 588, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 591, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .btn.small {
   padding: 7px 9px 7px;
   font-size: 13px;
 }
 
-/* line 595, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 598, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 :root .alert-message,
 :root .btn {
   border-radius: 0 \0;
 }
 
-/* line 602, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 605, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 button.btn::-moz-focus-inner,
 input[type=submit].btn::-moz-focus-inner {
   padding: 0;
   border: 0;
 }
 
-/* line 611, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 614, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .close {
   float: right;
   color: black;
@@ -2451,7 +2447,7 @@ input[type=submit].btn::-moz-focus-inner {
   -moz-opacity: 0.2;
   opacity: 0.2;
 }
-/* line 619, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 622, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .close:hover {
   color: black;
   text-decoration: none;
@@ -2461,7 +2457,7 @@ input[type=submit].btn::-moz-focus-inner {
   opacity: 0.4;
 }
 
-/* line 631, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 634, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message {
   position: relative;
   padding: 7px 15px;
@@ -2490,32 +2486,32 @@ input[type=submit].btn::-moz-focus-inner {
   -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
-/* line 644, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 647, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message .close {
   *margin-top: 3px;
   /* IE7 spacing */
 }
-/* line 649, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 652, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message h5 {
   line-height: 22px;
 }
-/* line 652, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 655, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message p {
   margin-bottom: 0;
 }
-/* line 655, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 658, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message div {
   margin-top: 5px;
   margin-bottom: 2px;
   line-height: 28px;
 }
-/* line 660, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 663, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message .btn {
   -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
   -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
 }
-/* line 665, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 668, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message.block-message {
   background-image: none;
   background-color: #fdf5d9;
@@ -2526,49 +2522,49 @@ input[type=submit].btn::-moz-focus-inner {
   -moz-box-shadow: none;
   box-shadow: none;
 }
-/* line 672, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 675, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message.block-message ul, .alert-message.block-message p {
   margin-right: 30px;
 }
-/* line 675, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 678, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message.block-message ul {
   margin-bottom: 0;
 }
-/* line 678, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 681, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message.block-message li {
   color: #404040;
 }
-/* line 681, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 684, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message.block-message .alert-actions {
   margin-top: 5px;
 }
-/* line 686, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 689, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message.block-message.error, .alert-message.block-message.success, .alert-message.block-message.info {
   color: #404040;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 }
-/* line 690, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 693, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message.block-message.error {
   background-color: #fddfde;
   border-color: #fbc7c6;
 }
-/* line 694, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 697, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message.block-message.success {
   background-color: #d1eed1;
   border-color: #bfe7bf;
 }
-/* line 698, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 701, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .alert-message.block-message.info {
   background-color: #ddf4fb;
   border-color: #c6edf9;
 }
 
-/* line 709, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 712, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .pagination {
   height: 44px;
   margin: 22px 0;
 }
-/* line 712, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 715, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .pagination ul {
   float: left;
   margin: 0;
@@ -2581,11 +2577,11 @@ input[type=submit].btn::-moz-focus-inner {
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
-/* line 720, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 723, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .pagination li {
   display: inline;
 }
-/* line 723, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 726, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .pagination a {
   float: left;
   padding: 0 14px;
@@ -2597,23 +2593,23 @@ input[type=submit].btn::-moz-focus-inner {
   /* IE6-7 */
   text-decoration: none;
 }
-/* line 734, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 737, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .pagination a:hover,
 .pagination .active a {
   background-color: #c7eefe;
 }
-/* line 738, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 741, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .pagination .disabled a,
 .pagination .disabled a:hover {
   background-color: transparent;
   color: #bfbfbf;
 }
-/* line 742, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 745, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .pagination .next a {
   border: 0;
 }
 
-/* line 751, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 754, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .well {
   background-color: #f5f5f5;
   margin-bottom: 20px;
@@ -2628,13 +2624,13 @@ input[type=submit].btn::-moz-focus-inner {
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
-/* line 760, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 763, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .well blockquote {
   border-color: #ddd;
   border-color: rgba(0, 0, 0, 0.15);
 }
 
-/* line 770, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 773, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .modal-backdrop {
   background-color: black;
   position: fixed;
@@ -2644,12 +2640,12 @@ input[type=submit].btn::-moz-focus-inner {
   bottom: 0;
   z-index: 10000;
 }
-/* line 779, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 782, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .modal-backdrop.fade {
   opacity: 0;
 }
 
-/* line 782, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 785, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .modal-backdrop, .modal-backdrop.fade.in {
   filter: alpha(opacity=80);
   -khtml-opacity: 0.8;
@@ -2657,7 +2653,7 @@ input[type=submit].btn::-moz-focus-inner {
   opacity: 0.8;
 }
 
-/* line 786, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 789, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .modal {
   position: fixed;
   top: 50%;
@@ -2680,11 +2676,11 @@ input[type=submit].btn::-moz-focus-inner {
   -moz-background-clip: padding-box;
   background-clip: padding-box;
 }
-/* line 800, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 803, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .modal .close {
   margin-top: 7px;
 }
-/* line 801, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 804, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .modal.fade {
   -webkit-transition: "opacity .3s linear, top .3s ease-out";
   -moz-transition: "opacity .3s linear, top .3s ease-out";
@@ -2693,23 +2689,23 @@ input[type=submit].btn::-moz-focus-inner {
   transition: "opacity .3s linear, top .3s ease-out";
   top: -25%;
 }
-/* line 805, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 808, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .modal.fade.in {
   top: 50%;
 }
 
-/* line 807, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 810, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .modal-header {
   border-bottom: 1px solid #eee;
   padding: 5px 15px;
 }
 
-/* line 811, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 814, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .modal-body {
   padding: 20px;
 }
 
-/* line 814, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 817, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .modal-footer {
   background-color: #f5f5f5;
   padding: 14px 15px 15px;
@@ -2734,13 +2730,13 @@ input[type=submit].btn::-moz-focus-inner {
 .modal-footer:after {
   clear: both;
 }
-/* line 822, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 825, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .modal-footer .btn {
   float: right;
   margin-left: 5px;
 }
 
-/* line 870, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 873, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .twipsy {
   display: block;
   position: absolute;
@@ -2753,14 +2749,14 @@ input[type=submit].btn::-moz-focus-inner {
   -moz-opacity: 0.8;
   opacity: 0.8;
 }
-/* line 878, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 881, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .twipsy.fade.in {
   filter: alpha(opacity=80);
   -khtml-opacity: 0.8;
   -moz-opacity: 0.8;
   opacity: 0.8;
 }
-/* line 881, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 884, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .twipsy.above .twipsy-arrow {
   bottom: 0;
   left: 50%;
@@ -2769,7 +2765,7 @@ input[type=submit].btn::-moz-focus-inner {
   border-right: 5px solid transparent;
   border-top: 5px solid black;
 }
-/* line 882, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 885, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .twipsy.left .twipsy-arrow {
   top: 50%;
   right: 0;
@@ -2778,7 +2774,7 @@ input[type=submit].btn::-moz-focus-inner {
   border-bottom: 5px solid transparent;
   border-left: 5px solid black;
 }
-/* line 883, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 886, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .twipsy.below .twipsy-arrow {
   top: 0;
   left: 50%;
@@ -2787,7 +2783,7 @@ input[type=submit].btn::-moz-focus-inner {
   border-right: 5px solid transparent;
   border-bottom: 5px solid black;
 }
-/* line 884, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 887, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .twipsy.right .twipsy-arrow {
   top: 50%;
   left: 0;
@@ -2797,7 +2793,7 @@ input[type=submit].btn::-moz-focus-inner {
   border-right: 5px solid black;
 }
 
-/* line 886, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 889, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .twipsy-inner {
   padding: 3px 8px;
   background-color: black;
@@ -2810,14 +2806,14 @@ input[type=submit].btn::-moz-focus-inner {
   border-radius: 4px;
 }
 
-/* line 895, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 898, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .twipsy-arrow {
   position: absolute;
   width: 0;
   height: 0;
 }
 
-/* line 905, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 908, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .popover {
   position: absolute;
   top: 0;
@@ -2826,7 +2822,7 @@ input[type=submit].btn::-moz-focus-inner {
   padding: 5px;
   display: none;
 }
-/* line 912, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 915, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .popover.above .arrow {
   bottom: 0;
   left: 50%;
@@ -2835,7 +2831,7 @@ input[type=submit].btn::-moz-focus-inner {
   border-right: 5px solid transparent;
   border-top: 5px solid black;
 }
-/* line 913, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 916, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .popover.right .arrow {
   top: 50%;
   left: 0;
@@ -2844,7 +2840,7 @@ input[type=submit].btn::-moz-focus-inner {
   border-bottom: 5px solid transparent;
   border-right: 5px solid black;
 }
-/* line 914, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 917, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .popover.below .arrow {
   top: 0;
   left: 50%;
@@ -2853,7 +2849,7 @@ input[type=submit].btn::-moz-focus-inner {
   border-right: 5px solid transparent;
   border-bottom: 5px solid black;
 }
-/* line 915, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 918, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .popover.left .arrow {
   top: 50%;
   right: 0;
@@ -2862,13 +2858,13 @@ input[type=submit].btn::-moz-focus-inner {
   border-bottom: 5px solid transparent;
   border-left: 5px solid black;
 }
-/* line 916, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 919, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .popover .arrow {
   position: absolute;
   width: 0;
   height: 0;
 }
-/* line 921, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 924, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .popover .inner {
   background-color: black;
   background-color: rgba(0, 0, 0, 0.8);
@@ -2882,7 +2878,7 @@ input[type=submit].btn::-moz-focus-inner {
   -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
   box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
 }
-/* line 930, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 933, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .popover .title {
   background-color: #f5f5f5;
   padding: 9px 15px;
@@ -2892,7 +2888,7 @@ input[type=submit].btn::-moz-focus-inner {
   border-radius: 3px 3px 0 0;
   border-bottom: 1px solid #eee;
 }
-/* line 937, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 940, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .popover .content {
   background-color: white;
   padding: 14px;
@@ -2903,12 +2899,12 @@ input[type=submit].btn::-moz-focus-inner {
   -moz-background-clip: padding-box;
   background-clip: padding-box;
 }
-/* line 942, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 945, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .popover .content p, .popover .content ul, .popover .content ol {
   margin-bottom: 0;
 }
 
-/* line 951, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 954, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .fade {
   -webkit-transition: opacity 0.15s linear;
   -moz-transition: opacity 0.15s linear;
@@ -2917,12 +2913,12 @@ input[type=submit].btn::-moz-focus-inner {
   transition: opacity 0.15s linear;
   opacity: 0;
 }
-/* line 954, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 957, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .fade.in {
   opacity: 1;
 }
 
-/* line 963, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 966, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .label {
   padding: 1px 3px 2px;
   background-color: #bfbfbf;
@@ -2934,24 +2930,24 @@ input[type=submit].btn::-moz-focus-inner {
   -moz-border-radius: 3px;
   border-radius: 3px;
 }
-/* line 971, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 974, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .label.important {
   background-color: #c43c35;
 }
-/* line 972, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 975, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .label.warning {
   background-color: #f89406;
 }
-/* line 973, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 976, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .label.success {
   background-color: #46a546;
 }
-/* line 974, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 977, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .label.notice {
   background-color: #62cffc;
 }
 
-/* line 981, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 984, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .media-grid {
   margin-left: -20px;
   margin-bottom: 0;
@@ -2968,11 +2964,11 @@ input[type=submit].btn::-moz-focus-inner {
 .media-grid:after {
   clear: both;
 }
-/* line 985, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 988, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .media-grid li {
   display: inline;
 }
-/* line 988, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 991, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .media-grid a {
   float: left;
   padding: 4px;
@@ -2985,11 +2981,11 @@ input[type=submit].btn::-moz-focus-inner {
   -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
 }
-/* line 995, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 998, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .media-grid a img {
   display: block;
 }
-/* line 998, content/assets/stylesheets/sass/bootstrap/patterns.scss */
+/* line 1001, content/assets/stylesheets/sass/bootstrap/patterns.scss */
 .media-grid a:hover {
   border-color: #0069d6;
   -webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
@@ -3005,16 +3001,13 @@ section.content {
 }
 
 /* line 12, content/assets/stylesheets/sass/styles.sass */
-article h1, article h2, article h3, article h4, article h5 {
-  font-family: "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif !important;
-}
-/* line 15, content/assets/stylesheets/sass/styles.sass */
 article pre {
   font-size: 13px !important;
 }
 
-/* line 18, content/assets/stylesheets/sass/styles.sass */
+/* line 15, content/assets/stylesheets/sass/styles.sass */
 .toc {
+  background: white;
   margin-left: 20px;
   max-width: 500px;
   padding: 20px;
@@ -3025,4 +3018,54 @@ article pre {
   -webkit-box-shadow: -2px 2px 6px #bbbbbb;
   -moz-box-shadow: -2px 2px 6px #bbbbbb;
   box-shadow: -2px 2px 6px #bbbbbb;
+}
+
+/* line 27, content/assets/stylesheets/sass/styles.sass */
+h1, h2, h3, h4, h5 {
+  color: #294757;
+  font-family: "museo", serif;
+  font-weight: 700;
+  text-shadow: 0 1px 0 white;
+}
+
+/* line 33, content/assets/stylesheets/sass/styles.sass */
+body.landing {
+  background: #0a8ebc;
+  color: white;
+}
+/* line 36, content/assets/stylesheets/sass/styles.sass */
+body.landing h1, body.landing h2, body.landing h3 {
+  color: white;
+  text-shadow: 0 1px 0 black;
+}
+/* line 39, content/assets/stylesheets/sass/styles.sass */
+body.landing a, body.landing a:hover {
+  font-family: "museo", serif;
+  color: #cccccc;
+  text-shadow: 0 1px 0 black;
+}
+/* line 43, content/assets/stylesheets/sass/styles.sass */
+body.landing .hero-unit {
+  background: white;
+  color: #0a8ebc;
+}
+/* line 46, content/assets/stylesheets/sass/styles.sass */
+body.landing .hero-unit h1 {
+  color: #0a8ebc;
+}
+/* line 48, content/assets/stylesheets/sass/styles.sass */
+body.landing .hero-unit a, body.landing .hero-unit a:hover {
+  color: #0a8ebc;
+  text-shadow: none;
+  text-decoration: underline;
+}
+
+/* line 53, content/assets/stylesheets/sass/styles.sass */
+body {
+  background: rgba(253, 246, 227, 0.6);
+}
+
+/* line 56, content/assets/stylesheets/sass/styles.sass */
+strong {
+  color: #cb4b16;
 }

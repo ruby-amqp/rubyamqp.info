@@ -3,29 +3,32 @@
     Ruby amqp gem:
     Getting Started with AMQP and Ruby
   </title>
+  <link href='/assets/stylesheets/bootstrap.css' media='screen' rel='stylesheet' type='text/css' />
   <link href='/assets/stylesheets/sass/styles.css' media='screen' rel='stylesheet' type='text/css' />
-</head>
-<script src='/assets/javascripts/jquery-1.7.min.js' type='text/javascript'></script>
-<script src='/assets/javascripts/codemirror.js'></script>
-<script src='/assets/javascripts/toc.js'></script>
-<script src='/assets/javascripts/code_highlight.js'></script>
-<link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
-<script src='/assets/javascripts/mode/ruby.js'></script>
-<link href='/assets/stylesheets/theme/default.css' rel='stylesheet' />
-<script type='text/javascript'>
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-27153041-1']);
-  _gaq.push(['_trackPageview']);
-  (function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script><body><div class='topbar'>
-  <div class='topbar-inner'>
+  <script src='/assets/javascripts/jquery-1.7.min.js' type='text/javascript'></script>
+  <script src='/assets/javascripts/codemirror.js'></script>
+  <script src='/assets/javascripts/toc.js'></script>
+  <script src='/assets/javascripts/code_highlight.js'></script>
+  <link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
+  <script src='/assets/javascripts/mode/ruby.js'></script>
+  <link href='/assets/stylesheets/theme/default.css' rel='stylesheet' />
+  <script type='text/javascript'>
+    //<![CDATA[
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27153041-1']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    //]]>
+  </script>
+</head><body><div class='navbar navbar-fixed-top'>
+  <div class='navbar-inner'>
     <div class='container'>
       <ul class='nav'>
-        <li>
+        <li class='active'>
           <a href='/'>
             Home
           </a>
@@ -68,8 +71,10 @@
       </ul>
     </div>
   </div>
-</div><section class='content'><article><div class='toc'></div>
-<h1>Getting Started with AMQP and Ruby</h1>
+</div><div class='container'><section><div class='page-header'>
+  <h1>Getting Started with AMQP and Ruby</h1>
+</div>
+<div class='toc'></div>
 <h2>About this guide</h2>
 <p>This guide is a quick tutorial that helps you to get started with v0.9.1 of the <span class="caps">AMQP</span> specification in general and the <a href="http://github.com/ruby-amqp/amqp">Ruby amqp gem</a> in particular.<br />
 It should take about 20 minutes to read and study the provided code examples. This guide covers:</p>
@@ -92,9 +97,7 @@ On Mac OS X, the fastest way to install RabbitMQ is with <a href="http://mxcl.gi
 <p><code>rabbitmq-server</code></p>
 <p>On Debian and Ubuntu, you can either <a href="http://www.rabbitmq.com/server.html">download the RabbitMQ .deb package</a> and install it with <a href="http://www.debian.org/doc/FAQ/ch-pkgtools.en.html">dpkg</a> or make use of the <a href="http://www.rabbitmq.com/debian.html#apt">apt repository</a> that the RabbitMQ team provides.</p>
 <p>For <span class="caps">RPM</span>-based distributions like RedHat or CentOS, the RabbitMQ team provides an <a href="http://www.rabbitmq.com/install.html#rpm"><span class="caps">RPM</span> package</a>.</p>
-<p><span class="help-block"><br />
-<b>Note:</b> The RabbitMQ package that ships with recent Ubuntu versions (for example, 10.10) is outdated and <strong>will not work with v0.8.0 and later of the amqp gem</strong> (we need at least RabbitMQ v2.0 for use with this guide).<br />
-</span></p>
+<div class="alert alert-error"><strong>Note:</strong> The RabbitMQ package that ships with recent Ubuntu versions (for example, 10.10) is outdated and <strong>will not work with v0.8.0 and later of the amqp gem</strong> (we need at least RabbitMQ v2.0 for use with this guide).</div>
 <h2>Installing the Ruby amqp gem</h2>
 <h3>Make sure that you have Ruby and <a href="http://docs.rubygems.org/read/chapter/3">Rubygems</a> installed</h3>
 <p>This guide assumes that you have installed one of the following supported Ruby implementations:</p>
@@ -619,8 +622,8 @@ and edited by
     var disqus_shortname = 'rubyamqpdocs'; // required: replace example with your forum shortname
     
     var disqus_developer = 0; // set to 1 on local machine for testing comments
-    = "var disqus_identifier = 'amqp_connecting_to_the_broker';"
-    = "var disqus_url = 'http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/GettingStarted.textile';
+    var disqus_identifier = 'amqp_connecting_to_the_broker';
+    var disqus_url = 'http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/GettingStarted.textile';
     
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
@@ -629,4 +632,28 @@ and edited by
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
   //]]>
-</script></article></section></body></html>
+</script></section><footer class='footer'>
+  <p class='pull-right'>
+    <a href='#'>Back to top</a>
+  </p>
+  <p>
+    This guide was written by
+    <a href='http://twitter.com/michaelklishin'>
+      Michael Klishin
+    </a>
+    and edited by
+    <a href='https://twitter.com/celldee'>
+      Chris Duncan
+    </a>
+  </p>
+  <p>
+    Layout and CSS using
+    <a href='http://twitter.github.com/bootstrap'>
+      Twitter Bootstrap
+    </a>
+    tuned by
+    <a href='https://twitter.com/ifesdjeen'>
+      Alex Petrov
+    </a>
+  </p>
+</footer></div></body></html>

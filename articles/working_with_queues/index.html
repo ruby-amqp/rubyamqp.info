@@ -3,29 +3,32 @@
     Ruby amqp gem:
     Working with queues
   </title>
+  <link href='/assets/stylesheets/bootstrap.css' media='screen' rel='stylesheet' type='text/css' />
   <link href='/assets/stylesheets/sass/styles.css' media='screen' rel='stylesheet' type='text/css' />
-</head>
-<script src='/assets/javascripts/jquery-1.7.min.js' type='text/javascript'></script>
-<script src='/assets/javascripts/codemirror.js'></script>
-<script src='/assets/javascripts/toc.js'></script>
-<script src='/assets/javascripts/code_highlight.js'></script>
-<link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
-<script src='/assets/javascripts/mode/ruby.js'></script>
-<link href='/assets/stylesheets/theme/default.css' rel='stylesheet' />
-<script type='text/javascript'>
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-27153041-1']);
-  _gaq.push(['_trackPageview']);
-  (function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script><body><div class='topbar'>
-  <div class='topbar-inner'>
+  <script src='/assets/javascripts/jquery-1.7.min.js' type='text/javascript'></script>
+  <script src='/assets/javascripts/codemirror.js'></script>
+  <script src='/assets/javascripts/toc.js'></script>
+  <script src='/assets/javascripts/code_highlight.js'></script>
+  <link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
+  <script src='/assets/javascripts/mode/ruby.js'></script>
+  <link href='/assets/stylesheets/theme/default.css' rel='stylesheet' />
+  <script type='text/javascript'>
+    //<![CDATA[
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27153041-1']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    //]]>
+  </script>
+</head><body><div class='navbar navbar-fixed-top'>
+  <div class='navbar-inner'>
     <div class='container'>
       <ul class='nav'>
-        <li>
+        <li class='active'>
           <a href='/'>
             Home
           </a>
@@ -68,8 +71,10 @@
       </ul>
     </div>
   </div>
-</div><section class='content'><article><div class='toc'></div>
-<h1>Working with queues</h1>
+</div><div class='container'><section><div class='page-header'>
+  <h1>Working with queues</h1>
+</div>
+<div class='toc'></div>
 <h2>About this guide</h2>
 <p>This guide covers everything related to queues in the <span class="caps">AMQP</span> v0.9.1 specification, common usage scenarios and how to accomplish typical operations using the amqp gem. This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images &amp; stylesheets). The source is available <a href="https://github.com/ruby-amqp/amqp/tree/master/docs">on Github</a>.</p>
 <h2>Which versions of the amqp gem does this guide cover?</h2>
@@ -512,9 +517,7 @@ consumer3 = AMQP::Consumer.new(channel, queue, nil, true)</pre>
   @consumer1_mailbox &lt;&lt; payload
 end</pre>
 <p><a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Consumer#on_delivery-instance_method"><span class="caps">AMQP</span>::Consumer#on_delivery</a> takes a block that is used exactly like the block passed to <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a>. In fact, <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Queue#subscribe-instance_method"><span class="caps">AMQP</span>::Queue#subscribe</a> uses <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Consumer"><span class="caps">AMQP</span>::Consumer</a> under the hood, adding a <span class="note">default consumer</span> to the queue.</p>
-<p><span class="help-block"><br />
-Default consumers do not have any special properties, they just provide a convenient way for application developers to register multiple consumers and a means of preserving backwards compatibility. Application developers are always free to use <span class="caps">AMQP</span>::Consumer instances directly, or intermix them with <span class="caps">AMQP</span>::Queue#subscribe.<br />
-</span></p>
+<p><span class="alert alert-error">Default consumers do not have any special properties, they just provide a convenient way for application developers to register multiple consumers and a means of preserving backwards compatibility. Application developers are always free to use <span class="caps">AMQP</span>::Consumer instances directly, or intermix them with <span class="caps">AMQP</span>::Queue#subscribe.</span></p>
 <p>Most of the public <span class="caps">API</span> methods on <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Consumer"><span class="caps">AMQP</span>::Consumer</a> return self, so it is possible to use method chaining extensively. An example from <a href="https://github.com/ruby-amqp/amqp/tree/master/spec">amqp gem spec suite</a>:</p>
 <pre>consumer1 = AMQP::Consumer.new(@channel, @queue).consume.on_delivery { |metadata, payload| mailbox1 &lt;&lt; payload }
 consumer2 = AMQP::Consumer.new(@channel, @queue).consume.on_delivery { |metadata, payload| mailbox2 &lt;&lt; payload }</pre>
@@ -742,12 +745,8 @@ end</pre>
 <pre>queue2.subscribe(:ack =&gt; true) do |metadata, payload|
   metadata.ack
 end</pre>
-<p><span class="help-block"><br />
-Acknowledgements are channel-specific. Applications must not receive messages on one channel and acknowledge them on another.<br />
-</span></p>
-<p><span class="help-block"><br />
-A message <span class="caps">MUST</span> not be acknowledged more than once. Doing so will result in a channel-level exception (PRECONDITION_FAILED) with an error message like this: &#8220;PRECONDITION_FAILED &#8211; unknown delivery tag&#8221;<br />
-</span></p>
+<p><span class="alert alert-error">Acknowledgements are channel-specific. Applications must not receive messages on one channel and acknowledge them on another.</span></p>
+<p><span class="alert alert-error">A message <span class="caps">MUST</span> not be acknowledged more than once. Doing so will result in a channel-level exception (PRECONDITION_FAILED) with an error message like this: &#8220;PRECONDITION_FAILED &#8211; unknown delivery tag&#8221;</span></p>
 <h3>Rejecting messages</h3>
 <p>When a consumer application receives a message, processing of that message may or may not succeed. An application can indicate to the broker that message processing has failed (or cannot be accomplished at the time) by rejecting a message. When rejecting a message, an application can ask the broker to discard or requeue it.</p>
 <p>To reject a message use the <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel#reject-instance_method"><span class="caps">AMQP</span>::Channel#reject</a> method:</p>
@@ -760,9 +759,7 @@ end</pre>
   # reject and requeue
   channel.reject(metadata.delivery_tag, true)
 end</pre>
-<p><span class="help-block"><br />
-When there is only one consumer on a queue, make sure you do not create infinite message delivery loops by rejecting and requeueing a message from the same consumer over and over again.<br />
-</span></p>
+<p><span class="alert alert-error">When there is only one consumer on a queue, make sure you do not create infinite message delivery loops by rejecting and requeueing a message from the same consumer over and over again.</span></p>
 <p>Another way to reject a message is by using {AMQP::Header#reject}:</p>
 <pre>queue.bind(exchange).subscribe do |metadata, payload|
   # reject but do not requeue (simply discard)
@@ -810,9 +807,7 @@ channel2.prefetch(1)</pre>
 [consumer2] Received Message #10, redelivered = false, ack-ed
 [consumer2] Received Message #11, redelivered = false, ack-ed
 </code></p>
-<p><span class="help-block"><br />
-The prefetching setting is ignored for consumers that do not use explicit acknowledgements.<br />
-</span></p>
+<p><span class="alert alert-error">The prefetching setting is ignored for consumers that do not use explicit acknowledgements.</span></p>
 <h2>How message acknowledgements relate to transactions and Publisher Confirms</h2>
 <p>In cases where you cannot afford to lose a single message, <span class="caps">AMQP</span> v0.9.1 applications can use one or a combination of the following protocol features:</p>
 <ul>
@@ -1414,8 +1409,8 @@ and edited by
     var disqus_shortname = 'rubyamqpdocs'; // required: replace example with your forum shortname
     
     var disqus_developer = 0; // set to 1 on local machine for testing comments
-    = "var disqus_identifier = 'amqp_queues';"
-    = "var disqus_url = 'http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/Queues.textile';
+    var disqus_identifier = 'amqp_queues';
+    var disqus_url = 'http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/Queues.textile';
     
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
@@ -1424,4 +1419,28 @@ and edited by
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
   //]]>
-</script></article></section></body></html>
+</script></section><footer class='footer'>
+  <p class='pull-right'>
+    <a href='#'>Back to top</a>
+  </p>
+  <p>
+    This guide was written by
+    <a href='http://twitter.com/michaelklishin'>
+      Michael Klishin
+    </a>
+    and edited by
+    <a href='https://twitter.com/celldee'>
+      Chris Duncan
+    </a>
+  </p>
+  <p>
+    Layout and CSS using
+    <a href='http://twitter.github.com/bootstrap'>
+      Twitter Bootstrap
+    </a>
+    tuned by
+    <a href='https://twitter.com/ifesdjeen'>
+      Alex Petrov
+    </a>
+  </p>
+</footer></div></body></html>

@@ -3,29 +3,32 @@
     Ruby amqp gem:
     Working with exchanges
   </title>
+  <link href='/assets/stylesheets/bootstrap.css' media='screen' rel='stylesheet' type='text/css' />
   <link href='/assets/stylesheets/sass/styles.css' media='screen' rel='stylesheet' type='text/css' />
-</head>
-<script src='/assets/javascripts/jquery-1.7.min.js' type='text/javascript'></script>
-<script src='/assets/javascripts/codemirror.js'></script>
-<script src='/assets/javascripts/toc.js'></script>
-<script src='/assets/javascripts/code_highlight.js'></script>
-<link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
-<script src='/assets/javascripts/mode/ruby.js'></script>
-<link href='/assets/stylesheets/theme/default.css' rel='stylesheet' />
-<script type='text/javascript'>
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-27153041-1']);
-  _gaq.push(['_trackPageview']);
-  (function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script><body><div class='topbar'>
-  <div class='topbar-inner'>
+  <script src='/assets/javascripts/jquery-1.7.min.js' type='text/javascript'></script>
+  <script src='/assets/javascripts/codemirror.js'></script>
+  <script src='/assets/javascripts/toc.js'></script>
+  <script src='/assets/javascripts/code_highlight.js'></script>
+  <link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
+  <script src='/assets/javascripts/mode/ruby.js'></script>
+  <link href='/assets/stylesheets/theme/default.css' rel='stylesheet' />
+  <script type='text/javascript'>
+    //<![CDATA[
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27153041-1']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    //]]>
+  </script>
+</head><body><div class='navbar navbar-fixed-top'>
+  <div class='navbar-inner'>
     <div class='container'>
       <ul class='nav'>
-        <li>
+        <li class='active'>
           <a href='/'>
             Home
           </a>
@@ -68,8 +71,10 @@
       </ul>
     </div>
   </div>
-</div><section class='content'><article><div class='toc'></div>
-<h1>Working with exchanges</h1>
+</div><div class='container'><section><div class='page-header'>
+  <h1>Working with exchanges</h1>
+</div>
+<div class='toc'></div>
 <h2>About this guide</h2>
 <p>This guide covers the use of exchanges according to the <span class="caps">AMQP</span> v0.9.1 specification including message publishing, common usage scenarios and how to accomplish typical operations using the Ruby amqp gem. This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images &amp; stylesheets). The source is available <a href="https://github.com/ruby-amqp/amqp/tree/master/docs">on Github</a>.</p>
 <h2>Which versions of the amqp gem does this guide cover?</h2>
@@ -612,13 +617,13 @@ end</pre>
 	<li>OS kernel buffers data before sending it</li>
 	<li>Network driver may also employ buffering</li>
 </ul>
-<p><span class="help-block"><br />
-As you can see, &#8220;when data is sent&#8221; is a complicated issue and while methods to flush buffers certainly exist on various platforms, doing so in a cross-platform way that <strong>includes the <span class="caps">JVM</span></strong> (that EventMachine also runs on) is non-trivial. In addition, even flushing buffers does not guarantee that the data was received by the broker because it might have crashed while data was travelling down the wire. The only way to reliably know whether data was received by the broker or a peer application is to use message acknowledgements. This is how <span class="caps">TCP</span> works and this approach is proven to work at  enormous scale of the modern Internet. <span class="caps">AMQP</span> (the protocol) fully embraces this fact and the amqp gem follows.<br />
-</span></p>
+<div class="alert alert-error">
+<p>As you can see, &#8220;when data is sent&#8221; is a complicated issue and while methods to flush buffers certainly exist on various platforms, doing so in a cross-platform way that <strong>includes the <span class="caps">JVM</span></strong> (that EventMachine also runs on) is non-trivial. In addition, even flushing buffers does not guarantee that the data was received by the broker because it might have crashed while data was travelling down the wire. The only way to reliably know whether data was received by the broker or a peer application is to use message acknowledgements. This is how <span class="caps">TCP</span> works and this approach is proven to work at  enormous scale of the modern Internet. <span class="caps">AMQP</span> (the protocol) fully embraces this fact and the amqp gem follows.</p>
+</div>
 <p>Given all of this, you may ask &#8220;when does the &#8221;highlight&quot; href=&#8220;http://rubydoc.info/github/ruby-amqp/amqp/master/<span class="caps">AMQP</span>/Exchange#publish-instance_method&#8221;&gt;AMQP::Exchange#publish</a> callback fire?&quot; The answer is on the next event loop tick. By then the data is pushed down to the OS kernel. As far as the Ruby library is concerned, it is reasonably safe behavior.</p>
-<p><span class="help-block"><br />
-The <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> callback is fired on the next event loop tick. Data is staged for delivery immediately. Applications <span class="caps">MUST</span> <span class="caps">NOT</span> assume that by the time the callback has fired, the data is guaranteed to leave the local machine networking stack, reach the <span class="caps">AMQP</span> broker or any peer applications that the message needs to be routed to.<br />
-</span></p>
+<div class="alert alert-error">
+<p>The <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> callback is fired on the next event loop tick. Data is staged for delivery immediately. Applications <span class="caps">MUST</span> <span class="caps">NOT</span> assume that by the time the callback has fired, the data is guaranteed to leave the local machine networking stack, reach the <span class="caps">AMQP</span> broker or any peer applications that the message needs to be routed to.</p>
+</div>
 <p>In cases when you cannot afford to lose a single message, <span class="caps">AMQP</span> v0.9.1 applications can use one (or a combination of) the following protocol features:</p>
 <ul>
 	<li>Publisher confirms (a RabbitMQ-specific extension to <span class="caps">AMQP</span> v0.9.1)</li>
@@ -704,16 +709,12 @@ end</pre>
 <p>Messages potentially spend some time in the queues to which they were routed before they are consumed. During this period of time, the broker may crash or experience a restart. To survive it, messages must be persisted to disk. This has a negative effect on performance, especially with network attached storage like <span class="caps">NAS</span> devices and Amazon <span class="caps">EBS</span>. <span class="caps">AMQP</span> v0.9.1 lets applications trade off performance for durability, or vice versa, on a message-by-message basis.</p>
 <p>To publish a persistent message, use the &#8220;:persistent&#8221; option that <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> accepts:</p>
 <pre>exchange.publish(payload, :persistent =&gt; true)</pre>
-<p><span class="help-block"><br />
-Note that in order to survive a broker crash, both the message and the queue that it was routed to must be persistent/durable.<br />
-</span></p>
+<div class="alert alert-error">Note that in order to survive a broker crash, both the message and the queue that it was routed to must be persistent/durable.</div>
 <p><a href="/articles/durability/">Durability and Message Persistence</a> provides more information on the subject.</p>
 <h3>Publishing In Multi-threaded Environments</h3>
 <p>When using amqp gem in multi-threaded environments, the rule of thumb is: avoid sharing <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel"><span class="caps">AMQP</span>::Channel</a> instances across threads.</p>
 <p>Starting with 0.8.0.RC14, <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> synchronizes data delivery on the channel object associated with exchange. This protects application developers from the most common problems related to publishing messages on a shared channel from multiple threads, however, by no means protects from every possible concurrency hazard.</p>
-<p><span class="help-block"><br />
-When using amqp gem in multi-threaded environments, the rule of thumb is: avoid sharing <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel"><span class="caps">AMQP</span>::Channel</a> instances across threads.<br />
-</span></p>
+<div class="alert alert-error">When using amqp gem in multi-threaded environments, the rule of thumb is: avoid sharing <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Channel"><span class="caps">AMQP</span>::Channel</a> instances across threads.</div>
 <h3>Sending one-off messages</h3>
 <p>The following example publishes a message and <strong>safely</strong> closes the <span class="caps">AMQP</span> connection afterwards by passing a block to <a class="highlight" href="http://rubydoc.info/github/ruby-amqp/amqp/master/AMQP/Exchange#publish-instance_method"><span class="caps">AMQP</span>::Exchange#publish</a> :</p>
 <pre>require 'rubygems' # or use Bundler.setup
@@ -1051,8 +1052,8 @@ and edited by
     var disqus_shortname = 'rubyamqpdocs'; // required: replace example with your forum shortname
     
     var disqus_developer = 0; // set to 1 on local machine for testing comments
-    = "var disqus_identifier = 'amqp_exchanges';"
-    = "var disqus_url = 'http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/Exchanges.textile';
+    var disqus_identifier = 'amqp_exchanges';
+    var disqus_url = 'http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/Exchanges.textile';
     
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
@@ -1061,4 +1062,28 @@ and edited by
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
   //]]>
-</script></article></section></body></html>
+</script></section><footer class='footer'>
+  <p class='pull-right'>
+    <a href='#'>Back to top</a>
+  </p>
+  <p>
+    This guide was written by
+    <a href='http://twitter.com/michaelklishin'>
+      Michael Klishin
+    </a>
+    and edited by
+    <a href='https://twitter.com/celldee'>
+      Chris Duncan
+    </a>
+  </p>
+  <p>
+    Layout and CSS using
+    <a href='http://twitter.github.com/bootstrap'>
+      Twitter Bootstrap
+    </a>
+    tuned by
+    <a href='https://twitter.com/ifesdjeen'>
+      Alex Petrov
+    </a>
+  </p>
+</footer></div></body></html>

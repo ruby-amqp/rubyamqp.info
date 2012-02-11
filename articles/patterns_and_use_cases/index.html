@@ -3,29 +3,32 @@
     Ruby amqp gem:
     Patterns and Use Cases
   </title>
+  <link href='/assets/stylesheets/bootstrap.css' media='screen' rel='stylesheet' type='text/css' />
   <link href='/assets/stylesheets/sass/styles.css' media='screen' rel='stylesheet' type='text/css' />
-</head>
-<script src='/assets/javascripts/jquery-1.7.min.js' type='text/javascript'></script>
-<script src='/assets/javascripts/codemirror.js'></script>
-<script src='/assets/javascripts/toc.js'></script>
-<script src='/assets/javascripts/code_highlight.js'></script>
-<link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
-<script src='/assets/javascripts/mode/ruby.js'></script>
-<link href='/assets/stylesheets/theme/default.css' rel='stylesheet' />
-<script type='text/javascript'>
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-27153041-1']);
-  _gaq.push(['_trackPageview']);
-  (function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script><body><div class='topbar'>
-  <div class='topbar-inner'>
+  <script src='/assets/javascripts/jquery-1.7.min.js' type='text/javascript'></script>
+  <script src='/assets/javascripts/codemirror.js'></script>
+  <script src='/assets/javascripts/toc.js'></script>
+  <script src='/assets/javascripts/code_highlight.js'></script>
+  <link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
+  <script src='/assets/javascripts/mode/ruby.js'></script>
+  <link href='/assets/stylesheets/theme/default.css' rel='stylesheet' />
+  <script type='text/javascript'>
+    //<![CDATA[
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27153041-1']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    //]]>
+  </script>
+</head><body><div class='navbar navbar-fixed-top'>
+  <div class='navbar-inner'>
     <div class='container'>
       <ul class='nav'>
-        <li>
+        <li class='active'>
           <a href='/'>
             Home
           </a>
@@ -68,8 +71,10 @@
       </ul>
     </div>
   </div>
-</div><section class='content'><article><div class='toc'></div>
-<h1>Patterns and Use Cases</h1>
+</div><div class='container'><section><div class='page-header'>
+  <h1>Patterns and Use Cases</h1>
+</div>
+<div class='toc'></div>
 <h2>About this guide</h2>
 <p>This guide explains typical messaging patterns and use cases. It only covers the most common scenarios. For comprehensive listof messaging patterns, consult books on this subject, for example, <a href="http://www.eaipatterns.com">Enterprise Integration Patterns</a>.</p>
 <p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images &amp; stylesheets). The source is available <a href="https://github.com/ruby-amqp/amqp/tree/master/docs">on Github</a>.</p>
@@ -470,4 +475,28 @@ and edited by
   <a href='mailto:michaelklishin@me.com?subject=amqp%20gem%20documentation'>
     contact the author of the guides directly
   </a>
-</p></article></section></body></html>
+</p></section><footer class='footer'>
+  <p class='pull-right'>
+    <a href='#'>Back to top</a>
+  </p>
+  <p>
+    This guide was written by
+    <a href='http://twitter.com/michaelklishin'>
+      Michael Klishin
+    </a>
+    and edited by
+    <a href='https://twitter.com/celldee'>
+      Chris Duncan
+    </a>
+  </p>
+  <p>
+    Layout and CSS using
+    <a href='http://twitter.github.com/bootstrap'>
+      Twitter Bootstrap
+    </a>
+    tuned by
+    <a href='https://twitter.com/ifesdjeen'>
+      Alex Petrov
+    </a>
+  </p>
+</footer></div></body></html>

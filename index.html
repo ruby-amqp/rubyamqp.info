@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang='en'>
   <head>
+    <link href='/assets/stylesheets/bootstrap.css' media='screen' rel='stylesheet' type='text/css' />
     <link href='/assets/stylesheets/sass/styles.css' media='screen' rel='stylesheet' type='text/css' />
     <script type='text/javascript'>
       var _gaq = _gaq || [];
@@ -17,30 +18,30 @@
     <link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
     <script src='/assets/javascripts/mode/ruby.js'></script>
     <link href='/assets/stylesheets/theme/default.css' rel='stylesheet' />
+    <script src='http://use.typekit.com/zls3kso.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+      //<![CDATA[
+        try{Typekit.load();}catch(e){}
+      //]]>
+    </script>
   </head>
-  <body>
+  <body class='landing'>
     <div class='container'>
-      <div class='hero-unit'>
-        <h1>Ruby AMQP</h1>
+      <div class='jumbotron masthead'>
+        <div class='inner'>
+          <h1>Ruby AMQP</h1>
+        </div>
         <p>
           Ruby amqp gem is a widely used, feature-rich, well-maintained, fast asynchronous AMQP 0.9.1 Ruby client with batteries included.
-          <a href='/articles/getting_started/'>
-            Get started in an instant
-          </a>
-          , read our guides, see our
-          <a href='http://bit.ly/mDm1JE'>
-            API reference
-          </a>
-          , we do care about the docs!
         </p>
-        <p>
-          <a class='btn primary large' href='/articles/getting_started/'>
-            Get Started!
-          </a>
+        <p><a href='/articles/getting_started/'>Get started in an instant</a>, read our guides, see our<a href='http://bit.ly/mDm1JE'>
+            API reference
+          </a>, we do care about the docs!
         </p>
       </div>
+      <hr class='soften' />
       <div class='row'>
-        <div class='span6'>
+        <div class='span4'>
           <h2>About</h2>
           <p>
             Advanced Message Queuing Protocol is a standard wire-level protocol and semantic framework for high performance enterprise messaging.
@@ -187,6 +188,31 @@
           </dl>
         </div>
       </div>
+      <footer class='footer'>
+        <p class='pull-right'>
+          <a href='#'>Back to top</a>
+        </p>
+        <p>
+          This guide was written by
+          <a href='http://twitter.com/michaelklishin'>
+            Michael Klishin
+          </a>
+          and edited by
+          <a href='https://twitter.com/celldee'>
+            Chris Duncan
+          </a>
+        </p>
+        <p>
+          Layout and CSS using
+          <a href='http://twitter.github.com/bootstrap'>
+            Twitter Bootstrap
+          </a>
+          tuned by
+          <a href='https://twitter.com/ifesdjeen'>
+            Alex Petrov
+          </a>
+        </p>
+      </footer>
     </div>
   </body>
 </html>

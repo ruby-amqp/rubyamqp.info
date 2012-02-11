@@ -4,6 +4,7 @@
     %title
       Ruby amqp gem:
       = @item[:title]
+    %link{ :href => "/assets/stylesheets/bootstrap.css", :rel => "stylesheet", :type => "text/css", :media => "screen" }
     %link{ :href => "/assets/stylesheets/sass/styles.css", :rel => "stylesheet", :type => "text/css", :media => "screen" }
 
     %script{ :src => "/assets/javascripts/jquery-1.7.min.js", :type => "text/javascript" }
@@ -24,16 +25,12 @@
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
 
-    %script{ :type => "text/javascript", :src => "http://use.typekit.com/zls3kso.js" }
-    :javascript
-      try{Typekit.load();}catch(e){}
-
   %body<>
-    .topbar
-      .topbar-inner
+    .navbar.navbar-fixed-top
+      .navbar-inner
         .container
           %ul.nav
-            %li
+            %li.active
               %a{:href => "/"}
                 Home
 
@@ -66,12 +63,12 @@
                 Error Handling
 
 
-    %section.content<>
-      %article<>
+    .container<>
+      %section<>
+        .page-header
+          %h1=@item[:title]
 
         .toc
-
-        %h1=@item[:title]
 
         = yield
 
@@ -118,3 +115,22 @@
                 dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
                 (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
             })();
+
+      %footer.footer
+        %p.pull-right
+          %a{:href => "#"} Back to top
+        %p
+          This guide was written by
+          %a{ :href => "http://twitter.com/michaelklishin" }
+            Michael Klishin
+          and edited by
+          %a{ :href => "https://twitter.com/celldee" }
+            Chris Duncan
+
+        %p
+          Layout and CSS using
+          %a{ :href => "http://twitter.github.com/bootstrap"}
+            Twitter Bootstrap
+          tuned by
+          %a{ :href => "https://twitter.com/ifesdjeen" }
+            Alex Petrov

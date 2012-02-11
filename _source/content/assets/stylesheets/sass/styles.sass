@@ -1,10 +1,5 @@
 @import "compass/typography/vertical_rhythm"
-
-@import bootstrap/bootstrap
-
-@import partials/config/grid
-@import partials/mixins/grid
-@import partials/widgets/grid
+@import mixins
 
 $grid-background-baseline-height: 1.375em
 
@@ -23,35 +18,58 @@ article
   :float right
   +box-shadow(-2px 2px 6px #bbb)
 
-
-h1, h2, h3, h4, h5
-  color: #294757
-  font-family: "museo", serif
-  font-weight: 700
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 1.0)
+.container > section
+  :margin-top 60px
 
 body.landing
-  background: #0A8EBC
-  color: #fff
-  h1, h2, h3,
-    color: #fff
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 1.0)
-  a, a:hover
-    font-family: "museo", serif
-    color: #ccc
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 1.0)
-  .hero-unit
-    background: #fff
-    color: #0A8EBC
-    h1
-      color: #0A8EBC
-    a, a:hover
-      color: #0A8EBC
-      text-shadow: none
-      text-decoration: underline
+  background: #fff
 
 body
   background: rgba(253, 246, 227, .6)
 
 strong
   color: #cb4b16
+
+code
+  white-space: pre
+  display: block
+  padding: 10px
+  color: gray
+
+.highlight
+  line-height: 25px
+  padding: 3px 4px
+  background-color: #f7f7f9
+  border: 1px solid #e1e1e8
+
+
+
+.jumbotron
+  position: relative
+
+.jumbotron h1
+  margin-bottom: 9px
+  font-size: 81px
+  letter-spacing: -1px
+  line-height: 1
+
+.masthead
+  padding-top: 36px
+  margin-bottom: 72px
+
+  h1, p
+    text-align: center
+
+  h1
+    margin-bottom: 18px
+
+  p
+    margin-left: 5%
+    margin-right: 5%
+    font-size: 30px
+    line-height: 36px
+
+footer
+  margin-top: 45px
+  padding: 35px 0 36px
+  border-top: 1px solid #E5E5E5

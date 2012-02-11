@@ -474,15 +474,15 @@ A common expectation of the code above is that it is run after the message "has 
  * OS kernel buffers data before sending it
  * Network driver may also employ buffering
 
-<span class="help-block">
+<div class="alert alert-error">
 As you can see, "when data is sent" is a complicated issue and while methods to flush buffers certainly exist on various platforms, doing so in a cross-platform way that *includes the JVM* (that EventMachine also runs on) is non-trivial. In addition, even flushing buffers does not guarantee that the data was received by the broker because it might have crashed while data was travelling down the wire. The only way to reliably know whether data was received by the broker or a peer application is to use message acknowledgements. This is how TCP works and this approach is proven to work at  enormous scale of the modern Internet. AMQP (the protocol) fully embraces this fact and the amqp gem follows.
-</span>
+</div>
 
 Given all of this, you may ask "when does the {% yard_link AMQP::Exchange#publish %} callback fire?" The answer is on the next event loop tick. By then the data is pushed down to the OS kernel. As far as the Ruby library is concerned, it is reasonably safe behavior.
 
-<span class="help-block">
+<div class="alert alert-error">
 The {% yard_link AMQP::Exchange#publish %} callback is fired on the next event loop tick. Data is staged for delivery immediately. Applications MUST NOT assume that by the time the callback has fired, the data is guaranteed to leave the local machine networking stack, reach the AMQP broker or any peer applications that the message needs to be routed to.
-</span>
+</div>
 
 In cases when you cannot afford to lose a single message, AMQP v0.9.1 applications can use one (or a combination of) the following protocol features:
 
@@ -536,9 +536,7 @@ To publish a persistent message, use the ":persistent" option that {% yard_link 
 
 <pre>exchange.publish(payload, :persistent => true)</pre>
 
-<span class="help-block">
-Note that in order to survive a broker crash, both the message and the queue that it was routed to must be persistent/durable.
-</span>
+<div class="alert alert-error">Note that in order to survive a broker crash, both the message and the queue that it was routed to must be persistent/durable.</div>
 
 "Durability and Message Persistence":/articles/durability/ provides more information on the subject.
 
@@ -548,9 +546,7 @@ When using amqp gem in multi-threaded environments, the rule of thumb is: avoid 
 
 Starting with 0.8.0.RC14, {% yard_link AMQP::Exchange#publish %} synchronizes data delivery on the channel object associated with exchange. This protects application developers from the most common problems related to publishing messages on a shared channel from multiple threads, however, by no means protects from every possible concurrency hazard.
 
-<span class="help-block">
-When using amqp gem in multi-threaded environments, the rule of thumb is: avoid sharing {% yard_link AMQP::Channel %} instances across threads.
-</span>
+<div class="alert alert-error">When using amqp gem in multi-threaded environments, the rule of thumb is: avoid sharing {% yard_link AMQP::Channel %} instances across threads.</div>
 
 h3. Sending one-off messages
 

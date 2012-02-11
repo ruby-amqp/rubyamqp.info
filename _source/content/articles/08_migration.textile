@@ -200,3 +200,4 @@ AMQP::Protocol::* classes were AMQP 0.8 protocol implementation detail. With the
 <span class="note">
 AMQP::Protocol::* classes were removed in the the amqp gem 0.8.0 development cycle.
 </span>
+

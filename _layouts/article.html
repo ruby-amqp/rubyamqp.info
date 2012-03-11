@@ -11,8 +11,7 @@
   <script src='/assets/javascripts/code_highlight.js'></script>
   <link href='/assets/stylesheets/codemirror.css' rel='stylesheet' />
   <script src='/assets/javascripts/mode/ruby.js'></script>
-  <script src='/assets/javascripts/raphael.js'></script>
-  <script src='/assets/javascripts/graphs.js'></script>
+  <meta content='text/html;charset=utf-8' http-equiv='Content-Type' />
   <link href='/assets/stylesheets/theme/default.css' rel='stylesheet' />
   <script type='text/javascript'>
     //<![CDATA[
@@ -109,6 +108,7 @@ and edited by
     contact the author of the guides directly
   </a>
 </p>
+{% if page.disqus_identifier %}
 <div id='disqus_thread'></div>
 <script type='text/javascript'>
   //<![CDATA[
@@ -126,7 +126,8 @@ and edited by
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
   //]]>
-</script></section><footer class='footer'>
+</script>
+{% endif %}</section><footer class='footer'>
   <p class='pull-right'>
     <a href='#'>Back to top</a>
   </p>

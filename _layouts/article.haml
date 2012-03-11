@@ -14,10 +14,10 @@
     %link{ :rel => "stylesheet", :href => "/assets/stylesheets/codemirror.css" }
     %script{ :src => "/assets/javascripts/mode/ruby.js" }
 
-    %script{ :src => "/assets/javascripts/raphael.js"}
-    %script{ :src => "/assets/javascripts/graphs.js"}
+    %meta{ "http-equiv" => "Content-Type", :content => "text/html;charset=utf-8" }
 
     %link{ :rel => "stylesheet", :href => "/assets/stylesheets/theme/default.css" }
+
     :javascript
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-27153041-1']);
@@ -104,6 +104,7 @@
             contact the author of the guides directly
 
 
+        {% if page.disqus_identifier %}
         #disqus_thread
         :javascript
           /* * * CONFIGURATION VARIABLES * * */
@@ -119,7 +120,7 @@
               dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
               (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
           })();
-
+        {% endif %}
       %footer.footer
         %p.pull-right
           %a{:href => "#"} Back to top

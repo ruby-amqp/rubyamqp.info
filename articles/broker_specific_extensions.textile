@@ -30,19 +30,19 @@ require "amqp/extensions/rabbitmq"</pre>
 
 h2. Per-queue Message Time-to-Live
 
-Per-queue Message Time-to-Live (TTL) is a RabbitMQ extension to AMQP 0.9.1 that lets developers control for how longa message published to a queue can live before it is discarded. A message that has been in the queue for longer than theconfigured TTL is said to be dead. Dead messages will not be delivered to consumers and cannot be fetched using*basic.get* operation ({% yard_link AMQP::Queue#pop %}).
+Per-queue Message Time-to-Live (TTL) is a RabbitMQ extension to AMQP 0.9.1 that lets developers control for how long a message published to a queue can live before it is discarded. A message that has been in the queue for longer than the configured TTL is said to be dead. Dead messages will not be delivered to consumers and cannot be fetched using the *basic.get* operation ({% yard_link AMQP::Queue#pop %}).
 
-Message TTL is specified using *x-message-ttl* argument on declaration. With amqp gem, you pass it to {% yard_link AMQP::Queue#initialize %} or{% yard_link AMQP::Channel#queue %}:
+Message TTL is specified using the *x-message-ttl* argument on declaration. With the amqp gem, you pass it to {% yard_link AMQP::Queue#initialize %} or{% yard_link AMQP::Channel#queue %}:
 
 <pre>
-# 1000 millisecondschannel.queue("", :arguments => { "x-message-ttl" => 1000 })</code>
+<code># 1000 millisecondschannel.queue("", :arguments => { "x-message-ttl" => 1000 })</code>
 </pre>
 
-When a published messages is routed to multiple queues, each of the queues gets a _copy of the message_. If then the message dies inone of the queues, it has no effect on copies of the message in other queues.
+When a published message is routed to multiple queues, each of the queues gets a _copy of the message_. If the message subsequently dies in one of the queues, it has no effect on copies of the message in other queues.
 
 h3. Example
 
-The example below sets message TTL for a new server-named queue to be 1000 milliseconds. It then publishes several messages thatare routed to the queue and tries to fetch messages using *basic.get* AMQP method ({% yard_link AMQP::Queue#pop %} after 0.7 and 1.5 seconds:
+The example below sets the message TTL for a new server-named queue to be 1000 milliseconds. It then publishes several messages that are routed to the queue and tries to fetch messages using the *basic.get* AMQP method ({% yard_link AMQP::Queue#pop %} after 0.7 and 1.5 seconds:
 
 {% example broker_specific_extensions/per_queue_message_ttl.rb, 1113127 %}
 
@@ -52,9 +52,9 @@ See also rabbitmq.com section on "Per-queue Message TTL":http://www.rabbitmq.com
 
 h2. Publisher Confirms (Publisher Acknowledgements)
 
-In some situations not a single message can be lost. The only reliable way of doing so is using confirmations."Publisher Confirms AMQP extension":http://www.rabbitmq.com/blog/2011/02/10/introducing-publisher-confirms/ was designed to solve the reliable publishing problem.
+In some situations it is essential that no messages are lost. The only reliable way of ensuring this is by using confirmations. The "Publisher Confirms AMQP extension":http://www.rabbitmq.com/blog/2011/02/10/introducing-publisher-confirms/ was designed to solve the reliable publishing problem.
 
-Publisher confirms are similar to message acknowledgements documented in the "Working With Queues":/articles/working_with_queues/ guide but involve publisher and AMQP brokerinstead of consumer and AMQP broker.
+Publisher confirms are similar to message acknowledgements documented in the "Working With Queues":/articles/working_with_queues/ guide but involve a publisher and the AMQP broker instead of a consumer and the AMQP broker.
 
 !https://github.com/ruby-amqp/amqp/raw/master/docs/diagrams/006_amqp_091_message_acknowledgements.png!
 
@@ -62,18 +62,18 @@ Publisher confirms are similar to message acknowledgements documented in the "Wo
 
 h3. Public API
 
-To use publisher confirmations, first put channel into confirmation mode using {% yard_link AMQP::Channel#confirm_select %}:
+To use publisher confirmations, first put the channel into confirmation mode using {% yard_link AMQP::Channel#confirm_select %}:
 
 <pre>channel.confirm_select</pre>
 
-From this moment on, every message published on this channel will cause channel's _publisher index_ (message counter) to be incremented. It is possible to accessusing {% yard_link AMQP::Channel#publisher_index %} method. To check whether channel is in the confirmation mode, use {% yard_link AMQP::Channel#uses_publisher_confirmations? %} predicate.
+From this moment on, every message published on this channel will cause the channel's _publisher index_ (message counter) to be incremented. It is possible to access the index using {% yard_link AMQP::Channel#publisher_index %} method. To check whether the channel is in confirmation mode, use the {% yard_link AMQP::Channel#uses_publisher_confirmations? %} predicate.
 To handle AMQP broker acknowledgements, define a handler using {% yard_link AMQP::Channel#on_ack %}, for example:
 
 <pre>channel.on_ack do |basic_ack|
  puts "Received basic_ack: multiple = #{basic_ack.multiple}, delivery_tag = #{basic_ack.delivery_tag}"
 end</pre>
 
-Delivery tag will indicate number of confirmed messages. If *multiple* attribute is true, the confirmation is for all messages up to the numberdelivery tag indicates. In other words, AMQP broker may confirm just one message or a batch of them.
+The delivery tag will indicate the number of confirmed messages. If the *multiple* attribute is true, the confirmation is for all messages up to the number that the delivery tag indicates. In other words, an AMQP broker may confirm just one message or a batch of them.
 
 h3. Example
 
@@ -85,13 +85,13 @@ See also rabbitmq.com section on "Confirms aka Publisher Acknowledgements":http:
 
 h2. basic.nack
 
-The AMQP specification defines the basic.reject method that allows clients to reject individual, delivered messages, instructing the brokerto either discard them or requeue them. Unfortunately, basic.reject provides no support for negatively acknowledging messages in bulk.
+The AMQP specification defines the basic.reject method that allows clients to reject individual, delivered messages, instructing the broker to either discard them or requeue them. Unfortunately, basic.reject provides no support for negatively acknowledging messages in bulk.
 
-To solve this, RabbitMQ supports the basic.nack method that provides all the functionality of basic.reject whilst alsoallowing for bulk processing of messages.
+To solve this, RabbitMQ supports the basic.nack method that provides all of the functionality of basic.reject whilst also allowing for bulk processing of messages.
 
 h3. Public API
 
-When RabbitMQ extensions are loaded, {% yard_link AMQP::Channel#reject %} method is overriden via mixin to take one additional argument: multi (defaults to false).When it is given and is true, amqp gem will use basic.nack AMQP method instead of basic.reject, to reject multiple messages at once.Otherwise, basic.reject is used as usual.
+When RabbitMQ extensions are loaded, the {% yard_link AMQP::Channel#reject %} method is overriden via a mixin to take one additional argument: multi (defaults to false). When the 'multi' argument is passed with a value of 'true', then the amqp gem will use the basic.nack AMQP method, instead of basic.reject, to reject multiple messages at once. Otherwise, basic.reject is used as usual.
 
 h3. Learn More
 
@@ -103,7 +103,7 @@ Alternate Exchanges is a RabbitMQ extension to AMQP 0.9.1 that lets developers d
 
 h3. Public API
 
-To specify exchange A as alternate exchange to exchange B, specify 'alternate-exchange' argument on declaration of B:
+To specify exchange A as an alternate exchange to exchange B, specify the 'alternate-exchange' argument on declaration of B:
 
 <pre>exchange1 = channel.fanout("ops.fallback",     :auto_delete => true)
 exchange2 = channel.fanout("events.collector", :auto_delete => true, :arguments => { "alternate-exchange" => "ops.fallback" })

@@ -1,7 +1,7 @@
 ---
 title: "Getting Started with AMQP and Ruby"
 layout: article
-disqus_identifier: "amqp_connecting_to_the_broker"
+disqus_identifier: "getting_started_with_amqp"
 disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/GettingStarted.textile"
 permalink: "/getting_started/"
 ---

@@ -3,7 +3,7 @@ title: "Running amqp gem test suite"
 layout: article
 disqus_identifier: "amqp_running_tests_textile"
 disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/RunningTests.textile"
-permalink: "/getting_started/"
+permalink: "/running_tests/"
 ---
 
 h2. About this guide

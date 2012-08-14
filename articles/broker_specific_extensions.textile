@@ -77,7 +77,7 @@ The delivery tag will indicate the number of confirmed messages. If the *multipl
 
 h3. Example
 
-{% example broker_specific_extensions/rabbitmq_publisher_confirmations_with_amqp_gem_0.8.0.rb, 923599 %}
+{% gist 923599 %}
 
 h3. Learn More
 
@@ -111,7 +111,7 @@ exchange2 = channel.fanout("events.collector", :auto_delete => true, :arguments 
 
 h3. Example
 
-{% example broker_specific_extensions/using_alternate_exchanges.rb, 1159091 %}
+{% gist 1159091 %}
 
 h3. Learn More
 

@@ -119,7 +119,7 @@ Each of the queues bound to the exchange receives a *copy* of the message.
 
 Full example:
 
-{% example working_with_exchanges/fanout_routing.rb, 1020181 %}
+{% gist 1020181 %}
 
 h3. Fanout use cases
 
@@ -185,7 +185,7 @@ The routing key will then be compared for equality with routing keys on bindings
 
 Full example:
 
-{% example working_with_exchanges/round_robin_balancing_using_direct_exchange.rb, 1041787 %}
+{% gist 1041787 %}
 
 h3. Direct exchanges and load balancing of messages
 
@@ -231,11 +231,11 @@ Some examples of usage:
 
 The default exchange is used by the "Hello, World" example:
 
-{% example getting_started/hello_world_dslified.rb, 998691 %}
+{% gist 998691 %}
 
 Additionally, the routing example above can be rewritten to use the default exchange:
 
-{% example working_with_exchanges/round_robin_balancing_using_the_default_exchange.rb, 1041778 %}
+{% gist 1041778 %}
 
 h3. Direct exchange use cases
 
@@ -301,7 +301,7 @@ As you can see, the "*" part of the pattern matches 1 word only.
 
 Full example:
 
-{% example working_with_exchanges/weather_broadcasts_with_fanout_exchange.rb, 1020308 %}
+{% gist 1020308 %}
 
 h3. Topic exchange use cases
 
@@ -339,7 +339,7 @@ To publish a message to an AMQP exchange, use {% yard_link AMQP::Exchange#publis
 
 {% yard_link AMQP::Exchange#publish %} can accept any object that responds to the `to_s` method, not just string instances:
 
-{% example working_with_exchanges/publishing_messages_as_objects.rb, 1020336 %}
+{% gist 1020336 %}
 
 The message payload is completely opaque to the library and is not modified in any way.
 
@@ -380,7 +380,7 @@ All other attributes can be added to a _headers table_ (in Ruby parlance, header
 
 An example to show how message metadata attributes are passed to {% yard_link AMQP::Exchange#publish %}:
 
-{% example working_with_exchanges/specifying_message_metadata_on_publishing.rb, 1020424 %}
+{% gist 1020424 %}
 
 <dl>
   <dt>:routing_key</dt>
@@ -503,7 +503,7 @@ An example of {% yard_link AMQP::Exchange#publish %} being used to publish an im
 
 The following code example demonstrates a message that is published as immediate but cannot be immediately consumed (no consumers) and thus is returned back to the producer:
 
-{% example working_with_exchanges/handling_returned_messages_with_amqp_gem.rb, 1025700 %}
+{% gist 1025700 %}
 
 h3. Publishing messages as mandatory
 
@@ -511,7 +511,7 @@ When publishing messages, it is possible to use the ":mandatory" option to publi
 
 The following code example demonstrates a message that is published as mandatory but cannot be routed (no bindings) and thus is returned back to the producer:
 
-{% example working_with_exchanges/unroutable_mandatory_message_is_returned.rb, 1041835 %}
+{% gist 1041835 %}
 
 h3. Returned messages
 
@@ -553,7 +553,7 @@ h3. Sending one-off messages
 
 The following example publishes a message and *safely* closes the AMQP connection afterwards by passing a block to {% yard_link AMQP::Exchange#publish %} :
 
-{% example working_with_exchanges/publishing_one_off_messages_with_ruby_amqp_gem.rb, 1020425 %}
+{% gist 1020425 %}
 
 h2. Headers exchanges
 
@@ -645,7 +645,7 @@ When there is just one queue bound to a headers exchange, messages are routed to
 
 Full example:
 
-{% example working_with_exchanges/headers_exchange_example.rb, 1034875 %}
+{% gist 1034875 %}
 
 h3. Headers exchange use cases
 
@@ -740,7 +740,7 @@ Exchanges can be *auto-deleted*. To declare an exchange as auto-deleted, use the
 
 Full example:
 
-{% example working_with_exchanges/auto_deleted_exchanges.rb, 1020226 %}
+{% gist 1020226 %}
 
 TBD: explain when exchange is considered to be "no longer in use"
 
@@ -750,7 +750,7 @@ Since Ruby is a genuine object-oriented language, it is important to demonstrate
 
 Full example:
 
-{% example working_with_exchanges/12_objects_that_consume_messages.rb, 1009425 %}
+{% gist 1009425 %}
 
 TBD
 

@@ -59,7 +59,7 @@ To declare a queue with a particular name, for example, "images.resize", pass it
 
 Full example:
 
-{% example working_with_queues/01b_declaring_a_queue_using_queue_constructor.rb, 998721 %}
+{% gist 998721 %}
 
 h3. Server-named queues
 
@@ -71,7 +71,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/01a_declaring_a_server_named_queue_using_queue_constructor.rb, 998720 %}
+{% gist 998720 %}
 
 The amqp gem allows server-named queues to be declared without callbacks:
 
@@ -127,7 +127,7 @@ To declare a durable shared queue, you pass a queue name that is a non-blank str
 
 Full example:
 
-{% example working_with_queues/02a_declaring_a_durable_shared_queue.rb, 998723 %}
+{% gist 998723 %}
 
 the same example rewritten to use {% yard_link AMQP::Channel#queue %}:
 
@@ -137,7 +137,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/02b_declaring_a_durable_shared_queue.rb, 998724 %}
+{% gist 998724 %}
 
 h2. Declaring a temporary exclusive queue
 
@@ -149,7 +149,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/03a_declaring_a_temporary_exclusive_queue.rb, 998725 %}
+{% gist 998725 %}
 
 The same example can be rewritten to use {% yard_link AMQP::Channel#queue %}:
 
@@ -159,11 +159,11 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/03b_declaring_a_temporary_exclusive_queue.rb, 998726 %}
+{% gist 998726 %}
 
 Exclusive queues may only be accessed by the current connection and are deleted when that connection closes. The declaration of an exclusive queue by other connections is not allowed and will result in a channel-level exception with the code 405 (RESOURCE_LOCKED) and a reply message similar to
 
-{% example working_with_queues/queue_exclusivity_violation_results.rb, 1008529 %}
+{% gist 1008529 %}
 
 h2. Binding queues to exchanges
 
@@ -175,7 +175,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/04_bind_a_queue_using_exchange_instance.rb, 998727 %}
+{% gist 998727 %}
 
 The same example using a string without callback:
 
@@ -183,7 +183,7 @@ The same example using a string without callback:
 
 Full example:
 
-{% example working_with_queues/05_bind_a_queue_using_exchange_name.rb, 998729 %}
+{% gist 998729 %}
 
 h2. Subscribing to receive messages ("push API")
 
@@ -195,7 +195,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/06_subscribe_to_receive_messages.rb, 998731 %}
+{% gist 998731 %}
 
 Subscriptions for message delivery are usually referred to as <span class="note">consumers</span> in the AMQP v0.9.1 specification, client library documentation and books. Consumers last as long as the channel that they were declared on, or until  client cancels them (unsubscribes).
 
@@ -253,7 +253,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/accessing_message_metadata.rb, 998739 %}
+{% gist 998739 %}
 
 h3. Exclusive consumers
 
@@ -323,7 +323,7 @@ end</pre>
 
 To demonstrate how redelivery works, let us have a look at the following code example:
 
-{% example working_with_queues/amqp_acknowledgements_and_message_redelivery.rb, 999396 %}
+{% gist 999396 %}
 
 So what is going on here? This example uses 3 AMQP connections to imitate 3 applications, 1 producer and two consumers. Each AMQP connection opens a single channel:
 
@@ -577,7 +577,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/07_fetch_a_message_from_the_queue.rb, 998732 %}
+{% gist 998732 %}
 
 If the queue is empty, then the `payload` argument will be nil, otherwise arguments are identical to those of the {% yard_link AMQP::Queue#subscribe %} callback.
 
@@ -597,7 +597,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/08_unsubscribing_a_consumer.rb, 998734 %}
+{% gist 998734 %}
 
 In AMQP parlance, unsubscribing from messages is often referred to as "cancelling a consumer". Once a consumer is cancelled, messages will no longer be delivered to it, however, due to the asynchronous nature of the protocol, it is possible for "in flight" messages to be received after this call completes.
 
@@ -612,7 +612,7 @@ To unbind a queue from an exchange use {% yard_link AMQP::Queue#unbind %}:
 
 Full example:
 
-{% example working_with_queues/09_unbinding_from_exchange.rb, 998742 %}
+{% gist 998742 %}
 
 Note that trying to unbind a queue from an exchange that the queue was never bound to will result in a channel-level exception.
 
@@ -628,7 +628,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/queue_status_example.rb, 1068363 %}
+{% gist 1068363 %}
 
 h2. Querying the number of consumers on a queue
 
@@ -642,7 +642,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/another_queue_status_example.rb, 1068377 %}
+{% gist 1068377 %}
 
 h2. Purging queues
 
@@ -658,7 +658,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/10_purge_a_queue.rb, 998743 %}
+{% gist 998743 %}
 
 Note that this example purges a newly declared queue with a unique server-generated name. When a queue is declared, it is empty, so for server-named queues, there is no need to purge them before they are used.
 
@@ -676,7 +676,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/11_deleting_a_queue.rb, 998744 %}
+{% gist 998744 %}
 
 h2. Objects as message consumers and unit testing consumers in isolation
 
@@ -725,7 +725,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/12_objects_that_consume_messages.rb, 1009425 %}
+{% gist 1009425 %}
 
 In this example, <span class="note">Consumer</span> instances have to be instantiated with an {% yard_link AMQP::Channel %} instance. If the message handling was done by an aggregated object, it would completely separate the handling logic and would be make it easy to unit test in isolation:
 
@@ -774,7 +774,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/13_objects_that_consume_messages_take_two.rb, 1009447 %}
+{% gist 1009447 %}
 
 Note that the <span class="note">Consumer</span> class demonstrated above can be easily tested in isolation without spinning up any AMQP connections:
 

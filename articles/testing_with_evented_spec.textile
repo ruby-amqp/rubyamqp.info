@@ -30,7 +30,7 @@ h3. Setting up
 
 To start using amqp all you need is to include {% yard_link EventedSpec::AMQPSpec %} module into your context and add {% yard_link #done %} calls to your examples:
 
-{% example testing_with_es/amqp-evented-spec-hello-world.rb, 1027377 %}
+{% gist 1027377 %}
 
 h3. Testing in the Asynchronous Environment
 
@@ -49,7 +49,7 @@ h3. Default Connection Options and Timeout
 
 It is sometimes desirable to use custom connection settings for your test environment as well as the default timeout value used. evented-spec lets you do it:
 
-{% example testing_with_es/amqp-evented-spec-hello-world-2.rb, 1027410 %}
+{% gist 1027410 %}
 
 Available options are passed to {AMQP.connect} so it is possible to specify host, port, vhost, username and password your test suite needs.
 
@@ -61,7 +61,7 @@ h3. Full Example
 
 Now that you're filled on theory part, it's time to do something with all this knowledge. Below goes a slightly modified version of one of the integration specs from AMQP suite. It sets up default topic exchange and publishes various messages about sports events:
 
-{% example testing_with_es/amqp-evented-spec-3.rb, 1027478 %}
+{% gist 1027478 %}
 
 Couple of things to notice: <a class='highlight'>#done</a> is invoked using an optional callback and optional delay, also instance variables behavior in hooks is the same as in "normal" rspec hooks.
 
@@ -73,7 +73,7 @@ AMQP gem uses "EventMachine":http://eventmachine.rubyforge.org/ under hood. If y
 
 In the following example, we declare two channels, then declare the same queue twice with the same name but different options (which raises a channel-level exception in AMQP):
 
-{% example testing_with_es/amqp-evented-spec-delayed-4.rb, 1027500 %}
+{% gist 1027500 %}
 
 If you draw a timeline, various events happen at 0.0s, then at 0.1s, then at 0.3s and eventually at 0.4s.
 

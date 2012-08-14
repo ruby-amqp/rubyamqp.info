@@ -85,7 +85,7 @@ h2. "Hello, world" example
 
 Let us begin with the classic "Hello, world" example. First, here is the code:
 
-{% example getting_started/hello_world.rb, 998690 %}
+{% gist 998690 %}
 
 This example demonstrates a very common communication scenario: *application A* wants to publish a message that will end up in a queue that *application B* listens on. In this case, the queue name is "amqpgem.examples.hello". Let us go through the code step by step:
 
@@ -141,7 +141,7 @@ Routing key is one of the _message attributes_. The default exchange will route 
 
 This first example can be modified to use the method chaining technique:
 
-{% example getting_started/hello_world_dslified.rb, 998691 %}
+{% gist 998691 %}
 
 This diagram demonstrates the "Hello, world" example data flow:
 
@@ -156,7 +156,7 @@ The previous example demonstrated how a connection to a broker is made and how t
 
 A very well-known broadcast example is Twitter: every time a person tweets, followers receive a notification. Blabbr, our imaginary information network, models this scenario: every network member has a separate queue and publishes blabs to a separate exchange. 3 Blabbr members, Joe, Aaron and Bob, follow the official NBA account on Blabbr to get updates about what is happening in the world of basketball. Here is the code:
 
-{% example getting_started/blabblr.rb, 998692 %}
+{% gist 998692 %}
 
 The first line has a few differences from the "Hello, world" example above:
 
@@ -221,7 +221,7 @@ Our example features multiple consumer applications monitoring updates for diffe
 
 Here is the code:
 
-{% example getting_started/weathr.rb, 998694 %}
+{% gist 998694 %}
 
 The first line that is different from the Blabbr example is
 
@@ -355,7 +355,7 @@ end
 
 The "Hello, world" example can be ported to use this technique:
 
-{% example getting_started/13_objects_that_consume_messages_take_two.rb, 1009447 %}
+{% gist 1009447 %}
 
 The most important line in this example is
 

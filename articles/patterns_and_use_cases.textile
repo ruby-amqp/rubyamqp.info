@@ -63,11 +63,11 @@ h3. Code example
 
 h4. Client code
 
-{% example patterns_and_use_cases/request_response_client.rb, 1207763 %}
+{% gist 1207763 %}
 
 h4. Server code
 
-{% example patterns_and_use_cases/request_reply_server.rb, 1207764 %}
+{% gist 1207764 %}
 
 In the examples above messages are published with the :immediate attribute set. This is not necessary in allcases: sometimes it is OK for requests to sit in the queue without active consumers. Replies, on the other hand,assume an active consumer and existing replies queue, so if routing or immediate delivery do not succeed,server application will log returned messages. More on this in the "Working With Exchanges":/articles/working_with_exchanges/ guide.
 
@@ -106,11 +106,11 @@ h3. Code example
 
 h4. Producer (Sender)
 
-{% example patterns_and_use_cases/command_producer.rb, 1207758 %}
+{% gist 1207758 %}
 
 h4. Consumer (Recipient)
 
-{% example patterns_and_use_cases/command_consumer.rb, 1207761 %}
+{% gist 1207761 %}
 
 h3. Related patterns
 
@@ -154,11 +154,11 @@ h3. Code example
 
 h4. Producer (Sender)
 
-{% example patterns_and_use_cases/event_producer.rb, 1207750 %}
+{% gist 1207750 %}
 
 h4. Consumer (Handler)
 
-{% example patterns_and_use_cases/events_consumer.rb, 1207749 %}
+{% gist 1207749 %}
 
 h3. Related patterns
 

@@ -42,13 +42,13 @@ In order to receive messages, a queue needs to be bound to at least one exchange
   puts "Just bound #{queue.name} to #{exchange.name}"
 end</pre>
 
-{% example working_with_queues/01b_declaring_a_queue_using_queue_constructor.rb, 998727 %}
+{% gist 998727 %}
 
 The same example using a string without callback:
 
 <pre>queue.bind("amq.fanout")</pre>
 
-{% example working_with_queues/05_bind_a_queue_using_exchange_name.rb, 998729 %}
+{% gist 998729 %}
 
 h2. Unbinding queues from exchanges
 
@@ -56,7 +56,7 @@ To unbind a queue from an exchange use {% yard_link AMQP::Queue#unbind %}:
 
 <pre>queue.unbind(exchange)</pre>
 
-{% example working_with_queues/09_unbinding_from_exchange.rb, 998742 %}
+{% gist 998742 %}
 
 <span class="note">Trying to unbind a queue from an exchange that the queue was never bound to will result in achannel-level exception.</span>
 

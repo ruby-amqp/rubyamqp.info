@@ -44,7 +44,7 @@ h3. Example
 
 The example below sets the message TTL for a new server-named queue to be 1000 milliseconds. It then publishes several messages that are routed to the queue and tries to fetch messages using the *basic.get* AMQP method ({% yard_link AMQP::Queue#pop %} after 0.7 and 1.5 seconds:
 
-{% example broker_specific_extensions/per_queue_message_ttl.rb, 1113127 %}
+{% gist 1113127 %}
 
 h3. Learn More
 

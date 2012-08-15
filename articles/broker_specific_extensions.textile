@@ -10,7 +10,7 @@ h2. RabbitMQ extensions
 
 h2. Supported extensions
 
-AMQP gem supports many RabbitMQ extensions to AMQP 0.9.1:
+The amqp gem supports many RabbitMQ extensions to AMQP 0.9.1:
 
   * "Publisher confirmations":http://www.rabbitmq.com/extensions.html#confirms (confirm.* class)
   * "Negative acknowledgements":http://www.rabbitmq.com/extensions.html#negative-acknowledgements (basic.nack)
@@ -30,7 +30,7 @@ require "amqp/extensions/rabbitmq"</pre>
 
 h2. Per-queue Message Time-to-Live
 
-Per-queue Message Time-to-Live (TTL) is a RabbitMQ extension to AMQP 0.9.1 that lets developers control for how long a message published to a queue can live before it is discarded. A message that has been in the queue for longer than the configured TTL is said to be dead. Dead messages will not be delivered to consumers and cannot be fetched using the *basic.get* operation ({% yard_link AMQP::Queue#pop %}).
+Per-queue Message Time-to-Live (TTL) is a RabbitMQ extension to AMQP 0.9.1 that allows developers to control how long a message published to a queue can live before it is discarded. A message that has been in the queue for longer than the configured TTL is said to be dead. Dead messages will not be delivered to consumers and cannot be fetched using the *basic.get* operation ({% yard_link AMQP::Queue#pop %}).
 
 Message TTL is specified using the *x-message-ttl* argument on declaration. With the amqp gem, you pass it to {% yard_link AMQP::Queue#initialize %} or{% yard_link AMQP::Channel#queue %}:
 
@@ -44,7 +44,7 @@ h3. Example
 
 The example below sets the message TTL for a new server-named queue to be 1000 milliseconds. It then publishes several messages that are routed to the queue and tries to fetch messages using the *basic.get* AMQP method ({% yard_link AMQP::Queue#pop %} after 0.7 and 1.5 seconds:
 
-{% example broker_specific_extensions/per_queue_message_ttl.rb, 1113127 %}
+{% gist 1113127 %}
 
 h3. Learn More
 
@@ -77,7 +77,7 @@ The delivery tag will indicate the number of confirmed messages. If the *multipl
 
 h3. Example
 
-{% example broker_specific_extensions/rabbitmq_publisher_confirmations_with_amqp_gem_0.8.0.rb, 923599 %}
+{% gist 923599 %}
 
 h3. Learn More
 
@@ -85,7 +85,7 @@ See also rabbitmq.com section on "Confirms aka Publisher Acknowledgements":http:
 
 h2. basic.nack
 
-The AMQP specification defines the basic.reject method that allows clients to reject individual, delivered messages, instructing the broker to either discard them or requeue them. Unfortunately, basic.reject provides no support for negatively acknowledging messages in bulk.
+The AMQP 0.9.1 specification defines the basic.reject method that allows clients to reject individual, delivered messages, instructing the broker to either discard them or requeue them. Unfortunately, basic.reject provides no support for negatively acknowledging messages in bulk.
 
 To solve this, RabbitMQ supports the basic.nack method that provides all of the functionality of basic.reject whilst also allowing for bulk processing of messages.
 
@@ -99,7 +99,7 @@ See also rabbitmq.com section on "Confirms aka Publisher Acknowledgements":http:
 
 h2. Alternate Exchanges
 
-Alternate Exchanges is a RabbitMQ extension to AMQP 0.9.1 that lets developers define "fallback" exchanges where unroutable messages will be sent.
+Alternate Exchanges is a RabbitMQ extension to AMQP 0.9.1 that allows developers to define "fallback" exchanges where unroutable messages will be sent.
 
 h3. Public API
 
@@ -111,7 +111,7 @@ exchange2 = channel.fanout("events.collector", :auto_delete => true, :arguments 
 
 h3. Example
 
-{% example broker_specific_extensions/using_alternate_exchanges.rb, 1159091 %}
+{% gist 1159091 %}
 
 h3. Learn More
 

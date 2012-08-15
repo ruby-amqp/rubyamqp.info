@@ -10,29 +10,29 @@ h2. About this guide
 
 This guide covers queue, exchange and message durability, as well as othertopics related to durability, for example, durability in cluster environment.
 
-This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images & stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images and stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
 
 h2. Covered versions
 
-This guide covers "Ruby amqp gem":http://github.com/ruby-amqp/amqp v0.8.0 and later.
+This guide covers "Ruby amqp gem":http://github.com/ruby-amqp/amqp 0.8.0 and later.
 
 h2. Entity durability and message persistence
 
 h3. Durability of exchanges
 
-AMQP separates concept of durability of entities (queues, exchanges) from messages persistence.Exchanges can be durable or transient. Durable exchanges survive broker restart, transient exchanges don't (theyhave to be redeclared when broker comes back online). Not all scenarios and use cases mandate exchanges to bedurable.
+AMQP separates the concept of entity durability (queues, exchanges) from message persistence. Exchanges can be durable or transient. Durable exchanges survive broker restart, transient exchanges do not (they have to be redeclared when broker comes back online). Not all scenarios and use cases mandate exchanges to be durable.
 
 h3. Durability of queues
 
-Durable queues are persisted to disk and thus survive broker restarts. Queues that are not durable are called transient.Not all scenarios and use cases mandate queues to be durable.
+Durable queues are persisted to disk and thus survive broker restarts. Queues that are not durable are called transient. Not all scenarios and use cases mandate queues to be durable.
 
-Note that *only durable queues can be bound to durable exchanges*. This guarantees that it is possible to restore bindingson broker restart.
+Note that *only durable queues can be bound to durable exchanges*. This guarantees that it is possible to restore bindings on broker restart.
 
-Durability of a queue does not make _messages_ that are routed to that queue durable. If broker is taken down and thenbrought back up, durable queue will be re-declared during broker startup, however, only _persistent_ messages will be recovered.
+Durability of a queue does not make _messages_ that are routed to that queue durable. If a broker is taken down and then brought back up, durable queues will be re-declared during broker startup, however, only _persistent_ messages will be recovered.
 
-h3. Persistence of messages
+h3. Message persistence
 
-The concept of messages persistence is separate: messages may be published as persistent. That makesAMQP broker persist them to disk. If the server is restarted, the system ensures that received persistent messagesare not lost. Simply publishing message to a durable exchange or the fact that queue(s) they are routed tois durable doesn't make messages persistent: it all depends on persistence mode of the messages itself.Publishing messages as persistent affects performance (just like with data stores, durability comes at a certain costin performance and vise versa). Pass :persistent => true to {% yard_link AMQP::Exchange#publish %} to publish your message as persistent.
+Messages may be published as persistent and this is what makes an AMQP broker persist them to disk. If the server is restarted, the system ensures that received persistent messages are not lost. Simply publishing a message to a durable exchange or the fact that a queue to which a message is routed is durable does not make that message persistent. It all depends on the persistence mode of the message itself. Publishing messages as persistent affects performance (just like with data stores, durability comes at a certain cost to performance and vice versa). Pass :persistent => true to {% yard_link AMQP::Exchange#publish %} to publish your message as persistent.
 
 h3. Transactions
 
@@ -40,9 +40,9 @@ TBD
 
 h3. Publisher confirms
 
-Because transactions carry certain (for some applications, significant) overhead, RabbitMQ introduced an extension to AMQP 0.9.1 called {http://www.rabbitmq.com/blog/2011/02/10/introducing-publisher-confirms/ publisher confirms} ({http://www.rabbitmq.com/extensions.html#confirms documentation}).
+Because transactions carry certain (for some applications, significant) overhead, RabbitMQ introduced an extension to AMQP 0.9.1 called "publisher confirms":http://www.rabbitmq.com/blog/2011/02/10/introducing-publisher-confirms/ ("documentation":http://www.rabbitmq.com/extensions.html#confirms).
 
-amqp gem implements support for this extension, but it is not loaded by default when you require "amqp". To load it, use
+The amqp gem implements support for this extension, but it is not loaded by default when you require "amqp". To load it, use
 
 <pre>require "amqp/extensions/rabbitmq"</pre>
 
@@ -65,6 +65,6 @@ Note that the same callback is used for all messages published via all exchanges
 
 h3. Clustering
 
-To achieve degree of durability critical applications need, it's necessary but not enough to use durable queues,exchanges and persistent messages. You need to use a cluster of brokers because otherwise, a single hardware problemmay bring broker down completely.
+To achieve the degree of durability that critical applications need, it is necessary but not enough to use durable queues, exchanges and persistent messages. You need to use a cluster of brokers because otherwise, a single hardware problem may bring a broker down completely.
 
 See "Clustering guide":/articles/clustering/ for in-depth discussion of this topic.

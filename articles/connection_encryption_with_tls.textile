@@ -10,13 +10,13 @@ This guide covers connection to AMQP brokers using TLS (also known as SSL) and r
 
 h2. Covered versions
 
-This guide covers "Ruby amqp gem":http://github.com/ruby-amqp/amqp v0.8.0 and later.
+This guide covers "Ruby amqp gem":http://github.com/ruby-amqp/amqp 0.8.0 and later.
 
 h2. Broker version requirements
 
 h3. RabbitMQ
 
-RabbitMQ supports TLS since version 1.7.0. Minimum requirements are
+RabbitMQ has supported TLS since version 1.7.0. Minimum requirements are
 
  * Erlang R13B
  * Erlang SSL application 3.10

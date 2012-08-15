@@ -8,14 +8,14 @@ permalink: "/working_with_queues/"
 
 h2. About this guide
 
-This guide covers everything related to queues in the AMQP v0.9.1 specification, common usage scenarios and how to accomplish typical operations using the amqp gem. This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images & stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
+This guide covers everything related to queues in the AMQP v0.9.1 specification, common usage scenarios and how to accomplish typical operations using the amqp gem. This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images and stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
 
 
 h2. Which versions of the amqp gem does this guide cover?
 
-This guide covers v0.8.0 and later of the "Ruby amqp gem":http://github.com/ruby-amqp/amqp.
+This guide covers 0.8.0 and later of the "Ruby amqp gem":http://github.com/ruby-amqp/amqp.
 
-h2. Queues in AMQP v0.9.1 - overview
+h2. Queues in AMQP 0.9.1 - overview
 
 h3. What are AMQP queues?
 
@@ -59,7 +59,7 @@ To declare a queue with a particular name, for example, "images.resize", pass it
 
 Full example:
 
-{% example working_with_queues/01b_declaring_a_queue_using_queue_constructor.rb, 998721 %}
+{% gist 998721 %}
 
 h3. Server-named queues
 
@@ -71,7 +71,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/01a_declaring_a_server_named_queue_using_queue_constructor.rb, 998720 %}
+{% gist 998720 %}
 
 The amqp gem allows server-named queues to be declared without callbacks:
 
@@ -102,7 +102,7 @@ When queue declaration attributes are different from those that the queue alread
 
 h2. Queue life-cycle patterns
 
-According to the AMQP v0.9.1 specification, there are two common message queue life-cycle patterns:
+According to the AMQP 0.9.1 specification, there are two common message queue life-cycle patterns:
 
  * Durable message queues that are shared by many consumers and have an independent existence: i.e. they will continue to exist and collect messages whether or not there are consumers to receive them.
  * Temporary message queues that are private to one consumer and are tied to that consumer. When the consumer disconnects, the message queue is deleted.
@@ -127,7 +127,7 @@ To declare a durable shared queue, you pass a queue name that is a non-blank str
 
 Full example:
 
-{% example working_with_queues/02a_declaring_a_durable_shared_queue.rb, 998723 %}
+{% gist 998723 %}
 
 the same example rewritten to use {% yard_link AMQP::Channel#queue %}:
 
@@ -137,7 +137,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/02b_declaring_a_durable_shared_queue.rb, 998724 %}
+{% gist 998724 %}
 
 h2. Declaring a temporary exclusive queue
 
@@ -149,7 +149,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/03a_declaring_a_temporary_exclusive_queue.rb, 998725 %}
+{% gist 998725 %}
 
 The same example can be rewritten to use {% yard_link AMQP::Channel#queue %}:
 
@@ -159,11 +159,11 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/03b_declaring_a_temporary_exclusive_queue.rb, 998726 %}
+{% gist 998726 %}
 
 Exclusive queues may only be accessed by the current connection and are deleted when that connection closes. The declaration of an exclusive queue by other connections is not allowed and will result in a channel-level exception with the code 405 (RESOURCE_LOCKED) and a reply message similar to
 
-{% example working_with_queues/queue_exclusivity_violation_results.rb, 1008529 %}
+{% gist 1008529 %}
 
 h2. Binding queues to exchanges
 
@@ -175,7 +175,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/04_bind_a_queue_using_exchange_instance.rb, 998727 %}
+{% gist 998727 %}
 
 The same example using a string without callback:
 
@@ -183,7 +183,7 @@ The same example using a string without callback:
 
 Full example:
 
-{% example working_with_queues/05_bind_a_queue_using_exchange_name.rb, 998729 %}
+{% gist 998729 %}
 
 h2. Subscribing to receive messages ("push API")
 
@@ -195,9 +195,9 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/06_subscribe_to_receive_messages.rb, 998731 %}
+{% gist 998731 %}
 
-Subscriptions for message delivery are usually referred to as <span class="note">consumers</span> in the AMQP v0.9.1 specification, client library documentation and books. Consumers last as long as the channel that they were declared on, or until  client cancels them (unsubscribes).
+Subscriptions for message delivery are usually referred to as <span class="note">consumers</span> in the AMQP 0.9.1 specification, client library documentation and books. Consumers last as long as the channel that they were declared on, or until  client cancels them (unsubscribes).
 
 Consumers are identified by <span class="note">consumer tags</span>. If you need to obtain the consumer tag of a subscribed queue then use {% yard_link AMQP::Queue#consumer_tag %}.
 
@@ -253,7 +253,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/accessing_message_metadata.rb, 998739 %}
+{% gist 998739 %}
 
 h3. Exclusive consumers
 
@@ -269,11 +269,11 @@ TBD: describe what happens when exclusivity property is violated and how to hand
 
 h3. Using multiple consumers per queue
 
-Historically, amqp gem versions before v0.8.0.RC14 (current master branch in the repository) have had a "one consumer per Queue instance" limitation. Previously, to work around this problem, application developers had to open multiple channels and work with multiple queue instances on different channels. This is not very convenient and is surprising for developers familiar with AMQP clients for other languages.
+Historically, amqp gem versions before 0.8.0.RC14 (current master branch in the repository) have had a "one consumer per Queue instance" limitation. Previously, to work around this problem, application developers had to open multiple channels and work with multiple queue instances on different channels. This is not very convenient and is surprising for developers familiar with AMQP clients for other languages.
 
 With more and more Ruby implementations dropping the "GIL":http://en.wikipedia.org/wiki/Global_Interpreter_Lock, load balancing between multiple consumers in the same queue in the same OS process has become more and more common. In certain cases, even applications that do not need any concurrency benefit from having multiple consumers on the same queue in the same process.
 
-Starting from amqp gem v0.8.0.RC14, it is possible to add any number of consumers by instantiating {AMQP::Consumer} directly:
+Starting from amqp gem 0.8.0.RC14, it is possible to add any number of consumers by instantiating {AMQP::Consumer} directly:
 
 <pre># non-exclusive consumer, consumer tag is generated
 consumer1 = AMQP::Consumer.new(channel, queue)
@@ -303,7 +303,7 @@ To cancel a particular consumer, use {% yard_link AMQP::Consumer#cancel %} metho
 
 h3. Message acknowledgements
 
-Consumer applications - applications that receive and process messages - may occasionally fail to process individual messages, or will just crash. There is also the possibility of network issues causing problems. This raises a question - "When should the AMQP broker remove messages from queues?" The AMQP v0.9.1 specification proposes two choices:
+Consumer applications - applications that receive and process messages - may occasionally fail to process individual messages, or will just crash. There is also the possibility of network issues causing problems. This raises a question - "When should the AMQP broker remove messages from queues?" The AMQP 0.9.1 specification proposes two choices:
 
  * After broker sends a message to an application (using either basic.deliver or basic.get-ok methods).
  * After the application sends back an acknowledgement (using basic.ack AMQP method).
@@ -323,9 +323,9 @@ end</pre>
 
 To demonstrate how redelivery works, let us have a look at the following code example:
 
-{% example working_with_queues/amqp_acknowledgements_and_message_redelivery.rb, 999396 %}
+{% gist 999396 %}
 
-So what is going on here? This example uses 3 AMQP connections to imitate 3 applications, 1 producer and two consumers. Each AMQP connection opens a single channel:
+So what is going on here? This example uses three AMQP connections to imitate three applications, one producer and two consumers. Each AMQP connection opens a single channel:
 
 <pre># open three connections to imitate three apps
 connection1 = AMQP.connect
@@ -425,7 +425,7 @@ An extract of output produced by this example:
 [consumer2] Received Message #34, redelivered = false, ack-ed
 [consumer2] Received Message #35, redelivered = false, ack-ed</code>
 
-As we can see, consumer #1 did not acknowledge 3 messages (labelled 1, 2 and 5):
+As we can see, consumer #1 did not acknowledge three messages (labelled 1, 2 and 5):
 
 <code>[consumer1] Got message #1, SKIPPED
 [consumer1] Got message #2, SKIPPED
@@ -491,7 +491,7 @@ end</pre>
 
 h3. Negative acknowledgements
 
-Messages are rejected with the <span class="note">`basic.reject`</span> AMQP method. There is one limitation that <span class="note">`basic.reject`</span> has: there is no way to reject multiple messages, as you can do with acknowledgements. However, if you are using "RabbitMQ":http://rabbitmq.com, then there is a solution. RabbitMQ provides an AMQP v0.9.1 extension known as "negative acknowledgements":http://www.rabbitmq.com/extensions.html#negative-acknowledgements (nacks) and the amqp gem supports this extension. For more information, please refer to the "Vendor-specific Extensions guide":/articles/broker_specific_extensions/.
+Messages are rejected with the <span class="note">`basic.reject`</span> AMQP method. There is one limitation that <span class="note">`basic.reject`</span> has: there is no way to reject multiple messages, as you can do with acknowledgements. However, if you are using "RabbitMQ":http://rabbitmq.com, then there is a solution. RabbitMQ provides an AMQP 0.9.1 extension known as "negative acknowledgements":http://www.rabbitmq.com/extensions.html#negative-acknowledgements (nacks) and the amqp gem supports this extension. For more information, please refer to the "Vendor-specific Extensions guide":/articles/broker_specific_extensions/.
 
 h3. QoS - Prefetching messages
 
@@ -515,7 +515,7 @@ channel1.prefetch(3)
 # app #2 processes messages one-by-one and has to send an ack after receiving each message
 channel2.prefetch(1)</pre>
 
-In that example, one consumer prefetches 3 messages and another consumer prefetches just 1. If we take a look at the output that the example produces, we will see that `consumer1` fetched 4 messages and acknowledged 1. After that, all subsequent messages were delivered to `consumer2`:
+In that example, one consumer prefetches three messages and another consumer prefetches just one. If we take a look at the output that the example produces, we will see that `consumer1` fetched four messages and acknowledged one. After that, all subsequent messages were delivered to `consumer2`:
 
 <code>[consumer2] Received Message #0, redelivered = false, ack-ed
 [consumer1] Got message #1, SKIPPED
@@ -524,7 +524,7 @@ In that example, one consumer prefetches 3 messages and another consumer prefetc
 [consumer2] Received Message #4, redelivered = false, ack-ed
 [consumer1] Got message #5, SKIPPED
 ---
-  by now consumer 1 has received 3 messages it did not acknowledge.
+  by now consumer 1 has received three messages it did not acknowledge.
   With prefetch = 3, AMQP broker will not send it any more messages until consumer 1 sends an ack
 ---
 [consumer2] Received Message #6, redelivered = false, ack-ed
@@ -540,15 +540,15 @@ In that example, one consumer prefetches 3 messages and another consumer prefetc
 
 h2. How message acknowledgements relate to transactions and Publisher Confirms
 
-In cases where you cannot afford to lose a single message, AMQP v0.9.1 applications can use one or a combination of the following protocol features:
+In cases where you cannot afford to lose a single message, AMQP 0.9.1 applications can use one or a combination of the following protocol features:
 
- * Publisher confirms (a RabbitMQ-specific extension to AMQP v0.9.1)
+ * Publisher confirms (a RabbitMQ-specific extension to AMQP 0.9.1)
  * Publishing messages as immediate
  * Transactions (noticeable overhead)
 
 This topic is covered in depth in the "Working With Exchanges":/articles/working_with_exchanges/ guide. In this guide, we will only mention how message acknowledgements are related to AMQP transactions and the Publisher Confirms extension.
 
-Let us consider a publisher application (P) that communications with a consumer (C) using AMQP v0.9.1. Their communication can be graphically represented like this:
+Let us consider a publisher application (P) that communications with a consumer (C) using AMQP 0.9.1. Their communication can be graphically represented like this:
 
 <code>
 -----       -----       -----
@@ -565,7 +565,7 @@ Message acknowledgements cover reliable delivery over S2 as well as successful p
 
 h2. Fetching messages when needed ("pull API")
 
-The AMQP v0.9.1 specification also provides a way for applications to fetch (pull) messages from the queue only when necessary. For that, use {% yard_link AMQP::Queue#pop %}:
+The AMQP 0.9.1 specification also provides a way for applications to fetch (pull) messages from the queue only when necessary. For that, use {% yard_link AMQP::Queue#pop %}:
 
 <pre>queue.pop do |metadata, payload|
   if payload
@@ -577,7 +577,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/07_fetch_a_message_from_the_queue.rb, 998732 %}
+{% gist 998732 %}
 
 If the queue is empty, then the `payload` argument will be nil, otherwise arguments are identical to those of the {% yard_link AMQP::Queue#subscribe %} callback.
 
@@ -597,7 +597,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/08_unsubscribing_a_consumer.rb, 998734 %}
+{% gist 998734 %}
 
 In AMQP parlance, unsubscribing from messages is often referred to as "cancelling a consumer". Once a consumer is cancelled, messages will no longer be delivered to it, however, due to the asynchronous nature of the protocol, it is possible for "in flight" messages to be received after this call completes.
 
@@ -612,7 +612,7 @@ To unbind a queue from an exchange use {% yard_link AMQP::Queue#unbind %}:
 
 Full example:
 
-{% example working_with_queues/09_unbinding_from_exchange.rb, 998742 %}
+{% gist 998742 %}
 
 Note that trying to unbind a queue from an exchange that the queue was never bound to will result in a channel-level exception.
 
@@ -628,7 +628,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/queue_status_example.rb, 1068363 %}
+{% gist 1068363 %}
 
 h2. Querying the number of consumers on a queue
 
@@ -642,7 +642,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/another_queue_status_example.rb, 1068377 %}
+{% gist 1068377 %}
 
 h2. Purging queues
 
@@ -658,7 +658,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/10_purge_a_queue.rb, 998743 %}
+{% gist 998743 %}
 
 Note that this example purges a newly declared queue with a unique server-generated name. When a queue is declared, it is empty, so for server-named queues, there is no need to purge them before they are used.
 
@@ -676,7 +676,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/11_deleting_a_queue.rb, 998744 %}
+{% gist 998744 %}
 
 h2. Objects as message consumers and unit testing consumers in isolation
 
@@ -725,7 +725,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/12_objects_that_consume_messages.rb, 1009425 %}
+{% gist 1009425 %}
 
 In this example, <span class="note">Consumer</span> instances have to be instantiated with an {% yard_link AMQP::Channel %} instance. If the message handling was done by an aggregated object, it would completely separate the handling logic and would be make it easy to unit test in isolation:
 
@@ -774,7 +774,7 @@ end</pre>
 
 Full example:
 
-{% example working_with_queues/13_objects_that_consume_messages_take_two.rb, 1009447 %}
+{% gist 1009447 %}
 
 Note that the <span class="note">Consumer</span> class demonstrated above can be easily tested in isolation without spinning up any AMQP connections:
 
@@ -827,4 +827,4 @@ The documentation is organized as several "documentation guides":/, covering all
  * "Bindings":/articles/bindings/
  * "Error handling and recovery":/articles/error_handling/
 
-RabbitMQ implements a number of extensions to AMQP v0.9.1 functionality that are covered in the "Vendor-specific Extensions guide":/articles/broker_specific_extensions/. At least one extension, per-queue messages time-to-live (TTL), is related to this guide and can be used with the amqp gem v0.8.0 and later.
+RabbitMQ implements a number of extensions to AMQP 0.9.1 functionality that are covered in the "Vendor-specific Extensions guide":/articles/broker_specific_extensions/. At least one extension, per-queue messages time-to-live (TTL), is related to this guide and can be used with the amqp gem 0.8.0 and later.

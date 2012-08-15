@@ -10,7 +10,7 @@ h2. About this guide
 
 This guide is for people who want to contribute to amqp gem development. It has no relevant information for those who want to build applications using the library.
 
-This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images & stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images and stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
 
 
 h2. Covered versions
@@ -23,11 +23,11 @@ Since late 2010, the canonical amqp gem repository is at "github.com/ruby-amqp/a
 
 h2. Initial setup
 
-amqp gem currently uses recent releases of RabbitMQ for automated tests. Broker installation is described in the {file:docs/GettingStarted.textile Getting started} guide and on "rabbitmq.com":http://www.rabbitmq.com/install.html. Once the broker is running, the only other step is to run
+The amqp gem currently uses recent releases of RabbitMQ for automated tests. Broker installation is described in the "Getting Started":/articles/getting_started/ guide and on "rabbitmq.com":http://www.rabbitmq.com/install.html. Once the broker is running, the only other step is to run
 
 @./bin/set_test_suite_realms_up.sh@
 
-that will set up vhosts and users we test authentication and authorization against. Please note that the script uses `rabbitmqctl` tool and in the server environment (for example, a virtual instance in the cloud) depending on your OS and/or distribution of choice, that tool may or may not be accessible to your OS user, so pay attention to that.
+that will set up vhosts and users that we test authentication and authorization with. Please note that the script uses the `rabbitmqctl` tool and in the server environment (for example, a virtual instance in the cloud) depending on your OS and/or distribution of choice, that tool may or may not be accessible to your OS user.
 
 h2. Dependencies
 
@@ -61,5 +61,5 @@ For that, we use Rake:
 
 @rake spec:ci@
 
-Thanks to the excellent "Travis CI":http://travis-ci.org project, we run test suites across multiple Ruby implementations/versions and 2 EventMachine versions.
+Thanks to the excellent "Travis CI":http://travis-ci.org project, we run test suites across multiple Ruby implementations/versions and two EventMachine versions.
 

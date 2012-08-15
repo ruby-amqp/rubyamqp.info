@@ -10,15 +10,15 @@ h2. About this guide
 
 This guide covers connection to an AMQP broker from standalone and Web applications, connection error handling, authentication failure handling and related issues.
 
-This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images & stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images and stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
 
 h2. Which versions of the amqp gem does this guide cover?
 
-This guide covers v0.8.0 and later of the "Ruby amqp gem":http://github.com/ruby-amqp/amqp.
+This guide covers 0.8.0 and later of the "Ruby amqp gem":http://github.com/ruby-amqp/amqp.
 
 h2. Terminology
 
-In this guide we define a standalone application as an application that does not run on a Web server like Unicorn or Passenger. The key difference is that these applications control the main Ruby VM thread and often use it to run the <span class="highlight">EventMachine</span> event loop. When the amqp gem is used in a Web application, the main thread is occupied by the Web application server and the code required to establish a connection to an AMQP broker needs to be a little bit different.
+In this guide we define a 'standalone application' as an application that does not run on a Web server like Unicorn or Passenger. The key difference is that these applications control the main Ruby VM thread and often use it to run the <span class="highlight">EventMachine</span> event loop. When the amqp gem is used in a Web application, the main thread is occupied by the Web application server and the code required to establish a connection to an AMQP broker needs to be a little bit different.
 
 
 h2. Two ways to specify connection parameters
@@ -128,7 +128,7 @@ EventMachine.run do
   # amqp gem cannot solve every possible race condition so be careful
 end</pre>
 
-If you do not need to assign the returned value to a variable, then the "block version" is recommended because it eliminates issues that may arise from attempts to use a connection object that is not fully opened yet. For example, handling of authentication failures is simpler with the block version, as we will see in the following sections.
+If you do not need to assign the returned value to a variable, then the "block version" is recommended because it eliminates issues that may arise from attempts to use a connection object that is not fully opened. For example, handling of authentication failures is simpler with the block version, as we will see in the following sections.
 
 h3. Using AMQP.start
 

@@ -6,40 +6,40 @@ permalink: "/patterns_and_use_cases/"
 
 h2. About this guide
 
-This guide explains typical messaging patterns and use cases. It only covers the most common scenarios. For comprehensive listof messaging patterns, consult books on this subject, for example, "Enterprise Integration Patterns":http://www.eaipatterns.com.
+This guide explains typical messaging patterns and use cases. It only covers the most common scenarios. For a comprehensive list of messaging patterns, consult books on this subject, for example, "Enterprise Integration Patterns":http://www.eaipatterns.com.
 
-This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images & stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images and stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
 
 h2. Covered versions
 
-This guide covers "Ruby amqp gem":http://github.com/ruby-amqp/amqp v0.8.0 and later.
+This guide covers "Ruby amqp gem":http://github.com/ruby-amqp/amqp 0.8.0 and later.
 
 h2. Introduction
 
-Messaging patterns are a lot like object-oriented design patterns: they are generalized reusable solutions to specific problems. They are notrecipes, however, and their exact implementation may and will vary from application to application. Just like OO design patterns,they can classified:
+Messaging patterns are a lot like object-oriented design patterns in that they are generalized reusable solutions to specific problems. They are not recipes, however, and their exact implementation may vary from application to application. Just like OO design patterns, they too can be classified:
  * Message construction patterns describe form, content and purpose of messages.
  * Message routing patterns outline how messages can be directed from producers to consumers.
  * Message transformation patterns change message content or metadata.
-There are other, more specialized group of messaging patterns that are out of scope of this guide.
-This guide demonstrates implementation of several common routing patterns plus explains how built-in AMQP 0.9.1 featurescan be used to implement message construction and message transformation patterns.
-Note that guide is a work in progress. There are many messaging patterns and new variations are being discovered every year.This guide thus strives to be useful to the 80% of developers instead of being "complete".
+There are other, more specialized groups of messaging patterns that are out of the scope of this guide.
+This guide demonstrates the implementation of several common routing patterns and also explains how built-in AMQP 0.9.1 features can be used to implement message construction and message transformation patterns.
+Note that the guide is a work in progress. There are many messaging patterns and new variations are being discovered every year. This guide thus strives to be useful to the 80% of developers instead of being "complete".
 
 
 h2. Request/Reply pattern
 
-h3. Description & Use cases
+h3. Description and Use cases
 
-Request/Reply is a simple way of integration when one application issues a request and another application respondsto it. This pattern is often referred to as"Remote Procedure Call", even when it is not entirely correct. Request/Replypattern is a 1:1 communication pattern.
-Some examples of Request/Reply pattern are:
- * The 1st application requests a document that the 2nd application generates or loads and returns.
- * End-user application issues a search request and another application returns results back.
+Request/Reply is a simple way of integration when one application issues a request and another application responds to it. This pattern is often referred to as "Remote Procedure Call", even when it is not entirely correct. The Request/Reply pattern is a 1:1 communication pattern.
+Some examples of the Request/Reply pattern are:
+ * Application 1 requests a document that the Application 2 generates or loads and returns.
+ * An end-user application issues a search request and another application returns the results.
  * One application requests a progress report from another application.
 
 h3. AMQP-based implementation
 
-Implementation of Request/Reply pattern on top of AMQP 0.9.1 involves two messages: a request (Req) and a response (Res).Client app generates a request identifier and sets :message_id attribute on Req. Client also uses a server-namedexclusive queue to receive replies and thus sets :reply_to Req attribute to the name of that queue.
+Implementation of Request/Reply pattern on top of AMQP 0.9.1 involves two messages: a request (Req) and a response (Res). A client app generates a request identifier and sets the :message_id attribute on Req. The client also uses a server-named exclusive queue to receive replies and thus sets the :reply_to Req attribute to the name of that queue.
 
-Server app uses a well-known queue name to receive requests and sets :correlation_id to :message_id of the originalrequest message (Req) to make it possible for the client to identify what request this reply is for.
+A server app uses a well-known queue name to receive requests and sets the :correlation_id to the :message_id of the original request message (Req) to make it possible for the client to identify which request a reply is for.
 
 h4. Request message attributes
 
@@ -69,13 +69,14 @@ h4. Server code
 
 {% gist 1207764 %}
 
-In the examples above messages are published with the :immediate attribute set. This is not necessary in allcases: sometimes it is OK for requests to sit in the queue without active consumers. Replies, on the other hand,assume an active consumer and existing replies queue, so if routing or immediate delivery do not succeed,server application will log returned messages. More on this in the "Working With Exchanges":/articles/working_with_exchanges/ guide.
+In the examples above messages are published with the :immediate attribute set. This is not necessary in all cases. Sometimes it is OK for requests to sit in the queue without active consumers. Replies, on the other hand, assume an active consumer and existing replies queue, so if routing or immediate delivery do not succeed, the server application will log returned messages. More on this in the "Working With Exchanges":/articles/working_with_exchanges/ guide.
 
 h3. Related patterns
 
 Request/Reply demonstrates two common techniques that are sometimes referred to as messaging patterns of its own:
 
-  * "Correlation Identifier":http://www.eaipatterns.com/CorrelationIdentifier.html (for identifying what request incoming response is for)  * "Return Address":http://www.eaipatterns.com/ReturnAddress.html (for identifying where replies should be sent)
+  * "Correlation Identifier":http://www.eaipatterns.com/CorrelationIdentifier.html (for identifying what request incoming response is for)
+  * "Return Address":http://www.eaipatterns.com/ReturnAddress.html (for identifying where replies should be sent)
 
 Other related patterns are
   * Scatter/Gather
@@ -83,17 +84,19 @@ Other related patterns are
 
 h2. Command pattern
 
-h3. Description & Use cases
+h3. Description and Use cases
 
-Command pattern is very similar to Request/Reply, except that there is no reply and messages are typed. For example, most modern Webapplications have at least one "background task processor" that carries out a number of operations asynchronously,without sending any responses back. Command pattern usually assumes 1:1 communication.
+The Command pattern is very similar to Request/Reply, except that there is no reply and messages are typed. For example, most modern Web applications have at least one "background task processor" that carries out a number of operations asynchronously, without sending any responses back. The Command pattern usually assumes 1:1 communication.
 
-Some specific examples of Command pattern are:
+Some specific examples of the Command pattern are:
 
- * Account termination in a Web app triggers information archiving (or deletion) that is done by a separate app "in the background".  * After a document or profile update, a Web app sends out commands to a search indexer application.  * Virtual machines control dashboard app sends virtual machine controller application a command to reboot.
+ * Account termination in a Web app triggers information archiving (or deletion) that is done by a separate app "in the background".
+ * After a document or profile update, a Web app sends out commands to a search indexer application.
+ * Virtual machines control dashboard app sends virtual machine controller application a command to reboot.
 
 h3. AMQP-based implementation
 
-Implementation of Command pattern on top of AMQP 0.9.1 involves well-known durable queues. Application that issues the commandthen can use default exchange to publish messages to well-known services directly. Request message :type attribute then indicatescommand type and message body (or body and headers) carry additional information consumer needs to carry it out.
+Implementation of the Command pattern on top of AMQP 0.9.1 involves well-known durable queues. The application that issues the command then can use the default exchange to publish messages to well-known services directly. The Request message :type attribute then indicates the command type and the message body (or body and headers) carry any additional information that the consumer needs to carry out the command.
 
 h4. Request message attributes
 
@@ -119,26 +122,26 @@ h3. Related patterns
 
 h2. Event pattern
 
-h3. Description & Use cases
+h3. Description and Use cases
 
-Event pattern is a version of the Command pattern, but with 1 or more receivers (1:N communication).The world we live in is full of events, so applications of this pattern are endless.
+The Event pattern is a version of the Command pattern, but with one or more receivers (1:N communication). The world we live in is full of events, so applications of this pattern are endless.
 
-Some specific use cases of Event pattern are
+Some specific use cases of the Event pattern are
 
-  * Event logging (one application asks event collector to record certain event and possibly take action)
+  * Event logging (one application asks an event collector to record certain events and possibly take action)
   * Event propagation in MMO games
   * Live sport score updates
   * Various "push notifications" for mobile applications
 
-The Event pattern is very similar to the Command pattern, however, there is typically certain differences between the two:
+The Event pattern is very similar to the Command pattern, however, there are typically certain differences between the two:
 
-  * Event listeners often do not respond back to event producers
+  * Event listeners often do not respond to event producers
   * Event listeners are often concerned with data collection: they update counters, persist event information and so on
-  * There may be more than event listener in the system. Commands are often carried out by one particular application
+  * There may be more than one event listener in the system. Commands are often carried out by one particular application
 
 h3. AMQP-based implementation
 
-Because Event pattern is a 1:N communication pattern, it typically uses a fanout exchange. Event listenersthen use server-named exclusive queues and all bind to that exchange. Event messages use :type messageattribute to indicate event type and message body (plus, possibly, message headers) to pass eventcontext information.
+Because the Event pattern is a 1:N communication pattern, it typically uses a fanout exchange. Event listeners then use server-named exclusive queues all bound to that exchange. Event messages use the :type message attribute to indicate the event type and the message body (plus, possibly, message headers) to pass event context information.
 
 h4. Request message attributes
 
@@ -146,7 +149,7 @@ h4. Request message attributes
   <dt>:type</dt>
   <dd>Message type as a string. For example: files.created, files.indexed or pages.viewed</dd>
 </dl>
-<span class="note">Due to misconfiguration or different upgrade time/policy, applications may receive events they do not know how to handle.It is important for developers to handle such cases, otherwise it is likely that consumers may crash.</span>
+<span class="note">Due to misconfiguration or different upgrade time/policy, applications may receive events that they do not know how to handle. It is important for developers to handle such cases, otherwise it is likely that consumers will crash.</span>
 
 More on fanout exchange type in the "Working With Exchanges":/articles/working_with_exchanges/ guide.
 
@@ -167,11 +170,11 @@ h3. Related patterns
 
 h2. Document Message pattern
 
-h3. Description & Use cases
+h3. Description and Use cases
 
-Document Message pattern is very similar to Command and Event patterns. The difference is in the intent: whereas a Command message tellsthe receiver to invoke certain behavior, a Document Message just passes data and lets the receiver decide what, if anything, to do with the data.
+The Document Message pattern is very similar to the Command and Event patterns. The difference is in the intent. A Command message tells the receiver to invoke certain behavior, whereas a Document Message just passes data and lets the receiver decide what to do with the data.
 
-Message payload is a single logical entity, for example, one (or a group of closely related) database rows or documents.
+The message payload is a single logical entity, for example, one (or a group of closely related) database rows or documents.
 
 Use cases for the Document Message pattern often have something to do with processing of documents:
 
@@ -183,9 +186,10 @@ Use cases for the Document Message pattern often have something to do with proce
 
 h2. Competing Consumers pattern
 
-h3. Description & Use cases
+h3. Description and Use cases
 
 "Competing Consumers":http://www.eaipatterns.com/CompetingConsumers.html are multiple consumers that process messages from a shared queue.
+
 TBD
 
 h3. AMQP-based implementation
@@ -198,7 +202,7 @@ TBD
 
 h2. Publish/Subscribe pattern
 
-h3. Description & Use cases
+h3. Description and Use cases
 
 TBD
 
@@ -212,7 +216,7 @@ TBD
 
 h2. Scatter/Gather pattern
 
-h3. Description & Use cases
+h3. Description and Use cases
 
 TBD
 
@@ -226,7 +230,7 @@ TBD
 
 h2. Smart Proxy pattern
 
-h3. Description & Use cases
+h3. Description and Use cases
 
 TBD
 
@@ -240,7 +244,7 @@ TBD
 
 h2. Multistep Processing (Routing Slip) pattern
 
-h3. Description & Use cases
+h3. Description and Use cases
 
 TBD
 

@@ -12,15 +12,13 @@ This guide explains the AMQP 0.9.1 Model used by RabbitMQ. Understanding the AMQ
 
 h3. What this guide covers
 
-This guide covers:
-
  * High-level overview of the AMQP 0.9.1 Model
- * Key differences of the AMQP model from some other messaging models
+ * Key differences between the AMQP model and some other messaging models
  * What exchanges are
  * What queues are
  * What bindings are
  * How AMQP protocol is structured and what AMQP methods are
- * What attributes AMQP 0.9.1 messages have
+ * AMQP 0.9.1 message attributes
  * What message acknowledgements are
  * What negative message acknowledgements are
  * and a lot of other things
@@ -29,7 +27,7 @@ h2. High-level overview of AMQP 0.9.1 and the AMQP Model
 
 h3. What is AMQP
 
-AMQP (Advanced Message Queuing Protocol) is a networking protocol which enables conforming client applications to communicate with conforming messaging middleware brokers.
+AMQP (Advanced Message Queuing Protocol) is a networking protocol that enables conforming client applications to communicate with conforming messaging middleware brokers.
 
 
 h3. Why AMQP was created
@@ -61,7 +59,7 @@ The AMQP 0.9.1 Model has the following view of the world: messages are published
 
 When publishing a message, producers may specify various _message attributes_ (message metadata). Some of this metadata may be used by the broker, however, the rest of it is completely opaque to the broker and is only used by applications that receive the message.
 
-Networks are unreliable and applications may fail to process messages, therefore the AMQP Model has a notion of _message acknowledgements_: when a message is pushed down to a consumer, the consumer _notifies the broker_, either automatically or as soon as the application developer chooses to do so. When message acknowledgements are in use, a broker will only completely remove a message from a queue when it receives a notification for that message (or group of messages).
+Networks are unreliable and applications may fail to process messages, therefore the AMQP Model has a notion of _message acknowledgements_: when a message is pushed down to a consumer, the consumer _notifies the broker_, either automatically, or as soon as the application developer chooses to do so. When message acknowledgements are in use, a broker will only completely remove a message from a queue when it receives a notification for that message (or group of messages).
 
 In certain situations, for example, when a message cannot be routed, messages may be _returned_ to producers, dropped, or, if the broker implements an extension, placed into a so-called "dead letter queue". Producers choose how to handle situations like this by publishing messages using certain parameters.
 
@@ -93,7 +91,7 @@ but it is possible to extend AMQP 0.9.1 brokers with custom exchange types, for 
 
 and so on.
 
-Besides the type, exchanges have a number of attributes, most imprortant of which are:
+Besides the type, exchanges have a number of attributes, most important of which are:
 
  * Name
  * Can be durable (information about them is persisted to disk and thus survives broker restarts) or non-durable (information is only kept in RAM)
@@ -106,7 +104,7 @@ Queues in the AMQP Model are very similar to queues in other message and "task q
 
  * Can be exclusive (used by only one connection)
  * Can be automatically deleted when last consumer unsubscribes
- * Can have metadata associated with them on declaration (some brokers use it to implement features like message TTL)
+ * Can have metadata associated with them on declaration (some brokers use this to implement features like message TTL)
 
 
 h2. AMQP Bindings
@@ -117,11 +115,11 @@ To draw an analogy:
 
  * Queue is like your destination in New York city
  * Exchange is like JFK airport
- * Bindings are routes from JFK to your destination. There can be none or more than one way to reach it
+ * Bindings are routes from JFK to your destination. There may be no way, or more than one way, to reach it
 
-Having this layer of indirection enables routing scenarios that are impossible of very hard to implement using publishing directly to queues and also eliminates certain amount of duplicated work application developers have to do.
+Having this layer of indirection enables routing scenarios that are impossible or very hard to implement using publishing directly to queues and also eliminates a certain amount of duplicated work that application developers have to do.
 
-If AMQP message cannot be routed to any queue (for example, because there are no bindings for the exchange it was published to), it is either dropped or returned to the publisher, depending on message attributes the publisher has set.
+If an AMQP message cannot be routed to any queue (for example, because there are no bindings for the exchange it was published to), it is either dropped or returned to the publisher, depending on the message attributes that the publisher has set.
 
 
 h2. AMQP Message Consumers
@@ -133,11 +131,11 @@ Storing messages in queues is useless unless applications can _consume_ them. In
 
 With the "push API", applications have to indicate interest in consuming messages from a particular queue. When they do so, we say that they _register a consumer_ or, simply put, _subscribe to a queue_. It is possible to have more than one consumer per queue or to register an _exclusive consumer_ (excludes all other consumers from the queue while it is consuming).
 
-Each consumer (subscription) has an identifier called a _consumer tag_. It can be used to unsubscribe from messages. Consumer tags are just strings.
+Each consumer (subscription) has an identifier called a _consumer tag_. This can be used to unsubscribe from messages. Consumer tags are just strings.
 
 h2. AMQP Message Attributes and Payload
 
-Messages in the AMQP Model have _attributes_. Some attributes are so common that the AMQP v0.9.1 specification defines them and application developers do not have to think about the exact attribute name. Some examples are
+Messages in the AMQP Model have _attributes_. Some attributes are so common that the AMQP 0.9.1 specification defines them and application developers do not have to think about the exact attribute name. Some examples are
 
  * Content type
  * Content encoding
@@ -150,20 +148,20 @@ Messages in the AMQP Model have _attributes_. Some attributes are so common that
 
 Some attributes are used by AMQP brokers, but most are open to interpretation by applications that receive them. Some attributes are optional and known as _headers_. They are similar to X-Headers in HTTP. Message attributes are set when a message is published.
 
-AMQP messages also have a _payload_ (the data that they carry). Brokers treat this data as opaque (it is neither modified nor used by them). It is possible for messages to contain only attributes and no payload. It is common to use serialization formats like JSON, Thrift, Protocol Buffers and MessagePack to serialize structured data in order to publish it as AMQP message payload.
+AMQP messages also have a _payload_ (the data that they carry). Brokers treat this data as opaque (it is neither modified nor used by them). It is possible for messages to contain only attributes and no payload. It is common to use serialization formats like JSON, Thrift, Protocol Buffers and MessagePack to serialize structured data in order to publish it as an AMQP message payload.
 
 
 h2. AMQP Message Acknowledgements
 
 Since networks are unreliable and applications fail, it is often necessary to have some kind of "processing acknowledgement". Sometimes it is only necessary to acknowledge the fact that a message has been received. Sometimes acknowledgements mean that a message was validated and processed by a consumer, for example, verified as having mandatory data and persisted to a data store or indexed.
 
-This situation is very common, so AMQP 0.9.1 has a built-in feature called _message acknowledgements_ (sometimes referred to as _acks_) that consumers use to confirm message delivery and/or processing. If an application crashes (AMQP broker notices this when connection is closed), if an acknowledgement for a message was expected but not received by the AMQP broker, the message is re-queued (and possibly immediately delivered to another consumer, if any exists).
+This situation is very common, so AMQP 0.9.1 has a built-in feature called _message acknowledgements_ (sometimes referred to as _acks_) that consumers use to confirm message delivery and/or processing. If an application crashes (the AMQP broker notices this when the connection is closed), and if an acknowledgement for a message was expected but not received by the AMQP broker, the message is re-queued (and possibly immediately delivered to another consumer, if any exists).
 
 Having acknowledgements built into the protocol helps developers to build more robust software.
 
 h2. AMQP 0.9.1 Methods
 
-AMQP 0.9.1 is structured as a number of _methods_. Methods are operations (like HTTP methods) and have nothing in common with methods in object-oriented programming languages. AMQP methods are grouped into _classes_. Classes are just logical groupings of AMQP methods. The "AMQP 0.9.1 reference":http://www.rabbitmq.com/amqp-0-9-1-reference.html can be found on  the RabbitMQ website.
+AMQP 0.9.1 is structured as a number of _methods_. Methods are operations (like HTTP methods) and have nothing in common with methods in object-oriented programming languages. AMQP methods are grouped into _classes_. Classes are just logical groupings of AMQP methods. The "AMQP 0.9.1 reference":http://www.rabbitmq.com/amqp-0-9-1-reference.html can be found on the RabbitMQ website.
 
 Let us take a look at the _exchange.*_ class, a group of methods related to operations on exchanges. It includes the following operations:
 
@@ -194,7 +192,7 @@ The sequence of events is very similar for another method pair, *queue.declare* 
 
 !https://img.skitch.com/20110720-g67urxg75c71qtwhwsjs684323.jpg!
 
-Not all AMQP methods have counterparts. Some (*basic.publish* being the most widely used one) do not have corresponding "response" methods and some others (*basic.get*, for example) have more than one possible "response".
+Not all AMQP methods have counterparts. Some (*basic.publish* being the most widely used) do not have corresponding "response" methods and some others (*basic.get*, for example) have more than one possible "response".
 
 
 h2. AMQP Connections
@@ -206,15 +204,15 @@ h2. AMQP Channels
 
 Some applications need multiple connections to an AMQP broker. However, it is undesirable to keep many TCP connections open at the same time because doing so consumes system resources and makes it more difficult to configure firewalls. AMQP 0.9.1 connections are multiplexed with _channels_ that can be thought of as "lightweight connections that share a single TCP connection".
 
-For applications that use multiple threads/processes/etc for processing, it is very common to open a new channel per thread (process, etc.) and *not share* channels between them.
+For applications that use multiple threads/processes/etc. for processing, it is very common to open a new channel per thread (process, etc.) and *not share* channels between them.
 
-Communication on a particular channel is completely separate from communication on another channel, therefore every AMQP method also carries a channel number that clients use to figure out which channel the method is for (and thus, which event handler needs to be invoked, for example).
+Communication on a particular channel is completely separate from communication on another channel, therefore every AMQP method also carries a channel number that clients use to figure out which channel the method is for (and thus, which event handler needs to be invoked).
 
 h2. AMQP Virtual Hosts (vhosts)
 
-To make it possible for a single broker to host multiple isolated "environments" (groups of users, exchanges, queues and so on), AMQP includes the concept of _virtual hosts_ (vhosts). They are similar to virtual hosts used by many popular Web servers and provide completely isolated environments in which AMQP entities live. AMQP clients specify what vhosts they want to use during AMQP connection negotiation.
+To make it possible for a single broker to host multiple isolated "environments" (groups of users, exchanges, queues and so on), AMQP includes the concept of _virtual hosts_ (vhosts). They are similar to virtual hosts used by many popular Web servers and provide completely isolated environments in which AMQP entities live. AMQP clients specify the vhosts that they want to use during AMQP connection negotiation.
 
-An AMQP 0.9.1 vhost name can be any non-blank string. Some most common use cases for vhosts are
+An AMQP 0.9.1 vhost name can be any non-blank string. Some of the most common use cases for vhosts are
 
  * To separate AMQP entities used by different groups of applications
  * To separate multiple installations/environments (e.g. production, staging) of one or more applications
@@ -235,7 +233,7 @@ These features make the AMQP 0.9.1 Model even more flexible and applicable to a 
 
 h2. Key differences from some other messaging models
 
-One key difference to understand about the AMQP 0.9.1 Model is that *messages are not sent to queues. They are sent to exchanges that route them to queues according to rules called "bindings"*. This means that routing is primarily handled by AMQP brokers and not applications themselves.
+One key difference to understand about the AMQP 0.9.1 model is that *messages are not sent to queues. They are sent to exchanges that route them to queues according to rules called "bindings"*. This means that routing is primarily handled by AMQP brokers and not applications themselves.
 
 TBD
 
@@ -243,9 +241,9 @@ h2. AMQP 0.9.1 clients ecosystem
 
 h3. Overview
 
-There are many AMQP 0.9.1 clients for many popular programming languages and platforms. Some of them follow AMQP terminology closely and only provide implementation of AMQP methods. Some others have additional features, convenience methods and abstractions. Some of the clients are asynchronous (non-blocking), some are synchronous (blocking), some support both models. Some clients support vendor-specific extensions (for example, RabbitMQ-specific extensions).
+There are many AMQP 0.9.1 clients for popular programming languages and platforms. Some of them follow AMQP terminology closely and only provide implementations of AMQP methods. Some others have additional features, convenience methods and abstractions. Some of the clients are asynchronous (non-blocking), some are synchronous (blocking), some support both models. Some clients support vendor-specific extensions (for example, RabbitMQ-specific extensions).
 
-Because one of the main AMQP goals is interoperability, it is a good idea for developers to understand protocol operations and not limit themselves to terminology of a particular client library. This way communicating with developers using different libraries will be significantly easier.
+Because one of the main AMQP goals is interoperability, it is a good idea for developers to understand protocol operations and not limit themselves to the terminology of a particular client library. This way communicating with developers using different libraries will be significantly easier.
 
 h2. Wrapping up
 

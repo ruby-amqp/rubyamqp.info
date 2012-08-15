@@ -8,22 +8,22 @@ permalink: "/getting_started/"
 
 h2. About this guide
 
-This guide is a quick tutorial that helps you to get started with v0.9.1 of the AMQP specification in general and the "Ruby amqp gem":http://github.com/ruby-amqp/amqp in particular.
+This guide is a quick tutorial that helps you to get started with the AMQP 0.9.1 specification in general and the "Ruby amqp gem":http://github.com/ruby-amqp/amqp in particular.
 It should take about 20 minutes to read and study the provided code examples. This guide covers:
 
  * Installing RabbitMQ, a mature popular server implementation of the AMQP protocol.
  * Installing the amqp gem via "Rubygems":http://rubygems.org and "Bundler":http://gembundler.com.
  * Running a "Hello, world" messaging example that is a simple demonstration of 1:1 communication.
- * Creating a "Twitter-like" publish/subscribe example with 1 publisher and 4 subscribers that demonstrates 1:n communication.
- * Creating a topic routing example with 2 publishers and 8 subscribers showcasing n:m communication when subscribers only receive messages that they are interested in.
+ * Creating a "Twitter-like" publish/subscribe example with one publisher and four subscribers that demonstrates 1:n communication.
+ * Creating a topic routing example with two publishers and eight subscribers showcasing n:m communication when subscribers only receive messages that they are interested in.
  * Learning how the amqp gem can be integrated with Ruby objects in a way that makes unit testing easy.
 
-This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images & stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images and stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
 
 
 h2. Which versions of the amqp gem does this guide cover?
 
-This guide covers v0.8.0 and later of the "Ruby amqp gem":https://github.com/ruby-amqp/amqp.
+This guide covers 0.8.0 and later of the "Ruby amqp gem":https://github.com/ruby-amqp/amqp.
 
 h2. Installing RabbitMQ
 
@@ -40,7 +40,7 @@ On Debian and Ubuntu, you can either "download the RabbitMQ .deb package":http:/
 
 For RPM-based distributions like RedHat or CentOS, the RabbitMQ team provides an "RPM package":http://www.rabbitmq.com/install.html#rpm.
 
-<div class="alert alert-error"><strong>Note:</strong> The RabbitMQ package that ships with recent Ubuntu versions (for example, 10.10) is outdated and *will not work with v0.8.0 and later of the amqp gem* (we need at least RabbitMQ v2.0 for use with this guide).</div>
+<div class="alert alert-error"><strong>Note:</strong> The RabbitMQ package that ships with recent Ubuntu versions (for example, 10.10) is outdated and *will not work with amqp gem 0.8.0 and later versions* (you will need at least RabbitMQ v2.0 for use with this guide).</div>
 
 h2. Installing the Ruby amqp gem
 
@@ -51,7 +51,7 @@ This guide assumes that you have installed one of the following supported Ruby i
  * Ruby v1.8.7
  * Ruby v1.9.2
  * Ruby v1.9.3
- * JRuby (we recommend v1.6)
+ * JRuby v1.6 or higher
  * Rubinius v1.2 or higher
  * Ruby Enterprise Edition
 
@@ -73,7 +73,7 @@ gem "amqp", "~> 0.9.0" # optionally: :git => "git://github.com/ruby-amqp/amqp.gi
 
 h3. Verifying your installation
 
-Let us verify your installation with this quick irb session:
+Verify your installation with a quick irb session:
 
 <code>irb -rubygems
 :001 > require "amqp"
@@ -92,7 +92,7 @@ This example demonstrates a very common communication scenario: *application A* 
 <pre>require "rubygems"
 require "amqp"</pre>
 
-is the simplest way to load the amqp gem if you have installed it with RubyGems. The following piece of code
+is the simplest way to load the amqp gem if you have installed it with RubyGems, but remember that you can omit the rubygems line if your environment does not need it. The following piece of code
 
 <pre>EventMachine.run do
   # ...
@@ -154,7 +154,7 @@ h2. Blabblr: one-to-many publish/subscribe (pubsub) example
 
 The previous example demonstrated how a connection to a broker is made and how to do 1:1 communication using the default exchange. Now let us take a look at another common scenario: broadcast, or multiple consumers and one producer.
 
-A very well-known broadcast example is Twitter: every time a person tweets, followers receive a notification. Blabbr, our imaginary information network, models this scenario: every network member has a separate queue and publishes blabs to a separate exchange. 3 Blabbr members, Joe, Aaron and Bob, follow the official NBA account on Blabbr to get updates about what is happening in the world of basketball. Here is the code:
+A very well-known broadcast example is Twitter: every time a person tweets, followers receive a notification. Blabbr, our imaginary information network, models this scenario: every network member has a separate queue and publishes blabs to a separate exchange. Three Blabbr members, Joe, Aaron and Bob, follow the official NBA account on Blabbr to get updates about what is happening in the world of basketball. Here is the code:
 
 {% gist 998692 %}
 
@@ -200,7 +200,7 @@ A diagram for Blabbr looks like this:
 !https://github.com/ruby-amqp/amqp/raw/master/docs/diagrams/002_blabbr_example_routing.png!
 
 
-Next we use EventMachine's {http://eventmachine.rubyforge.org/EventMachine.html#M000466 add_timer} method to run a piece of code in 1 second from now:
+Next we use EventMachine's "add_timer":http://eventmachine.rubyforge.org/EventMachine.html#M000466 method to run a piece of code in 1 second from now:
 
 <pre>EventMachine.add_timer(1) do
   exchange.delete
@@ -260,7 +260,7 @@ but not
  * americas.south
  * americas.south.chile.santiago
 
-so "*" only matches a single word. The AMQP v0.9.1 specification says that topic segments (words) may contain the letters A-Z and a-z and digits 0-9.
+so "*" only matches a single word. The AMQP 0.9.1 specification says that topic segments (words) may contain the letters A-Z and a-z and digits 0-9.
 
 A (very simplistic) diagram to demonstrate topic exchange in action:
 
@@ -298,13 +298,13 @@ The name of the server-named queue is generated by the broker and sent back to t
 
 h3. Avoid race conditions
 
-A word of warning: you may find examples on the Web of {% yard_link AMQP::Channel#queue %} usage that do not use callbacks. We *recommend that you use a callback for server-named queues*, otherwise your code may be subject to "race conditions":http://en.wikipedia.org/wiki/Race_condition. Even though the amqp gem tries to be reasonably smart and protect you from most common problems (for example, binding operations will be delayed until after queue name is received from the broker), there is no way it can do so for every case. The primary reason for supporting {% yard_link AMQP::Channel#queue %} usage without a callback for server-named queues is backwards compatibility with earlier versions.
+A word of warning: you may find examples on the Web of {% yard_link AMQP::Channel#queue %} usage that do not use callbacks. We *recommend that you use a callback for server-named queues*, otherwise your code may be subject to "race conditions":http://en.wikipedia.org/wiki/Race_condition. Even though the amqp gem tries to be reasonably smart and protect you from most common problems (for example, binding operations will be delayed until after queue name is received from the broker), there is no way it can do so for every case. The primary reason for supporting {% yard_link AMQP::Channel#queue %} usage without a callback for server-named queues is backwards compatibility with earlier versions of the gem.
 
 h2. Integration with objects
 
 Since Ruby is a genuine object-oriented language, it is important to demonstrate how the Ruby amqp gem can be integrated into rich object-oriented code.
 
-The {% yard_link AMQP::Queue#subscribe %} callback does not have to be a block. It can be any Ruby object that responds to `call`. A common technique is to combine {http://rubydoc.info/stdlib/core/1.8.7/Object:method Object#method} and {http://rubydoc.info/stdlib/core/1.8.7/Method:to_proc Method#to_proc} and use object methods as message handlers.
+The {% yard_link AMQP::Queue#subscribe %} callback does not have to be a block. It can be any Ruby object that responds to `call`. A common technique is to combine "Object#method":http://rubydoc.info/stdlib/core/1.8.7/Object:method and "Method#to_proc":http://rubydoc.info/stdlib/core/1.8.7/Method:to_proc and use object methods as message handlers.
 
 An example to demonstrate this technique:
 
@@ -399,7 +399,7 @@ end</pre>
 
 h2. Wrapping up
 
-This is the end of the tutorial. Congratulations! You have learned quite a bit about both AMQP v0.9.1 and the amqp gem. This is only the tip of the iceberg. AMQP has many more features built into the protocol:
+This is the end of the tutorial. Congratulations! You have learned quite a bit about both AMQP 0.9.1 and the amqp gem. This is only the tip of the iceberg. AMQP has many more features built into the protocol:
 
  * Reliable delivery of messages
  * Message confirmations (a way to tell broker that a message was or was not processed successfully)

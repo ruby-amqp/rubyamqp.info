@@ -9,3 +9,6 @@ _site/*
 *.sassc
 *\#*
 ~*
+_source/*
+output/*
+tmp/*

@@ -12,3 +12,4 @@ _site/*
 _source/*
 output/*
 tmp/*
+deploy.sh

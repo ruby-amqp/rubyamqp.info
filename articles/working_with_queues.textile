@@ -292,7 +292,7 @@ end</pre>
 
 {% yard_link AMQP::Consumer#on_delivery %} takes a block that is used exactly like the block passed to {% yard_link AMQP::Queue#subscribe %}. In fact, {% yard_link AMQP::Queue#subscribe %} uses {% yard_link AMQP::Consumer %} under the hood, adding a <span class="note">default consumer</span> to the queue.
 
-<span class="alert alert-error">Default consumers do not have any special properties, they just provide a convenient way for application developers to register multiple consumers and a means of preserving backwards compatibility. Application developers are always free to use AMQP::Consumer instances directly, or intermix them with AMQP::Queue#subscribe.</span>
+<p class="alert alert-error">Default consumers do not have any special properties, they just provide a convenient way for application developers to register multiple consumers and a means of preserving backwards compatibility. Application developers are always free to use AMQP::Consumer instances directly, or intermix them with AMQP::Queue#subscribe.</p>
 
 Most of the public API methods on {% yard_link AMQP::Consumer %} return self, so it is possible to use method chaining extensively. An example from "amqp gem spec suite":https://github.com/ruby-amqp/amqp/tree/master/spec:
 
@@ -453,9 +453,9 @@ As a shortcut, it is possible to acknowledge messages using the {AMQP::Header#ac
   metadata.ack
 end</pre>
 
-<span class="alert alert-error">Acknowledgements are channel-specific. Applications must not receive messages on one channel and acknowledge them on another.</span>
+<p class="alert alert-error">Acknowledgements are channel-specific. Applications must not receive messages on one channel and acknowledge them on another.</p>
 
-<span class="alert alert-error">A message MUST not be acknowledged more than once. Doing so will result in a channel-level exception (PRECONDITION_FAILED) with an error message like this: "PRECONDITION_FAILED - unknown delivery tag"</span>
+<p class="alert alert-error">A message MUST not be acknowledged more than once. Doing so will result in a channel-level exception (PRECONDITION_FAILED) with an error message like this: "PRECONDITION_FAILED - unknown delivery tag"</p>
 
 h3. Rejecting messages
 
@@ -475,7 +475,7 @@ in the example above, messages are rejected without requeueing (broker will simp
   channel.reject(metadata.delivery_tag, true)
 end</pre>
 
-<span class="alert alert-error">When there is only one consumer on a queue, make sure you do not create infinite message delivery loops by rejecting and requeueing a message from the same consumer over and over again.</span>
+<p class="alert alert-error">When there is only one consumer on a queue, make sure you do not create infinite message delivery loops by rejecting and requeueing a message from the same consumer over and over again.</p>
 
 Another way to reject a message is by using {AMQP::Header#reject}:
 

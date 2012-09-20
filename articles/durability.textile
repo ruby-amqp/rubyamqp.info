@@ -10,7 +10,7 @@ h2. About this guide
 
 This guide covers queue, exchange and message durability, as well as othertopics related to durability, for example, durability in cluster environment.
 
-This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images and stylesheets). The source is available "on Github":https://github.com/ruby-amqp/amqp/tree/master/docs.
+This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (including images and stylesheets). The source is available "on Github":https://github.com/ruby-amqp/ruby-amqp.github.com.
 
 h2. Covered versions
 

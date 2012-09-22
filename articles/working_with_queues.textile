@@ -327,14 +327,14 @@ To demonstrate how redelivery works, let us have a look at the following code ex
 
 So what is going on here? This example uses three AMQP connections to imitate three applications, one producer and two consumers. Each AMQP connection opens a single channel:
 
-<pre># open three connections to imitate three apps
+<pre># open multiple connections to imitate three apps
 connection1 = AMQP.connect
 connection2 = AMQP.connect
 connection3 = AMQP.connect
 
 channel_exception_handler = Proc.new { |ch, channel_close| EventMachine.stop; raise "channel error: #{channel_close.reply_text}" }
 
-# open two channels
+# open several channels
 channel1    = AMQP::Channel.new(connection1)
 channel1.on_error(&channel_exception_handler)
 # ...

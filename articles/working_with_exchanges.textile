@@ -362,7 +362,6 @@ AMQP messages have various metadata attributes that can be set when a message is
 
  * :routing_key
  * :persistent
- * :immediate
  * :mandatory
  * :content_type
  * :content_encoding
@@ -388,13 +387,6 @@ An example to show how message metadata attributes are passed to {% yard_link AM
 
   <dt>:persistent</dt>
   <dd>When set to true, AMQP broker will persist message to disk.</dd>
-
-  <dt>:immediate</dt>
-  <dd>
-  This flag tells the server how to react if the message cannot be routed to a queue consumer immediately. If this flag is set to true, the server will return
-  an undeliverable message to the producer with a basic.return AMQP method. If this flag is set to false, the server will queue the message, but with no guarantee
-  that it will ever be consumed.
-  </dd>
 
   <dt>:mandatory</dt>
   <dd>
@@ -493,17 +485,6 @@ In cases when you cannot afford to lose a single message, AMQP 0.9.1 application
 
 A more detailed overview of the pros and cons of each option can be found in a "blog post that introduces Publisher Confirms extension":http://bit.ly/rabbitmq-publisher-confirms by the RabbitMQ team. The next sections of this guide will describe how the features above can be used with the Ruby amqp gem.
 
-h3. Publishing messages as immediate
-
-When publishing messages, it is possible to use the ":immediate" option to publish a message as "immediate". When an immediate message cannot be delivered to any consumer (meaning that one or more queues to which the message was routed have no active consumers), then the message is returned to the producer.
-
-An example of {% yard_link AMQP::Exchange#publish %} being used to publish an immediate message:
-
-<pre>exchange.publish("Message ##{i}", :immediate => true)</pre>
-
-The following code example demonstrates a message that is published as immediate but cannot be immediately consumed (no consumers) and thus is returned back to the producer:
-
-{% gist 1025700 %}
 
 h3. Publishing messages as mandatory
 

@@ -75,7 +75,6 @@ A more in-depth description is this:
  * If there are suitable queues, a _copy_ of the message is placed into each one (step 2)
  * If the message was published as mandatory, but there are no active consumers for it, it is returned to the publisher (step 2b)
  * If there are active consumers on those queues and the basic.qos setting permits, message is pushed to those consumers (step 3)
- * If there are no active consumers and the message is *not* published as mandatory, it will be left in the queue
 
 The important thing to take away from this is that messages may or may not be routed and it is important for applications to handle unroutable messages.
 

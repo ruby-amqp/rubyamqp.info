@@ -69,7 +69,6 @@ h4. Server code
 
 {% gist 1207764 %}
 
-In the examples above messages are published with the :immediate attribute set. This is not necessary in all cases. Sometimes it is OK for requests to sit in the queue without active consumers. Replies, on the other hand, assume an active consumer and existing replies queue, so if routing or immediate delivery do not succeed, the server application will log returned messages. More on this in the "Working With Exchanges":/articles/working_with_exchanges/ guide.
 
 h3. Related patterns
 

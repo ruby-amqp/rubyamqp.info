@@ -106,11 +106,11 @@ h4. Request message attributes
 
 h3. Code example
 
-h4. Producer (Sender)
+h4. Consumer (Recipient)
 
 {% gist 1207758 %}
 
-h4. Consumer (Recipient)
+h4. Producer (Sender)
 
 {% gist 1207761 %}
 

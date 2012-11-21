@@ -39,7 +39,8 @@ Hash options that the amqp gem will recognize are
  * :password (aliased as :pass)
  * :vhost
  * :ssl
- * :timeout
+ * :timeout (in seconds)
+ * :heartbeat (in seconds), `0` means no heartbeat
  * :frame_max
 
 h4. Default parameters
@@ -53,6 +54,7 @@ Default connection parameters are
   :pass      => "guest",
   :vhost     => "/",
   :ssl       => false,
+  :heartbeat => 0,
   :frame_max => 131072
 }</pre>
 

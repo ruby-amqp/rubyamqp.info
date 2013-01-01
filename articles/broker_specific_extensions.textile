@@ -12,13 +12,15 @@ h2. Supported extensions
 
 The amqp gem supports many RabbitMQ extensions to AMQP 0.9.1:
 
-  * "Publisher confirmations":http://www.rabbitmq.com/extensions.html#confirms (confirm.* class)
-  * "Negative acknowledgements":http://www.rabbitmq.com/extensions.html#negative-acknowledgements (basic.nack)
-  * "Alternate Exchanges":http://www.rabbitmq.com/extensions.html#alternate-exchange
-  * "Per-queue Message Time-to-Live":http://www.rabbitmq.com/extensions.html#queue-ttl
-  * "Queue Leases":http://www.rabbitmq.com/extensions.html#queue-leases
-  * "Sender-selected Distribution":http://www.rabbitmq.com/extensions.html#sender-selected-distribution
-  * "Validated user_id":http://www.rabbitmq.com/extensions.html#validated-user-id
+  * "Publisher confirmations":http://www.rabbitmq.com/confirms.html (confirm.* class)
+  * "Negative acknowledgements":http://www.rabbitmq.com/nack.html (basic.nack)
+  * "Consumer Cancellation Notifications":http://www.rabbitmq.com/consumer-cancel.html
+  * "Exchange-to-Exchange bindings":http://www.rabbitmq.com/e2e.html
+  * "Alternate Exchanges":http://www.rabbitmq.com/ae.html
+  * "Per-queue Message Time-to-Live":http://www.rabbitmq.com/ttl.html#per-queue-message-ttl
+  * "Queue Leases":http://www.rabbitmq.com/ttl.html#queue-ttl
+  * "Sender-selected Distribution":http://www.rabbitmq.com/sender-selected.html
+  * "Validated user_id":http://www.rabbitmq.com/validated-user-id.html
 
 h2. Enabling RabbitMQ extensions
 
@@ -48,7 +50,7 @@ The example below sets the message TTL for a new server-named queue to be 1000 m
 
 h3. Learn More
 
-See also rabbitmq.com section on "Per-queue Message TTL":http://www.rabbitmq.com/extensions.html#queue-ttl
+See also rabbitmq.com section on "Per-queue Message TTL":http://www.rabbitmq.com/ttl.html#per-queue-message-ttl
 
 h2. Publisher Confirms (Publisher Acknowledgements)
 
@@ -81,7 +83,7 @@ h3. Example
 
 h3. Learn More
 
-See also rabbitmq.com section on "Confirms aka Publisher Acknowledgements":http://www.rabbitmq.com/extensions.html#confirms
+See also rabbitmq.com section on "Confirms aka Publisher Acknowledgements":http://www.rabbitmq.com/confirms.html
 
 h2. basic.nack
 
@@ -95,7 +97,7 @@ When RabbitMQ extensions are loaded, the {% yard_link AMQP::Channel#reject %} me
 
 h3. Learn More
 
-See also rabbitmq.com section on "Confirms aka Publisher Acknowledgements":http://www.rabbitmq.com/extensions.html#negative-acknowledgements
+See also rabbitmq.com section on "Confirms aka Publisher Acknowledgements":http://www.rabbitmq.com/nack.html
 
 h2. Alternate Exchanges
 
@@ -115,4 +117,4 @@ h3. Example
 
 h3. Learn More
 
-See also rabbitmq.com section on "Alternate Exchanges":http://www.rabbitmq.com/extensions.html#alternate-exchange
+See also rabbitmq.com section on "Alternate Exchanges":http://www.rabbitmq.com/ae.html

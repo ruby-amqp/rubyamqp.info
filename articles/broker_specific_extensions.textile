@@ -30,6 +30,8 @@ with
 <pre>require "amqp"
 require "amqp/extensions/rabbitmq"</pre>
 
+
+
 h2. Per-queue Message Time-to-Live
 
 Per-queue Message Time-to-Live (TTL) is a RabbitMQ extension to AMQP 0.9.1 that allows developers to control how long a message published to a queue can live before it is discarded. A message that has been in the queue for longer than the configured TTL is said to be dead. Dead messages will not be delivered to consumers and cannot be fetched using the *basic.get* operation ({% yard_link AMQP::Queue#pop %}).
@@ -51,6 +53,9 @@ The example below sets the message TTL for a new server-named queue to be 1000 m
 h3. Learn More
 
 See also rabbitmq.com section on "Per-queue Message TTL":http://www.rabbitmq.com/ttl.html#per-queue-message-ttl
+
+
+
 
 h2. Publisher Confirms (Publisher Acknowledgements)
 
@@ -85,6 +90,9 @@ h3. Learn More
 
 See also rabbitmq.com section on "Confirms aka Publisher Acknowledgements":http://www.rabbitmq.com/confirms.html
 
+
+
+
 h2. basic.nack
 
 The AMQP 0.9.1 specification defines the basic.reject method that allows clients to reject individual, delivered messages, instructing the broker to either discard them or requeue them. Unfortunately, basic.reject provides no support for negatively acknowledging messages in bulk.
@@ -98,6 +106,9 @@ When RabbitMQ extensions are loaded, the {% yard_link AMQP::Channel#reject %} me
 h3. Learn More
 
 See also rabbitmq.com section on "Confirms aka Publisher Acknowledgements":http://www.rabbitmq.com/nack.html
+
+
+
 
 h2. Alternate Exchanges
 
@@ -118,3 +129,10 @@ h3. Example
 h3. Learn More
 
 See also rabbitmq.com section on "Alternate Exchanges":http://www.rabbitmq.com/ae.html
+
+
+
+h2. Wrapping Up
+
+With amqp gem you can use a number of RabbitMQ extensions to AMQP 0.9.1. Some are special features in the library,
+while some other are used via extra declaration attributes and message properties.

@@ -13,7 +13,7 @@ This guide covers everything related to queues in the AMQP v0.9.1 specification,
 
 h2. Which versions of the amqp gem does this guide cover?
 
-This guide covers 0.8.0 and later of the "Ruby amqp gem":http://github.com/ruby-amqp/amqp.
+This guide covers "Ruby amqp gem":http://github.com/ruby-amqp/amqp 1.0.x.
 
 h2. Queues in AMQP 0.9.1 - overview
 

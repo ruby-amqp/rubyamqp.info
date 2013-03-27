@@ -12,7 +12,7 @@ This guide describes tools and strategies that help in troubleshooting and debug
 
 h2. Covered versions
 
-This guide covers "Ruby amqp gem":http://github.com/ruby-amqp/amqp 0.8.0 and later.
+This guide covers "Ruby amqp gem":http://github.com/ruby-amqp/amqp 1.0.x.
 
 h2. First steps
 

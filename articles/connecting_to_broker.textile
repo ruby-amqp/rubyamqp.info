@@ -14,7 +14,7 @@ This work is licensed under a <a rel="license" href="http://creativecommons.org/
 
 h2. Which versions of the amqp gem does this guide cover?
 
-This guide covers 0.8.0 and later of the "Ruby amqp gem":http://github.com/ruby-amqp/amqp.
+This guide covers "Ruby amqp gem":http://github.com/ruby-amqp/amqp 1.0.x.
 
 h2. Terminology
 

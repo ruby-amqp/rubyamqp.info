@@ -8,7 +8,7 @@ permalink: "/getting_started/"
 
 h2. About this guide
 
-This guide is a quick tutorial that helps you to get started with the AMQP 0.9.1 specification in general and the "Ruby amqp gem":http://github.com/ruby-amqp/amqp in particular.
+This guide is a quick tutorial that helps you to get started with RabbitMQ and the "Ruby amqp gem":http://github.com/ruby-amqp/amqp.
 It should take about 20 minutes to read and study the provided code examples. This guide covers:
 
  * Installing RabbitMQ, a mature popular server implementation of the AMQP protocol.

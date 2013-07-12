@@ -13,7 +13,7 @@ To contribute to the project, please fork and make a pull request. Thanks!
 In order to modify contents and launch dev environment, run:
 
       bundle install --binstubs
-      ./bin/jekyll --auto --server
+      ./bin/jekyll serve --watch
 
 and then navigate to [http://localhost:4000/](http://localhost:4000/).
 

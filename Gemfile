@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "jekyll"
+gem "jekyll", "~> 1.0.1"
 gem "rdiscount"
 gem "haml"
 gem "RedCloth"

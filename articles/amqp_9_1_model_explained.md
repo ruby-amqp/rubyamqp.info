@@ -14,7 +14,7 @@ under a
 <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative
 Commons Attribution 3.0 Unported License</a> (including images &
 stylesheets). The source is available [on
-Github](https://github.com/ruby-amqp/ruby-amqp.github.com).
+Github](https://github.com/ruby-amqp/rubyamqp.info).
 
 ### What this guide covers
 

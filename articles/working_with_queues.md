@@ -158,7 +158,7 @@ queue = AMQP::Queue.new(channel, "", :auto_delete => true)
 In this case, as soon as the AMQP broker reply (`queue.declare-ok`
 AMQP method) arrives, the queue object name will be assigned to the
 value that the broker generated. Many AMQP operations require a queue
-name, so before an { yard_link AMQP::Queue } instance receives its
+name, so before an `AMQP::Queue` instance receives its
 name, those operations are delayed. This example demonstrates this:
 
 ``` ruby
@@ -263,93 +263,277 @@ queue = AMQP::Queue.new(channel, "images.resize", :durable => true)
 
 Full example:
 
-{ gist 998723 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
 
-the same example rewritten to use { yard_link AMQP::Channel#queue }:
+require "rubygems"
+require "amqp"
 
-    channel.queue("images.resize", :durable => true) do |queue, declare_ok|
-      puts "#{queue.name} is ready to go."
-    end
+# Declaring a durable shared queue
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel = AMQP::Channel.new(connection)
+  queue   = AMQP::Queue.new(channel, "images.resize", :durable => true)
+
+  connection.close {
+    EventMachine.stop { exit }
+  }
+end
+```
+
+the same example rewritten to use `AMQP::Channel#queue`:
+
+``` ruby
+channel.queue("images.resize", :durable => true) do |queue, declare_ok|
+  puts "#{queue.name} is ready to go."
+end
+```
 
 Full example:
 
-{ gist 998724 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+# Declaring a durable shared queue using AMQP::Channel#queue method
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel = AMQP::Channel.new(connection)
+  queue   = channel.queue("images.resize", :durable => true)
+
+  connection.close {
+    EventMachine.stop { exit }
+  }
+end
+```
 
 Declaring a temporary exclusive queue
 -------------------------------------
 
-To declare a server-named, exclusive, auto-deleted queue, pass [" (empty
-string) as the queue name and use the ](exclusive") and “:auto_delete”
+To declare a server-named, exclusive, auto-deleted queue, pass `""` (an empty
+string) as the queue name and use the ](exclusive") and `:auto_delete`
 options:
 
-    AMQP::Queue.new(channel, "", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
-      puts "#{queue.name} is ready to go."
-    end
+``` ruby
+AMQP::Queue.new(channel, "", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
+  puts "#{queue.name} is ready to go."
+end
+```
 
 Full example:
 
-{ gist 998725 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+# Declaring a temporary exclusive queue
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel = AMQP::Channel.new(connection)
+
+  AMQP::Queue.new(channel, "", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
+    puts "#{queue.name} is ready to go."
+
+    connection.close {
+      EventMachine.stop { exit }
+    }
+  end
+end
+```
 
 The same example can be rewritten to use
-{ yard_link AMQP::Channel#queue }:
+`AMQP::Channel#queue`:
 
-    channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
-      puts "#{queue.name} is ready to go."
-    end
+``` ruby
+channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
+  puts "#{queue.name} is ready to go."
+end
+```
 
 Full example:
 
-{ gist 998726 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+# Declaring a temporary exclusive queue
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  AMQP::Channel.new do |channel, open_ok|
+    channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
+      puts "#{queue.name} is ready to go."
+
+      connection.close {
+        EventMachine.stop { exit }
+      }
+    end
+  end
+end
+```
 
 Exclusive queues may only be accessed by the current connection and are
 deleted when that connection closes. The declaration of an exclusive
 queue by other connections is not allowed and will result in a
-channel-level exception with the code 405 (RESOURCE_LOCKED) and a reply
+channel-level exception with the code `405 (RESOURCE_LOCKED)` and a reply
 message similar to
 
-{ gist 1008529 }
+``` ruby
+require "rubygems"
+require 'amqp'
+
+
+puts "=> Queue exclusivity violation results "
+puts
+EventMachine.run do
+  connection1 = AMQP.connect("amqp://guest:guest@dev.rabbitmq.com")
+  channel1    = AMQP::Channel.new(connection1)
+
+  connection2 = AMQP.connect("amqp://guest:guest@dev.rabbitmq.com")
+  channel2    = AMQP::Channel.new(connection2)
+
+  channel1.on_error do |ch, close|
+    puts "Handling a channel-level exception on channel1: #{close.reply_text}, #{close.inspect}"
+  end
+  channel2.on_error do |ch, close|
+    puts "Handling a channel-level exception on channel2: #{close.reply_text}, #{close.inspect}"
+  end
+
+  name = "amqpgem.examples.queue"
+  channel1.queue(name, :auto_delete => true, :exclusive => true)
+  # declare a queue with the same name on a different connection
+  channel2.queue(name, :auto_delete => true, :exclusive => true)
+
+
+  EventMachine.add_timer(3.5) do
+    connection1.close {
+      connection2.close {
+        EventMachine.stop { exit }
+      }
+    }
+  end
+end
+```
 
 Binding queues to exchanges
 ---------------------------
 
 In order to receive messages, a queue needs to be bound to at least one
 exchange. Most of the time binding is explcit (done by applications). To
-bind a queue to an exchange, use { yard_link AMQP::Queue#bind } where
-the argument passed can be either an { yard_link AMQP::Exchange }
+bind a queue to an exchange, use `AMQP::Queue#bind` where
+the argument passed can be either an `AMQP::Exchange`
 instance or a string.
 
+``` ruby
+queue.bind(exchange) do |bind_ok|
+  puts "Just bound #{queue.name} to #{exchange.name}"
+end
+```
+
+Full example:
+
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+# Binding a queue to an exchange
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel  = AMQP::Channel.new(connection)
+  exchange = channel.fanout("amq.fanout")
+
+  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
     queue.bind(exchange) do |bind_ok|
       puts "Just bound #{queue.name} to #{exchange.name}"
     end
 
-Full example:
-
-{ gist 998727 }
+    connection.close {
+      EventMachine.stop { exit }
+    }
+  end
+end
+```
 
 The same example using a string without callback:
 
-    queue.bind("amq.fanout")
+``` ruby
+queue.bind("amq.fanout")
+```
 
 Full example:
 
-{ gist 998729 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+# Binding a queue to an exchange
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel = AMQP::Channel.new(connection)
+  exchange_name = "amq.fanout"
+
+  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
+    queue.bind(exchange_name)
+    puts "Bound #{queue.name} to #{exchange_name}"
+
+    connection.close {
+      EventMachine.stop { exit }
+    }
+  end
+end
+```
 
 Subscribing to receive messages (“push API”)
 --------------------------------------------
 
 To set up a queue subscription to enable an application to receive
 messages as they arrive in a queue, one uses the
-{ yard_link AMQP::Queue#subscribe } method. Then when a message
+`AMQP::Queue#subscribe` method. Then when a message
 arrives, the message header (metadata) and body (payload) are passed to
 the handler:
 
-    queue.subscribe do |metadata, payload|
-      puts "Received a message: #{payload.inspect}."
-    end
+``` ruby
+queue.subscribe do |metadata, payload|
+  puts "Received a message: #{payload.inspect}."
+end
+```
 
 Full example:
 
-{ gist 998731 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel  = AMQP::Channel.new(connection)
+  exchange = channel.fanout("amq.fanout")
+
+  channel.queue("", :auto_delete => true, :exclusive => true) do |queue|
+    queue.bind(exchange).subscribe do |metadata, payload|
+      puts "Received a message: #{payload.inspect}. Shutting down..."
+
+      connection.close { EventMachine.stop }
+    end
+
+    EventMachine.add_timer(0.2) do
+      puts "=> Publishing..."
+      exchange.publish("Ohai!")
+    end
+  end
+end
+```
 
 Subscriptions for message delivery are usually referred to as
 <span class="note">consumers</span> in the AMQP 0.9.1 specification,
@@ -359,62 +543,125 @@ channel that they were declared on, or until client cancels them
 
 Consumers are identified by <span class="note">consumer tags</span>. If
 you need to obtain the consumer tag of a subscribed queue then use
-{ yard_link AMQP::Queue#consumer_tag }.
+`AMQP::Queue#consumer_tag`.
 
 ### Accessing message metadata
 
 The <span class="note">header</span> object in the example above
 provides access to message metadata and delivery information:
 
-\* Message content type\
- \* Message content encoding\
- \* Message routing key\
- \* Message delivery mode (persistent or not)\
- \* Consumer tag this delivery is for\
- \* Delivery tag\
- \* Message priority\
- \* Whether or not message is redelivered\
- \* Producer application id
+ * Message content type
+ * Message content encoding
+ * Message routing key
+ * Message delivery mode (persistent or not)
+ * Consumer tag this delivery is for
+ * Delivery tag
+ * Message priority
+ * Whether or not message is redelivered
+ * Producer application id
 
 and so on. An example to demonstrate how to access some of those
 attributes:
 
-    # producer
-    exchange.publish("Hello, world!",
-                     :app_id      => "amqpgem.example",
-                     :priority    => 8,
-                     :type        => "kinda.checkin",
-                     # headers table keys can be anything
-                     :headers     => {
-                       :coordinates => {
-                         :latitude  => 59.35,
-                         :longitude => 18.066667
-                       },
-                       :participants => 11,
-                       :venue        => "Stockholm"
-                     },
-                     :timestamp   => Time.now.to_i)
+``` ruby
+# producer
+exchange.publish("Hello, world!",
+                 :app_id      => "amqpgem.example",
+                 :priority    => 8,
+                 :type        => "kinda.checkin",
+                 # headers table keys can be anything
+                 :headers     => {
+                   :coordinates => {
+                     :latitude  => 59.35,
+                     :longitude => 18.066667
+                   },
+                   :participants => 11,
+                   :venue        => "Stockholm"
+                 },
+                 :timestamp   => Time.now.to_i)
 
-    # consumer
-    queue.subscribe do |metadata, payload|
-      puts "metadata.routing_key : #{metadata.routing_key}"
-      puts "metadata.content_type: #{metadata.content_type}"
-      puts "metadata.priority    : #{metadata.priority}"
-      puts "metadata.headers     : #{metadata.headers.inspect}"
-      puts "metadata.timestamp   : #{metadata.timestamp.inspect}"
-      puts "metadata.type        : #{metadata.type}"
-      puts "metadata.delivery_tag: #{metadata.delivery_tag}"
-      puts "metadata.redelivered : #{metadata.redelivered?}"
+# consumer
+queue.subscribe do |metadata, payload|
+  puts "metadata.routing_key : #{metadata.routing_key}"
+  puts "metadata.content_type: #{metadata.content_type}"
+  puts "metadata.priority    : #{metadata.priority}"
+  puts "metadata.headers     : #{metadata.headers.inspect}"
+  puts "metadata.timestamp   : #{metadata.timestamp.inspect}"
+  puts "metadata.type        : #{metadata.type}"
+  puts "metadata.delivery_tag: #{metadata.delivery_tag}"
+  puts "metadata.redelivered : #{metadata.redelivered?}"
 
-      puts "metadata.app_id      : #{metadata.app_id}"
-      puts "metadata.exchange    : #{metadata.exchange}"
-      puts
-      puts "Received a message: #{payload}."
-    end
+  puts "metadata.app_id      : #{metadata.app_id}"
+  puts "metadata.exchange    : #{metadata.exchange}"
+  puts
+  puts "Received a message: #{payload}."
+end
+```
 
 Full example:
 
-{ gist 998739 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "bundler"
+Bundler.setup
+
+$:.unshift(File.expand_path("../../../lib", __FILE__))
+
+require 'amqp'
+
+EventMachine.run do
+  connection = AMQP.connect(:host => '127.0.0.1')
+  puts "Connected to AMQP broker. Running #{AMQP::VERSION} version of the gem..."
+
+  channel  = AMQP::Channel.new(connection)
+  queue    = channel.queue("amqpgem.examples.hello_world", :auto_delete => true)
+  exchange = channel.direct("amq.direct")
+
+  queue.bind(exchange)
+
+  channel.on_error do |ch, channel_close|
+    puts channel_close.reply_text
+    connection.close { EventMachine.stop }
+  end
+
+  queue.subscribe do |metadata, payload|
+    puts "metadata.routing_key : #{metadata.routing_key}"
+    puts "metadata.content_type: #{metadata.content_type}"
+    puts "metadata.priority    : #{metadata.priority}"
+    puts "metadata.headers     : #{metadata.headers.inspect}"
+    puts "metadata.timestamp   : #{metadata.timestamp.inspect}"
+    puts "metadata.type        : #{metadata.type}"
+    puts "metadata.delivery_tag: #{metadata.delivery_tag}"
+    puts "metadata.redelivered : #{metadata.redelivered}"
+
+    puts "metadata.app_id      : #{metadata.app_id}"
+    puts "metadata.exchange    : #{metadata.exchange}"
+    puts
+    puts "Received a message: #{payload}. Disconnecting..."
+
+    connection.close {
+      EventMachine.stop { exit }
+    }
+  end
+
+  exchange.publish("Hello, world!",
+                   :app_id      => "amqpgem.example",
+                   :priority    => 8,
+                   :type        => "kinda.checkin",
+                   # headers table keys can be anything
+                   :headers     => {
+                     :coordinates => {
+                       :latitude  => 59.35,
+                       :longitude => 18.066667
+                     },
+                     :participants => 11,
+                     :venue        => "Stockholm"
+                   },
+                   :timestamp   => Time.now.to_i)
+end
+```
 
 ### Exclusive consumers
 
@@ -426,11 +673,13 @@ exclusive consumer crashes or loses the TCP connection to the broker,
 then the channel is closed and the exclusive consumer is cancelled.
 
 To exclusively receive messages from the queue, pass the “:exclusive”
-option to { yard_link AMQP::Queue#subscribe }:
+option to `AMQP::Queue#subscribe`:
 
-    queue.subscribe(:exclusive => true) do |metadata, payload|
-      # message handling logic...
-    end
+``` ruby
+queue.subscribe(:exclusive => true) do |metadata, payload|
+  # message handling logic...
+end
+```
 
 TBD: describe what happens when exclusivity property is violated and how
 to handle it.
@@ -452,53 +701,59 @@ process has become more and more common. In certain cases, even
 applications that do not need any concurrency benefit from having
 multiple consumers on the same queue in the same process.
 
-Starting from amqp gem 0.8.0.RC14, it is possible to add any number of
-consumers by instantiating {AMQP::Consumer} directly:
+Starting from amqp gem 0.8.0, it is possible to add any number of
+consumers by instantiating `AMQP::Consumer` directly:
 
-    # non-exclusive consumer, consumer tag is generated
-    consumer1 = AMQP::Consumer.new(channel, queue)
+``` ruby
+# non-exclusive consumer, consumer tag is generated
+consumer1 = AMQP::Consumer.new(channel, queue)
 
-    # non-exclusive consumer, consumer tag is explicitly given
-    consumer2 = AMQP::Consumer.new(channel, queue, "#{queue.name}-consumer-#{rand}-#{Time.now}")
+# non-exclusive consumer, consumer tag is explicitly given
+consumer2 = AMQP::Consumer.new(channel, queue, "#{queue.name}-consumer-#{rand}-#{Time.now}")
 
-    # exclusive consumer, consumer tag is generated
-    consumer3 = AMQP::Consumer.new(channel, queue, nil, true)
+# exclusive consumer, consumer tag is generated
+consumer3 = AMQP::Consumer.new(channel, queue, nil, true)
+```
 
 Instantiated consumers do not begin consuming messages immediately. This
 is because in certain cases, it is useful to add a consumer but make it
 active at a later time. To consume messages, use the
-{ yard_link AMQP::Consumer#consume } method in combination with
-{ yard_link AMQP::Consumer#on_delivery }:
+`AMQP::Consumer#consume` method in combination with
+`AMQP::Consumer#on_delivery`:
 
-    consumer1.consume.on_delivery do |metadata, payload|
-      @consumer1_mailbox << payload
-    end
+``` ruby
+consumer1.consume.on_delivery do |metadata, payload|
+  @consumer1_mailbox << payload
+end
+```
 
-{ yard_link AMQP::Consumer#on_delivery } takes a block that is used
-exactly like the block passed to { yard_link AMQP::Queue#subscribe }.
-In fact, { yard_link AMQP::Queue#subscribe } uses
-{ yard_link AMQP::Consumer } under the hood, adding a
+`AMQP::Consumer#on_delivery` takes a block that is used
+exactly like the block passed to `AMQP::Queue#subscribe`.
+In fact, `AMQP::Queue#subscribe` uses
+`AMQP::Consumer` under the hood, adding a
 <span class="note">default consumer</span> to the queue.
 
 <p class="alert alert-error">
 Default consumers do not have any special properties, they just provide
 a convenient way for application developers to register multiple
 consumers and a means of preserving backwards compatibility. Application
-developers are always free to use AMQP::Consumer instances directly, or
-intermix them with AMQP::Queue#subscribe.
-
+developers are always free to use `AMQP::Consumer` instances directly, or
+intermix them with `AMQP::Queue#subscribe`.
 </p>
-Most of the public API methods on { yard_link AMQP::Consumer } return
+
+Most of the public API methods on `AMQP::Consumer` return
 self, so it is possible to use method chaining extensively. An example
 from [amqp gem spec
 suite](https://github.com/ruby-amqp/amqp/tree/master/spec):
 
-    consumer1 = AMQP::Consumer.new(@channel, @queue).consume.on_delivery { |metadata, payload| mailbox1 << payload }
-    consumer2 = AMQP::Consumer.new(@channel, @queue).consume.on_delivery { |metadata, payload| mailbox2 << payload }
+``` ruby
+consumer1 = AMQP::Consumer.new(@channel, @queue).consume.on_delivery { |metadata, payload| mailbox1 << payload }
+consumer2 = AMQP::Consumer.new(@channel, @queue).consume.on_delivery { |metadata, payload| mailbox2 << payload }
+```
 
 To cancel a particular consumer, use
-{ yard_link AMQP::Consumer#cancel } method. To cancel a default queue
-consumer, use { yard_link AMQP::Queue#unsubscribe }.
+`AMQP::Consumer#cancel` method. To cancel a default queue
+consumer, use `AMQP::Queue#unsubscribe`.
 
 ### Message acknowledgements
 
@@ -508,9 +763,9 @@ crash. There is also the possibility of network issues causing problems.
 This raises a question - “When should the AMQP broker remove messages
 from queues?” The AMQP 0.9.1 specification proposes two choices:
 
-\* After broker sends a message to an application (using either
-basic.deliver or basic.get-ok methods).\
- \* After the application sends back an acknowledgement (using basic.ack
+ * After broker sends a message to an application (using either
+basic.deliver or basic.get-ok methods).
+ * After the application sends back an acknowledgement (using basic.ack
 AMQP method).
 
 The former choice is called the **automatic acknowledgement model**,
@@ -529,7 +784,7 @@ time, the broker will wait until at least one consumer is registered for
 the same queue before attempting redelivery.
 
 The acknowledgement model is chosen when a new consumer is registered
-for a queue. By default, { yard_link AMQP::Queue#subscribe } will use
+for a queue. By default, `AMQP::Queue#subscribe` will use
 the **automatic** model. To switch to the **explicit** model, the “:ack”
 option should\
 be used:
@@ -673,11 +928,11 @@ immediately redelivered to the consumer #2:
 [consumer2] Received Message #1, redelivered = true, ack-ed\
 [consumer2] Received Message #2, redelivered = true, ack-ed </code>
 
-To acknowledge a message use { yard_link AMQP::Channel#acknowledge }:
+To acknowledge a message use `AMQP::Channel#acknowledge`:
 
     channel1.acknowledge(metadata.delivery_tag, false)
 
-{ yard_link AMQP::Channel#acknowledge } takes two arguments: message
+`AMQP::Channel#acknowledge` takes two arguments: message
 **delivery tag** and a flag that indicates whether or not we want to
 acknowledge multiple messages at once. Delivery tag is simply a
 channel-specific increasing number that the server uses to identify
@@ -713,7 +968,7 @@ broker that message processing has failed (or cannot be accomplished at
 the time) by rejecting a message. When rejecting a message, an
 application can ask the broker to discard or requeue it.
 
-To reject a message use the { yard_link AMQP::Channel#reject } method:
+To reject a message use the `AMQP::Channel#reject` method:
 
     queue.bind(exchange).subscribe do |metadata, payload|
       # reject but do not requeue (simply discard)
@@ -874,7 +1129,7 @@ Fetching messages when needed (“pull API”)
 
 The AMQP 0.9.1 specification also provides a way for applications to
 fetch (pull) messages from the queue only when necessary. For that, use
-{ yard_link AMQP::Queue#pop }:
+`AMQP::Queue#pop`:
 
     queue.pop do |metadata, payload|
       if payload
@@ -890,18 +1145,18 @@ Full example:
 
 If the queue is empty, then the `payload` argument will be nil,
 otherwise arguments are identical to those of the
-{ yard_link AMQP::Queue#subscribe } callback.
+`AMQP::Queue#subscribe` callback.
 
 Unsubscribing from messages
 ---------------------------
 
 Sometimes it is necessary to unsubscribe from messages without deleting
-a queue. To do that, use the { yard_link AMQP::Queue#unsubscribe }
+a queue. To do that, use the `AMQP::Queue#unsubscribe`
 method:
 
     queue.unsubscribe
 
-By default { yard_link AMQP::Queue#unsubscribe } uses the “:noack”
+By default `AMQP::Queue#unsubscribe` uses the “:noack”
 option to inform the broker that there is no need to send a
 confirmation. In other words, it does not expect you to pass in a
 callback, because the consumer tag on the instance and the registered
@@ -924,14 +1179,14 @@ longer be delivered to it, however, due to the asynchronous nature of
 the protocol, it is possible for “in flight” messages to be received
 after this call completes.
 
-Fetching messages with { yard_link AMQP::Queue#pop } is still possible
+Fetching messages with `AMQP::Queue#pop` is still possible
 even after a consumer is cancelled.
 
 Unbinding queues from exchanges
 -------------------------------
 
 To unbind a queue from an exchange use
-{ yard_link AMQP::Queue#unbind }:
+`AMQP::Queue#unbind`:
 
     queue.unbind(exchange)
 
@@ -949,7 +1204,7 @@ It is possible to query the number of messages sitting in the queue by
 declaring the queue with the “:passive” attribute set. The response
 (`queue.declare-ok` AMQP method) will include the number of messages
 along with other attributes. However, the amqp gem provides a
-convenience method, { yard_link AMQP::Queue#status }:
+convenience method, `AMQP::Queue#status`:
 
     queue.status do |number_of_messages, number_of_consumers|
       puts
@@ -968,7 +1223,7 @@ It is possible to query the number of consumers on a queue by declaring
 the queue with the “:passive” attribute set. The response
 (`queue.declare-ok` AMQP method) will include the number of consumers
 along with other attributes. However, the amqp gem provides a
-convenience method, { yard_link AMQP::Queue#status }:
+convenience method, `AMQP::Queue#status`:
 
     queue.status do |number_of_messages, number_of_consumers|
       puts
@@ -984,7 +1239,7 @@ Purging queues
 --------------
 
 It is possible to purge a queue (remove all of the messages from it)
-using { yard_link AMQP::Queue#purge }:
+using `AMQP::Queue#purge`:
 
     queue.purge
 
@@ -1009,7 +1264,7 @@ used.
 Deleting queues
 ---------------
 
-To delete a queue, use { yard_link AMQP::Queue#delete }. When a queue
+To delete a queue, use `AMQP::Queue#delete`. When a queue
 is deleted, all of the messages in it are deleted as well.
 
     queue.delete
@@ -1017,7 +1272,7 @@ is deleted, all of the messages in it are deleted as well.
 This method takes an optional callback. However, remember that this
 operation is performed asynchronously. To run a piece of code when the
 AMQP broker confirms that a queue has been deleted, use a callback that
-{ yard_link AMQP::Queue#delete } takes:
+`AMQP::Queue#delete` takes:
 
     queue.delete do |_|
       puts "Deleted #{queue.name}"
@@ -1037,7 +1292,7 @@ problems/solutions concerning consumer applications (applications that
 primarily receive and process messages, as opposed to producers that
 publish them).
 
-An { yard_link AMQP::Queue#subscribe } callback does not have to be a
+An `AMQP::Queue#subscribe` callback does not have to be a
 block. It can be any Ruby object that responds to the `call` method. A
 common technique is to combine
 `Object#method` and
@@ -1090,7 +1345,7 @@ Full example:
 { gist 1009425 }
 
 In this example, <span class="note">Consumer</span> instances have to be
-instantiated with an { yard_link AMQP::Channel } instance. If the
+instantiated with an `AMQP::Channel` instance. If the
 message handling was done by an aggregated object, it would completely
 separate the handling logic and would be make it easy to unit test in
 isolation:

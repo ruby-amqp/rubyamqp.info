@@ -1215,9 +1215,9 @@ In cases where you cannot afford to lose a single message, AMQP 0.9.1
 applications can use one or a combination of the following protocol
 features:
 
-\* Publisher confirms (a RabbitMQ-specific extension to AMQP 0.9.1)\
- \* Publishing messages as immediate\
- \* Transactions (noticeable overhead)
+ * Publisher confirms (a RabbitMQ-specific extension to AMQP 0.9.1)
+ * Publishing messages as immediate
+ * Transactions (noticeable overhead)
 
 This topic is covered in depth in the [Working With
 Exchanges](/articles/working_with_exchanges/) guide. In this guide, we
@@ -1225,16 +1225,16 @@ will only mention how message acknowledgements are related to AMQP
 transactions and the Publisher Confirms extension.
 
 Let us consider a publisher application (P) that communications with a
-consumer © using AMQP 0.9.1. Their communication can be graphically
+consumer (C) using AMQP 0.9.1. Their communication can be graphically
 represented like this:
 
-<code>\
-—— —— ——\
-| | S1 | | S2 | |\
-| P | \> | B | \> | C |\
-| | | | | |\
-—— —— ——\
-</code>
+```
+-----       -----       -----
+|   |   S1  |   |   S2  |   |
+| P | ====> | B | ====> | C |
+|   |       |   |       |   |
+-----       -----       -----
+```
 
 We have two network segments, S1 and S2. Each of them may fail. P is
 concerned with making sure that messages cross S1, while broker (B) and
@@ -1252,17 +1252,48 @@ The AMQP 0.9.1 specification also provides a way for applications to
 fetch (pull) messages from the queue only when necessary. For that, use
 `AMQP::Queue#pop`:
 
-    queue.pop do |metadata, payload|
-      if payload
-        puts "Fetched a message: #{payload.inspect}, content_type: #{metadata.content_type}. Shutting down..."
-      else
-        puts "No messages in the queue"
-      end
-    end
+``` ruby
+queue.pop do |metadata, payload|
+  if payload
+    puts "Fetched a message: #{payload.inspect}, content_type: #{metadata.content_type}. Shutting down..."
+  else
+    puts "No messages in the queue"
+  end
+end
+```
 
 Full example:
 
-{ gist 998732 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel = AMQP::Channel.new(connection)
+  exchange = channel.fanout("amq.fanout")
+
+  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
+    queue.bind(exchange)
+    puts "Bound. Publishing a message..."
+    exchange.publish("Ohai!")
+
+    EventMachine.add_timer(0.5) do
+      queue.pop do |metadata, payload|
+        if payload
+          puts "Fetched a message: #{payload.inspect}, content_type: #{metadata.content_type}. Shutting down..."
+        else
+          puts "No messages in the queue"
+        end
+
+        connection.close { EventMachine.stop }
+      end
+    end
+  end
+end
+```
 
 If the queue is empty, then the `payload` argument will be nil,
 otherwise arguments are identical to those of the
@@ -1275,7 +1306,9 @@ Sometimes it is necessary to unsubscribe from messages without deleting
 a queue. To do that, use the `AMQP::Queue#unsubscribe`
 method:
 
-    queue.unsubscribe
+``` ruby
+queue.unsubscribe
+```
 
 By default `AMQP::Queue#unsubscribe` uses the “:noack”
 option to inform the broker that there is no need to send a
@@ -1284,15 +1317,41 @@ callback, because the consumer tag on the instance and the registered
 callback for messages are cleared immediately.
 
 If an application needs to execute a piece of code after the broker
-response arrives, {AMQP::Queue#unsubscribe} takes an optional callback:
+response arrives, `AMQP::Queue#unsubscribe` takes an optional callback:
 
-    queue.unsubscribe do |unbind_ok|
-      # server response arrived, handle it if necessary...
-    end
+``` ruby
+queue.unsubscribe do |unbind_ok|
+  # server response arrived, handle it if necessary...
+end
+```
 
 Full example:
 
-{ gist 998734 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel = AMQP::Channel.new(connection)
+  exchange = channel.fanout("amq.fanout")
+
+  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
+    queue.bind(exchange).subscribe do |headers, payload|
+      puts "Received a new message"
+    end
+
+    EventMachine.add_timer(0.3) do
+      queue.unsubscribe
+      puts "Unsubscribed. Shutting down..."
+
+      connection.close { EventMachine.stop }
+    end # EventMachine.add_timer
+  end # channel.queue
+end
+```
 
 In AMQP parlance, unsubscribing from messages is often referred to as
 “cancelling a consumer”. Once a consumer is cancelled, messages will no
@@ -1309,11 +1368,40 @@ Unbinding queues from exchanges
 To unbind a queue from an exchange use
 `AMQP::Queue#unbind`:
 
-    queue.unbind(exchange)
+``` ruby
+queue.unbind(exchange)
+```
 
 Full example:
 
-{ gist 998742 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel = AMQP::Channel.new(connection)
+  channel.on_error do |ch, channel_close|
+    raise "Channel-level exception: #{channel_close.reply_text}"
+  end
+
+  exchange = channel.fanout("amq.fanout")
+
+  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
+    queue.bind(exchange)
+
+    EventMachine.add_timer(0.5) do
+      queue.unbind(exchange) do |_|
+        puts "Unbound. Shutting down..."
+
+        connection.close { EventMachine.stop }
+      end
+    end # EventMachine.add_timer
+  end # channel.queue
+end
+```
 
 Note that trying to unbind a queue from an exchange that the queue was
 never bound to will result in a channel-level exception.
@@ -1322,39 +1410,118 @@ Querying the number of messages in a queue
 ------------------------------------------
 
 It is possible to query the number of messages sitting in the queue by
-declaring the queue with the “:passive” attribute set. The response
+declaring the queue with the `:passive` attribute set. The response
 (`queue.declare-ok` AMQP method) will include the number of messages
 along with other attributes. However, the amqp gem provides a
 convenience method, `AMQP::Queue#status`:
 
+``` ruby
+queue.status do |number_of_messages, number_of_consumers|
+  puts
+  puts "# of messages in the queue #{queue.name} = #{number_of_messages}"
+  puts
+end
+```
+
+Full example:
+
+``` ruby
+require 'rubygems'
+require 'amqp'
+
+puts "=> Queue#status example"
+puts
+AMQP.start(:host => 'localhost') do |connection|
+  channel   = AMQP::Channel.new(connection)
+
+  queue_name = "amqpgem.integration.queue.status.queue"
+  exchange   = channel.fanout("amqpgem.integration.queue.status.fanout", :auto_delete => true)
+  queue      = channel.queue(queue_name, :auto_delete => true).bind(exchange)
+
+  100.times do |i|
+    print "."
+    exchange.publish(Time.now.to_i.to_s + "_#{i}", :key => queue_name)
+  end
+  $stdout.flush
+
+  EventMachine.add_timer(0.5) do
     queue.status do |number_of_messages, number_of_consumers|
       puts
       puts "# of messages in the queue #{queue.name} = #{number_of_messages}"
       puts
+      queue.purge
     end
+  end
 
-Full example:
 
-{ gist 1068363 }
+  show_stopper = Proc.new do
+    $stdout.puts "Stopping..."
+    connection.close { EventMachine.stop }
+  end
+
+  Signal.trap "INT", show_stopper
+  EventMachine.add_timer(2, show_stopper)
+end
+```
+
 
 Querying the number of consumers on a queue
 -------------------------------------------
 
 It is possible to query the number of consumers on a queue by declaring
-the queue with the “:passive” attribute set. The response
+the queue with the `:passive` attribute set. The response
 (`queue.declare-ok` AMQP method) will include the number of consumers
 along with other attributes. However, the amqp gem provides a
 convenience method, `AMQP::Queue#status`:
 
-    queue.status do |number_of_messages, number_of_consumers|
-      puts
-      puts "# of consumers on the queue #{queue.name} = #{number_of_consumers}"
-      puts
-    end
+``` ruby
+queue.status do |number_of_messages, number_of_consumers|
+  puts
+  puts "# of consumers on the queue #{queue.name} = #{number_of_consumers}"
+  puts
+end
+```
 
 Full example:
 
-{ gist 1068377 }
+``` ruby
+require 'rubygems'
+require 'amqp'
+
+puts "=> Queue#status example"
+puts
+AMQP.start(:host => 'localhost') do |connection|
+  channel   = AMQP::Channel.new(connection)
+
+  queue_name = "amqpgem.integration.queue.status.queue"
+  exchange   = channel.fanout("amqpgem.integration.queue.status.fanout", :auto_delete => true)
+  queue      = channel.queue(queue_name, :auto_delete => true).bind(exchange)
+
+  100.times do |i|
+    print "."
+    exchange.publish(Time.now.to_i.to_s + "_#{i}", :key => queue_name)
+  end
+  $stdout.flush
+
+  EventMachine.add_timer(0.5) do
+    queue.status do |number_of_messages, number_of_consumers|
+      puts
+      puts "# of consumer on the queue #{queue.name} = #{number_of_consumers}"
+      puts
+      queue.purge
+    end
+  end
+
+
+  show_stopper = Proc.new do
+    $stdout.puts "Stopping..."
+    connection.close { EventMachine.stop }
+  end
+
+  Signal.trap "INT", show_stopper
+  EventMachine.add_timer(2, show_stopper)
+end
+```
 
 Purging queues
 --------------
@@ -1362,20 +1529,48 @@ Purging queues
 It is possible to purge a queue (remove all of the messages from it)
 using `AMQP::Queue#purge`:
 
-    queue.purge
+``` ruby
+queue.purge
+```
 
 This method takes an optional callback. However, remember that this
 operation is performed asynchronously. To run a piece of code when the
 AMQP broker confirms that a queue has been purged, use a callback that
-{AMQP::Queue#purge} takes:
+`AMQP::Queue#purge` takes:
 
+``` ruby
+queue.purge do |_|
+  puts "Purged #{queue.name}"
+end
+```
+
+Full example:
+
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com:5672") do |connection, open_ok|
+  channel = AMQP::Channel.new(connection)
+  channel.on_error do |ch, channel_close|
+    raise "Channel-level exception: #{channel_close.reply_text}"
+  end
+  exchange = channel.fanout("amq.fanout")
+
+  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
     queue.purge do |_|
       puts "Purged #{queue.name}"
     end
 
-Full example:
-
-{ gist 998743 }
+    EventMachine.add_timer(0.5) do
+      connection.close { EventMachine.stop }
+    end # EventMachine.add_timer
+  end # channel.queue
+end
+```
 
 Note that this example purges a newly declared queue with a unique
 server-generated name. When a queue is declared, it is empty, so for
@@ -1388,20 +1583,47 @@ Deleting queues
 To delete a queue, use `AMQP::Queue#delete`. When a queue
 is deleted, all of the messages in it are deleted as well.
 
-    queue.delete
+``` ruby
+queue.delete
+```
 
 This method takes an optional callback. However, remember that this
 operation is performed asynchronously. To run a piece of code when the
 AMQP broker confirms that a queue has been deleted, use a callback that
 `AMQP::Queue#delete` takes:
 
-    queue.delete do |_|
-      puts "Deleted #{queue.name}"
-    end
+``` ruby
+queue.delete do |_|
+  puts "Deleted #{queue.name}"
+end
+```
 
 Full example:
 
-{ gist 998744 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel = AMQP::Channel.new(connection)
+  channel.on_error do |ch, channel_close|
+    raise "Channel-level exception: #{channel_close.reply_text}"
+  end
+  exchange = channel.fanout("amq.fanout")
+
+  channel.queue("", :auto_delete => true, :exclusive => true) do |queue, declare_ok|
+    EventMachine.add_timer(0.5) do
+      queue.delete do
+        puts "Deleted #{queue.name}"
+        connection.close { EventMachine. stop }
+      end
+    end # EventMachine.add_timer
+  end # channel.queue
+end
+```
 
 Objects as message consumers and unit testing consumers in isolation
 --------------------------------------------------------------------
@@ -1416,8 +1638,7 @@ publish them).
 An `AMQP::Queue#subscribe` callback does not have to be a
 block. It can be any Ruby object that responds to the `call` method. A
 common technique is to combine
-`Object#method` and
-`Method#to_proc`
+`Object#method` and `Method#to_proc`
 and use object methods as message handlers.
 
 An example to demonstrate this technique:
@@ -1463,92 +1684,254 @@ end
 
 Full example:
 
-{ gist 1009425 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
 
-In this example, <span class="note">Consumer</span> instances have to be
+require "rubygems"
+require "amqp"
+
+class Consumer
+
+  #
+  # API
+  #
+
+  def initialize(channel, queue_name = AMQ::Protocol::EMPTY_STRING)
+    @queue_name = queue_name
+
+    @channel    = channel
+    @channel.on_error(&method(:handle_channel_exception))
+  end # initialize
+
+  def start
+    @queue = @channel.queue(@queue_name, :exclusive => true)
+    @queue.subscribe(&method(:handle_message))
+  end # start
+
+
+
+  #
+  # Implementation
+  #
+
+  def handle_message(metadata, payload)
+    puts "Received a message: #{payload}, content_type = #{metadata.content_type}"
+  end # handle_message(metadata, payload)
+
+  def handle_channel_exception(channel, channel_close)
+    puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
+  end # handle_channel_exception(channel, channel_close)
+end
+
+
+class Producer
+
+  #
+  # API
+  #
+
+  def initialize(channel, exchange)
+    @channel  = channel
+    @exchange = exchange
+  end # initialize(channel, exchange)
+
+  def publish(message, options = {})
+    @exchange.publish(message, options)
+  end # publish(message, options = {})
+end
+
+
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel  = AMQP::Channel.new(connection)
+  worker   = Consumer.new(channel, "amqpgem.objects.integration")
+  worker.start
+
+  producer = Producer.new(channel, channel.default_exchange)
+  puts "Publishing..."
+  producer.publish("Hello, world", :routing_key => "amqpgem.objects.integration")
+
+  # stop in 2 seconds
+  EventMachine.add_timer(2.0) { connection.close { EventMachine.stop } }
+end
+```
+
+In this example, `Consumer` instances have to be
 instantiated with an `AMQP::Channel` instance. If the
 message handling was done by an aggregated object, it would completely
 separate the handling logic and would be make it easy to unit test in
 isolation:
 
-    class Consumer
+``` ruby
+class Consumer
 
-      #
-      # API
-      #
+  #
+  # API
+  #
 
-      def handle_message(metadata, payload)
-        puts "Received a message: #{payload}, content_type = #{metadata.content_type}"
-      end # handle_message(metadata, payload)
-    end
-
-
-    class Worker
-
-      #
-      # API
-      #
+  def handle_message(metadata, payload)
+    puts "Received a message: #{payload}, content_type = #{metadata.content_type}"
+  end # handle_message(metadata, payload)
+end
 
 
-      def initialize(channel, queue_name = AMQ::Protocol::EMPTY_STRING, consumer = Consumer.new)
-        @queue_name = queue_name
+class Worker
 
-        @channel    = channel
-        @channel.on_error(&method(:handle_channel_exception))
-
-        @consumer   = consumer
-      end # initialize
-
-      def start
-        @queue = @channel.queue(@queue_name, :exclusive => true)
-        @queue.subscribe(&@consumer.method(:handle_message))
-      end # start
+  #
+  # API
+  #
 
 
-      #
-      # Implementation
-      #
+  def initialize(channel, queue_name = AMQ::Protocol::EMPTY_STRING, consumer = Consumer.new)
+    @queue_name = queue_name
 
-      def handle_channel_exception(channel, channel_close)
-        puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
-      end # handle_channel_exception(channel, channel_close)
-    end
+    @channel    = channel
+    @channel.on_error(&method(:handle_channel_exception))
+
+    @consumer   = consumer
+  end # initialize
+
+  def start
+    @queue = @channel.queue(@queue_name, :exclusive => true)
+    @queue.subscribe(&@consumer.method(:handle_message))
+  end # start
+
+
+  #
+  # Implementation
+  #
+
+  def handle_channel_exception(channel, channel_close)
+    puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
+  end # handle_channel_exception(channel, channel_close)
+end
+```
 
 Full example:
 
-{ gist 1009447 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+class Consumer
+
+  #
+  # API
+  #
+
+  def handle_message(metadata, payload)
+    puts "Received a message: #{payload}, content_type = #{metadata.content_type}"
+  end # handle_message(metadata, payload)
+end
+
+
+class Worker
+
+  #
+  # API
+  #
+
+
+  def initialize(channel, queue_name = AMQ::Protocol::EMPTY_STRING, consumer = Consumer.new)
+    @queue_name = queue_name
+
+    @channel    = channel
+    @channel.on_error(&method(:handle_channel_exception))
+
+    @consumer   = consumer
+  end # initialize
+
+  def start
+    @queue = @channel.queue(@queue_name, :exclusive => true)
+    @queue.subscribe(&@consumer.method(:handle_message))
+  end # start
+
+
+
+  #
+  # Implementation
+  #
+
+  def handle_channel_exception(channel, channel_close)
+    puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
+  end # handle_channel_exception(channel, channel_close)
+end
+
+
+class Producer
+
+  #
+  # API
+  #
+
+  def initialize(channel, exchange)
+    @channel  = channel
+    @exchange = exchange
+  end # initialize(channel, exchange)
+
+  def publish(message, options = {})
+    @exchange.publish(message, options)
+  end # publish(message, options = {})
+
+
+  #
+  # Implementation
+  #
+
+  def handle_channel_exception(channel, channel_close)
+    puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
+  end # handle_channel_exception(channel, channel_close)
+end
+
+
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel  = AMQP::Channel.new(connection)
+  worker   = Worker.new(channel, "amqpgem.objects.integration")
+  worker.start
+
+  producer = Producer.new(channel, channel.default_exchange)
+  puts "Publishing..."
+  producer.publish("Hello, world", :routing_key => "amqpgem.objects.integration")
+
+  # stop in 2 seconds
+  EventMachine.add_timer(2.0) { connection.close { EventMachine.stop } }
+end
+```
 
 Note that the <span class="note">Consumer</span> class demonstrated
 above can be easily tested in isolation without spinning up any AMQP
 connections:
 
-    require "ostruct"
-    require "json"
+``` ruby
+require "ostruct"
+require "json"
 
-    # RSpec example
-    describe Consumer do
-      describe "when a new message arrives" do
-        subject { described_class.new }
+# RSpec example
+describe Consumer do
+  describe "when a new message arrives" do
+    subject { described_class.new }
 
-        let(:metadata) do
-          o = OpenStruct.new
+    let(:metadata) do
+      o = OpenStruct.new
 
-          o.content_type = "application/json"
-          o
-        end
-        let(:payload)  { JSON.encode({ :command => "reload_config" }) }
-
-        it "does some useful work" do
-          # check preconditions here if necessary
-
-          subject.handle_message(metadata, payload)
-
-          # add your code expectations here
-        end
-      end
+      o.content_type = "application/json"
+      o
     end
+    let(:payload)  { JSON.encode({ :command => "reload_config" }) }
 
-TBD
+    it "does some useful work" do
+      # check preconditions here if necessary
+
+      subject.handle_message(metadata, payload)
+
+      # add your code expectations here
+    end
+  end
+end
+```
 
 Queue durability vs message durability
 --------------------------------------
@@ -1572,9 +1955,9 @@ What to read next
 The documentation is organized as several [documentation guides](/),
 covering all kinds of topics. Guides related to this one are:
 
-\* [Working With Exchanges](/articles/working_with_exchanges/)\
- \* [Bindings](/articles/bindings/)\
- \* [Error handling and recovery](/articles/error_handling/)
+ * [Working With Exchanges](/articles/working_with_exchanges/)
+ * [Bindings](/articles/bindings/)
+ * [Error handling and recovery](/articles/error_handling/)
 
 RabbitMQ implements a number of extensions to AMQP 0.9.1 functionality
 that are covered in the [Vendor-specific Extensions

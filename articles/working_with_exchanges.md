@@ -134,9 +134,11 @@ Also, both methods let you pass a block to run a piece of code when the
 broker responds with an `exchange.declare-ok` (meaning that the
 exchange has been successfully declared).
 
-    channel.fanout("nodes.metadata") do |exchange|
-      # exchange is declared and ready to be used.
-    end
+``` ruby
+channel.fanout("nodes.metadata") do |exchange|
+  # exchange is declared and ready to be used.
+end
+```
 
 ### Fanout routing example
 
@@ -144,8 +146,57 @@ To demonstrate fanout routing behavior we can declare ten server-named
 exclusive queues, bind them all to one fanout exchange and then publish
 a message to the exchange:
 
+``` ruby
+exchange = channel.topic("amqpgem.examples.routing.fanout_routing", :auto_delete => true)
+
+10.times do
+  q = channel.queue("", :exclusive => true, :auto_delete => true).bind(exchange)
+  q.subscribe do |payload|
+    puts "Queue #{q.name} received #{payload}"
+  end
+end
+
+# Publish some test data after all queues are declared and bound
+EventMachine.add_timer(1.2) { exchange.publish "Hello, fanout exchanges world!" }
+```
+
+When run, this example produces the following output:
+
+```
+Queue amq.gen-0p/BjxGNCue42RcJhpUrdg received Hello, fanout exchanges world!
+Queue amq.gen-3GXULvZuYh1KsOD83yvlNg received Hello, fanout exchanges world!
+Queue amq.gen-4EcyydTfoZzXjNSSLsh09Q received Hello, fanout exchanges world!
+Queue amq.gen-B1isyTpR5svB6ClQ2TQEBQ received Hello, fanout exchanges world!
+Queue amq.gen-FwLLioB7Mk4LGA4yJ1Mo7A received Hello, fanout exchanges world!
+Queue amq.gen-OtBQokiA/DmNkB5bPzaRig received Hello, fanout exchanges world!
+Queue amq.gen-RYHQUrj3yihb0DRF7KVpRg received Hello, fanout exchanges world!
+Queue amq.gen-SZJ40mGwbhdcbOGeHMhUkg received Hello, fanout exchanges world!
+Queue amq.gen-sDeVZg9Vx1knq+n9EMi8tA received Hello, fanout exchanges world!
+Queue amq.gen-uWOuVaosW4bWAHqKG6pZVw received Hello, fanout exchanges world!
+```
+
+Each of the queues bound to the exchange receives a **copy** of the
+message.
+
+Full example:
+
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "bundler"
+Bundler.setup
+
+$:.unshift(File.expand_path("../../../lib", __FILE__))
+
+require "amqp"
+
+EventMachine.run do
+  AMQP.connect("amqp://dev.rabbitmq.com") do |connection|
+    channel  = AMQP::Channel.new(connection)
     exchange = channel.topic("amqpgem.examples.routing.fanout_routing", :auto_delete => true)
 
+    # Subscribers.
     10.times do
       q = channel.queue("", :exclusive => true, :auto_delete => true).bind(exchange)
       q.subscribe do |payload|
@@ -153,51 +204,30 @@ a message to the exchange:
       end
     end
 
-    # Publish some test data after all queues are declared and bound
+    # Publish some test data in a bit, after all queues are declared & bound
     EventMachine.add_timer(1.2) { exchange.publish "Hello, fanout exchanges world!" }
 
-When run, this example produces the following output:
 
-<code>Queue
-amq.gen-0p/BjxGNCue42RcJhpUrdg received Hello, fanout exchanges world!
-Queue amq.gen-3GXULvZuYh1KsOD83yvlNg received Hello, fanout exchanges
-world!\
-Queue
-amq.gen-4EcyydTfoZzXjNSSLsh09Q received Hello, fanout exchanges world!
-Queue amq.gen-B1isyTpR5svB6ClQ2TQEBQ received Hello, fanout exchanges
-world!\
-Queue
-amq.gen-FwLLioB7Mk4LGA4yJ1Mo7A received Hello, fanout exchanges world!
-Queue amq.gen-OtBQokiA/DmNkB5bPzaRig received Hello, fanout exchanges
-world!\
-Queue
-amq.gen-RYHQUrj3yihb0DRF7KVpRg received Hello, fanout exchanges world!
-Queue amq.gen-SZJ40mGwbhdcbOGeHMhUkg received Hello, fanout exchanges
-world!\
-Queue
-amq.gen-sDeVZg9Vx1knq+n9EMi8tA received Hello, fanout exchanges world!
-Queue amq.gen-uWOuVaosW4bWAHqKG6pZVw received Hello, fanout exchanges
-world!</code>
+    show_stopper = Proc.new { connection.close { EventMachine.stop } }
 
-Each of the queues bound to the exchange receives a **copy** of the
-message.
-
-Full example:
-
-{ gist 1020181 }
+    Signal.trap "TERM", show_stopper
+    EM.add_timer(3, show_stopper)
+  end
+end
+```
 
 ### Fanout use cases
 
 Because a fanout exchange delivers a copy of a message to every queue
 bound to it, its use cases are quite similar:
 
-\* Massively multiplayer online (MMO) games can use it for leaderboard
-updates or other global events\
- \* Sport news sites can use fanout exchanges for distributing score
-updates to mobile clients in near real-time\
- \* Distributed systems can broadcast various state and configuration
-updates\
- \* Group chats can distribute messages between participants using a
+ * Massively multiplayer online (MMO) games can use it for leaderboard
+updates or other global events
+ * Sport news sites can use fanout exchanges for distributing score
+updates to mobile clients in near real-time
+ * Distributed systems can broadcast various state and configuration
+updates
+ * Group chats can distribute messages between participants using a
 fanout exchange (although AMQP does not have a built-in concept of
 presence, so [XMPP](http://xmpp.org) may be a better choice)
 
@@ -216,13 +246,13 @@ Direct exchanges
 ### How direct exchanges route messages
 
 A direct exchange delivers messages to queues based on a
-<span class="note">message routing key</span>, an attribute that every
+`message routing key`, an attribute that every
 AMQP v0.9.1 message contains.
 
 Here is how it works:
 
-\* A queue binds to the exchange with a routing key K\
- \* When a new message with routing key R arrives at the direct
+ * A queue binds to the exchange with a routing key K
+ * When a new message with routing key R arrives at the direct
 exchange, the exchange routes it to the queue if K = R
 
 A direct exchange is ideal for the [unicast
@@ -238,15 +268,17 @@ Here is a graphical representation:
 
 There are two ways to declare a direct exchange:
 
-\* By instantiating a `AMQP::Exchange`and specifying its
-type as “:direct”\
- \* By using the `AMQP::Channel#direct`method
+ * By instantiating a `AMQP::Exchange`and specifying its
+type as “:direct”
+ * By using the `AMQP::Channel#direct`method
 
 Here are two examples to demonstrate:
 
-    exchange = AMQP::Exchange.new(channel, :direct, "nodes.metadata")
+``` ruby
+exchange = AMQP::Exchange.new(channel, :direct, "nodes.metadata")
 
-    exchange = channel.direct("nodes.metadata")
+exchange = channel.direct("nodes.metadata")
+```
 
 Both methods asynchronously declare a queue. Because the declaration
 necessitates a network round trip, publishing operations on
@@ -257,16 +289,20 @@ Also, both methods let you pass a block to run a piece of code when the
 broker responds with `exchange.declare-ok` (meaning that the exchange
 has been successfully declared).
 
-    channel.direct("pages.content.extraction") do |exchange|
-      # exchange is declared and ready to be used.
-    end
+``` ruby
+channel.direct("pages.content.extraction") do |exchange|
+  # exchange is declared and ready to be used.
+end
+```
 
 ### Direct routing example
 
 Since direct exchanges use the **message routing key** for routing,
 message producers need to specify it:
 
-    exchange.publish("Hello, direct exchanges world!", :routing_key => "amqpgem.examples.queues.shared")
+``` ruby
+exchange.publish("Hello, direct exchanges world!", :routing_key => "amqpgem.examples.queues.shared")
+```
 
 The routing key will then be compared for equality with routing keys on
 bindings, and consumers that subscribed with the same routing key each
@@ -274,7 +310,46 @@ get a copy of the message:
 
 Full example:
 
-{ gist 1041787 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "bundler"
+Bundler.setup
+
+$:.unshift(File.expand_path("../../../lib", __FILE__))
+
+require "amqp"
+
+EventMachine.run do
+  AMQP.connect do |connection|
+    channel1  = AMQP::Channel.new(connection)
+    channel2  = AMQP::Channel.new(connection)
+    exchange = channel1.direct("amqpgem.examples.exchanges.direct", :auto_delete => true)
+
+    q1 = channel1.queue("amqpgem.examples.queues.shared", :auto_delete => true).bind(exchange, :routing_key => "shared.key")
+    q1.subscribe do |payload|
+      puts "Queue #{q1.name} on channel 1 received #{payload}"
+    end
+
+    # since the queue is shared, binding here is redundant but we will leave it in for completeness.
+    q2 = channel2.queue("amqpgem.examples.queues.shared", :auto_delete => true).bind(exchange, :routing_key => "shared.key")
+    q2.subscribe do |payload|
+      puts "Queue #{q2.name} on channel 2 received #{payload}"
+    end
+
+    # Publish some test data in a bit, after all queues are declared & bound
+    EventMachine.add_timer(1.2) do
+      5.times { |i| exchange.publish("Hello #{i}, direct exchanges world!", :routing_key => "shared.key") }
+    end
+
+    show_stopper = Proc.new { connection.close { EventMachine.stop } }
+
+    Signal.trap "TERM", show_stopper
+    EM.add_timer(3, show_stopper)
+  end
+end
+```
 
 ### Direct exchanges and load balancing of messages
 
@@ -284,7 +359,7 @@ When doing so, it is important to understand that, in AMQP 0.9.1,
 **messages are load balanced between consumers and not between queues**.
 
 The Ruby amqp gem historically has a limitation that only one consumer
-(message handler) is allowed per `AMQP::Queue`instance,
+(message handler) is allowed per `AMQP::Queue` instance,
 however, this limitation will be addressed in the future. With the amqp
 gem 0.8.x, if you want to load balance messages between multiple
 consumers in the same application/OS process, then you need to use a
@@ -299,13 +374,13 @@ information on this subject.
 AMQP 0.9.1 brokers must implement a direct exchange type and pre-declare
 two instances:
 
-\* <span class="note">amq.direct</span>\
- \* **“”** exchange known as <span class="note">default exchange</span>
+ * `amq.direct`
+ * `""` (empty string) exchange known as `default exchange`
 (unnamed, referred to as an empty string by many clients including amqp
 Ruby gem)
 
 Applications can rely on those exchanges always being available to them.
-Each vhost has separate instances of those\
+Each vhost has separate instances of those
 exchanges, they are **not shared across vhosts** for obvious reasons.
 
 ### Default exchange
@@ -328,8 +403,8 @@ even though that is not technically what is happening.
 The amqp gem offers two ways of obtaining a reference to the default
 exchange:
 
-\* Using the `AMQP::Channel#default_exchange`method\
- \* Using the `AMQP::Channel#direct`method with an empty
+ * Using the `AMQP::Channel#default_exchange` method
+ * Using the `AMQP::Channel#direct` method with an empty
 string as the exchange name
 
 `AMQP::Exchange#initialize`can also be used, but requires
@@ -338,34 +413,90 @@ more coding effort and it offers no benefits over instance methods on
 
 Some examples of usage:
 
-    exchange = AMQP::Exchange.new(channel, :direct, "")
-
-    exchange = channel.default_exchange
-
-    exchange = channel.direct("")
+``` ruby
+exchange = AMQP::Exchange.new(channel, :direct, "")
+exchange = channel.default_exchange
+exchange = channel.direct("")
+```
 
 The default exchange is used by the “Hello, World” example:
 
-{ gist 998691 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+EventMachine.run do
+  AMQP.connect(:host => '127.0.0.1') do |connection|
+    puts "Connected to AMQP broker. Running #{AMQP::VERSION} version of the gem..."
+
+    channel  = AMQP::Channel.new(connection)
+
+    channel.queue("amqpgem.examples.helloworld", :auto_delete => true).subscribe do |payload|
+      puts "Received a message: #{payload}. Disconnecting..."
+
+      connection.close { EventMachine.stop }
+    end
+
+    channel.direct("").publish "Hello, world!", :routing_key => "amqpgem.examples.helloworld"
+  end
+end
+```
 
 Additionally, the routing example above can be rewritten to use the
 default exchange:
 
-{ gist 1041778 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require "amqp"
+
+EventMachine.run do
+  AMQP.connect do |connection|
+    channel1  = AMQP::Channel.new(connection)
+    channel2  = AMQP::Channel.new(connection)
+    exchange = channel1.default_exchange
+
+    q1 = channel1.queue("amqpgem.examples.queues.shared", :auto_delete => true)
+    q1.subscribe do |payload|
+      puts "Queue #{q1.name} on channel 1 received #{payload}"
+    end
+
+    q2 = channel2.queue("amqpgem.examples.queues.shared", :auto_delete => true)
+    q2.subscribe do |payload|
+      puts "Queue #{q2.name} on channel 2 received #{payload}"
+    end
+
+    # Publish some test data in a bit, after queues are declared & bound
+    EventMachine.add_timer(0.3) do
+      5.times { |i| exchange.publish("Hello #{i}, fanout exchanges world!", :routing_key => "amqpgem.examples.queues.shared") }
+    end
+
+
+    show_stopper = Proc.new { connection.close { EventMachine.stop } }
+    Signal.trap "TERM", show_stopper
+    EM.add_timer(3, show_stopper)
+  end
+end
+```
 
 ### Direct exchange use cases
 
 Direct exchanges can be used in a wide variety of cases:
 
-\* Direct (near real-time) messages to individual players in an MMO
-game\
- \* Delivering notifications to specific geographic locations (for
-example, points of sale)\
- \* Distributing tasks between multiple instances of the same
-application all having the same function, for example, image processors\
- \* Passing data between workflow steps, each having an identifier (also
-consider using headers exchange)\
- \* Delivering notifications to individual software services in the
+ * Direct (near real-time) messages to individual players in an MMO
+game
+ * Delivering notifications to specific geographic locations (for
+example, points of sale)
+ * Distributing tasks between multiple instances of the same
+application all having the same function, for example, image processors
+ * Passing data between workflow steps, each having an identifier (also
+consider using headers exchange)
+ * Delivering notifications to individual software services in the
 network
 
 Topic exchanges

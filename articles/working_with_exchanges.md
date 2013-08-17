@@ -526,71 +526,72 @@ location-specific data (for instance, weather broadcasts). Consumers
 indicate which topics they are interested in (think of it like
 subscribing to a feed for an individual tag of your favourite blog as
 opposed to the full feed). The routing is enabled by specifying a
-routing pattern_ to the `AMQP::Queue#bind`method, for
+_routing pattern_ to the `AMQP::Queue#bind` method, for
 example:
 
-    channel.queue("americas.south").bind(exchange, :routing_key => "americas.south.#").subscribe do |headers, payload|
-      puts "An update for South America: #{payload}, routing key is #{headers.routing_key}"
-    end
+``` ruby
+channel.queue("americas.south").bind(exchange, :routing_key => "americas.south.#").subscribe do |headers, payload|
+  puts "An update for South America: #{payload}, routing key is #{headers.routing_key}"
+end
+```
 
 In the example above we bind a queue with the name of “americas.south”
 to the topic exchange declared earlier using the
-`AMQP::Queue#bind`method. This means that only messages
-with a routing key matching “americas.south.#” will be routed to the
-“americas.south” queue.
+`AMQP::Queue#bind` method. This means that only messages
+with a routing key matching `americas.south.#` will be routed to the
+`americas.south` queue.
 
 A routing pattern consists of several words separated by dots, in a
 similar way to URI path segments being joined by slash. A few of
 examples:
 
-\* asia.southeast.thailand.bangkok\
- \* sports.basketball\
- \* usa.nasdaq.aapl\
- \* tasks.search.indexing.accounts
+ * asia.southeast.thailand.bangkok
+ * sports.basketball
+ * usa.nasdaq.aapl
+ * tasks.search.indexing.accounts
 
-The following routing keys match the “americas.south.#” pattern:
+The following routing keys match the `americas.south.#` pattern:
 
-\* americas.south\
- \* americas.south.**brazil**\
- \* americas.south.**brazil.saopaolo**\
- \* americas.south.**chile.santiago**
+ * americas.south
+ * americas.south.**brazil**
+ * americas.south.**brazil.saopaolo**
+ * americas.south.**chile.santiago**
 
 In other words, the “#” part of the pattern matches 0 or more words.
 
 For the pattern “americas.south.**", some matching routing keys are:
-\
-** americas.south.**brazil**\
- \* americas.south.**chile**\
- \* americas.south.**peru**
-\
+
+ * americas.south.**brazil**
+ * americas.south.**chile**
+ * americas.south.**peru**
+
 but not
-\
- \* americas.south\
- \* americas.south.chile.santiago
-\
-As you can see, the”**" part of the pattern matches 1 word only.
 
-\
+ * americas.south
+ * americas.south.chile.santiago
+
+As you can see, the `*` part of the pattern matches 1 word only.
+
+
 Full example:
-\
 
-\
-h3. Topic exchange use cases
-\
+
+### Topic exchange use cases
+
 Topic exchanges have a very broad set of use cases. Whenever a problem
 involves multiple consumers/applications that selectively choose which
 type of messages they want to receive, the use of topic exchanges should
 be considered. To name a few examples:
-\
-** Distributing data relevant to specific geographic location, for
-example, points of sale\
- \* Background task processing done by multiple workers, each capable of
-handling specific set of tasks\
- \* Stocks price updates (and updates on other kinds of financial data)\
- \* News updates that involve categorization or tagging (for example,
-only for a particular sport or team)\
- \* Orchestration of services of different kinds in the cloud\
- \* Distributed architecture/OS-specific software builds or packaging
+
+ * Distributing data relevant to specific geographic location, for
+example, points of sale
+ * Background task processing done by multiple workers, each capable of
+handling specific set of tasks
+ * Stocks price updates (and updates on other kinds of financial data)
+ * News updates that involve categorization or tagging (for example,
+only for a particular sport or team)
+ * Orchestration of services of different kinds in the cloud\
+ * Distributed architecture/OS-specific software builds or packaging
 where each builder can handle only one architecture or OS
 
 Declaring/Instantiating exchanges
@@ -598,59 +599,45 @@ Declaring/Instantiating exchanges
 
 With the Ruby amqp gem, exchanges can be declared in two ways:
 
-\* By using the `AMQP::Exchange#initialize`method that
-takes an optional callback\
- \* By using a number of convenience methods on
+ * By using the `AMQP::Exchange#initialize`method that
+takes an optional callback
+* By using a number of convenience methods on
 `AMQP::Channel`instances:
 
-**\* \
-**\* `AMQP::Channel#default_exchange }\
- **\* \
-**\* `AMQP::Channel#fanout }\
- **\*
-\
+ * `AMQP::Channel#default_exchange`
+ * `AMQP::Channel#fanout`
+ * `AMQP::Channel#direct`
+ * `AMQP::Channel#topic`
+
+
 The previous sections on specific exchange types provide plenty of
 examples of how these methods can be used.
-\
-h2. Publishing messages
-\
-To publish a message to an AMQP exchange, use :
-\
-\<pre\>exchange.publish\</pre\>
 
-\
- can accept any object that responds to the `to_s` method, not just
-string instances:
-\
+## Publishing messages
 
-\
-The message payload is completely opaque to the library and is not
-modified in any way.
-\
-h3. Data serialization
-\
-You are encouraged to take care of data serialization before publishing
-. Note that because AMQP is a binary protocol, text formats like JSON
-largely lose their advantage of being easy to inspect as data travels
-across the network, so consider using [BSON](http://bsonspec.org)
-instead.
-\
+To publish a message to an exchange, use
+
+``` ruby
+exchange.publish(payload, options)
+```
+
+The method accepts message body and a number of message and delivery metadata options. Routing key can be blank (`""`) but never `nil`.
+The body needs to be a string. The message payload is completely opaque to the library and is not modified by Bunny or RabbitMQ in any way.
+
+### Data serialization
+
+You are encouraged to take care of data serialization before publishing (i.e. by using JSON, Thrift, Protocol Buffers or some other serialization library).
+Note that because AMQP is a binary protocol, text formats like JSON largely lose their advantage of being easy to inspect as data travels across the network,
+so if bandwidth efficiency is important, consider using [MessagePack](http://msgpack.org/) or [Protocol Buffers](http://code.google.com/p/protobuf/).
+
 A few popular options for data serialization are:
-\
-** JSON: [json gem](https://rubygems.org/gems/json) (part of standard
-Ruby library on Ruby 1.9) or
-[yajl-ruby](https://rubygems.org/gems/yajl-ruby) (Ruby bindings to
-YAJL)\
- \* BSON: [bson gem](https://rubygems.org/gems/bson) for JRuby
-(implemented as a Java extension) and
-[bson_ext](https://rubygems.org/bson_ext) (C extension) for C-based
-Rubies\
- \* [Message Pack](http://msgpack.org) has Ruby bindings but currently
-does not provide Java implementation for JRuby\
- \* XML: [Nokogiri](https://nokogiri.org) is a swiss army knife for XML
-processing with Ruby, built on top of libxml2\
- \* Protocol Buffers: [beefcake](https://github.com/bmizerany/beefcake)\
- \* Thrift: [thrift-client](https://github.com/fauna/thrift_client)
+
+ * JSON: [json gem](https://rubygems.org/gems/json) (part of standard Ruby library on Ruby 1.9) or [yajl-ruby](https://rubygems.org/gems/yajl-ruby) (Ruby bindings to YAJL)
+ * BSON: [bson gem](https://rubygems.org/gems/bson) for JRuby (implemented as a Java extension) or [bson_ext](https://rubygems.org/bson_ext) for C-based Rubies
+ * [Message Pack](http://msgpack.org) has Ruby bindings and provides a Java implementation for JRuby
+ * XML: [Nokogiri](https://nokogiri.org) is a swiss army knife for XML processing with Ruby, built on top of libxml2
+ * Protocol Buffers: [beefcake](https://github.com/bmizerany/beefcake)
+
 
 ### Message metadata
 
@@ -658,207 +645,164 @@ AMQP messages have various metadata attributes that can be set when a
 message is published. Some of the attributes are well-known and
 mentioned in the AMQP 0.9.1 specification, others are specific to a
 particular application. Well-known attributes are listed here as options
-that `AMQP::Exchange#publish`takes:
+that `AMQP::Exchange#publish` takes:
 
-\* :routing_key\
- \* :persistent\
- \* :mandatory\
- \* :content_type\
- \* :content_encoding\
- \* :priority\
- \* :message_id\
- \* :correlation_id\
- \* :reply_to\
- \* :type\
- \* :user_id\
- \* :app_id\
- \* :timestamp\
- \* :expiration
+ * :routing_key
+ * :persistent
+ * :mandatory
+ * :content_type
+ * :content_encoding
+ * :priority
+ * :message_id
+ * :correlation_id
+ * :reply_to
+ * :type
+ * :user_id
+ * :app_id
+ * :timestamp
+ * :expiration
 
 All other attributes can be added to a *headers table* (in Ruby
 parlance, headers hash) that `AMQP::Exchange#publish }
 accepts as the “:headers” argument.
 
 An example to show how message metadata attributes are passed to
-`AMQP::Exchange#publish }:
+`AMQP::Exchange#publish`:
 
-{ gist 1020424 }
+``` ruby
+exchange.publish("Hey, what a great view!",
+                 :app_id         => "amqpgem.example",
+                 :priority       => 8,
+                 :type           => "kinda.checkin",
+                 :correlation_id => "b907b65a4876fc0d4b12fbdef1b41fb0a9876a94",
+                 # headers table keys can be anything
+                 :headers        => {
+                   :coordinates => {
+                     :latitude  => 59.35,
+                     :longitude => 18.066667
+                   },
+                   :participants => 11,
+                   :venue        => "Stockholm"
+                 },
+                 :timestamp   => Time.now.to_i,
+                 :routing_key => "amqpgem.key")
+```
 
 <dl>
-
-<dt>
-:routing_key
-
-</dt>
+<dt>:routing_key</dt>
 
 <dd>
 Used for routing messages depending on the exchange type and
 configuration.
-
 </dd>
 
-<dt>
-:persistent
-
-</dt>
+<dt>:persistent</dt>
 
 <dd>
 When set to true, AMQP broker will persist message to disk.
-
 </dd>
 
-<dt>
-:mandatory
-
-</dt>
+<dt>:mandatory</dt>
 
 <dd>
 This flag tells the server how to react if the message cannot be routed
 to a queue. If this flag is set to true, the server will return an
-unroutable message\
+unroutable message 
  to the producer with a basic.return AMQP method. If this flag is set to
-false, the server silently drops the message.\
-
+false, the server silently drops the message.
 </dd>
 
-<dt>
-:content_type
-
-</dt>
+<dt>:content_type</dt>
 
 <dd>
 MIME content type of message payload. Has the same purpose/semantics as
 HTTP Content-Type header.
-
 </dd>
 
-<dt>
-:content_encoding
-
-</dt>
+<dt>:content_encoding</dt>
 
 <dd>
 MIME content encoding of message payload. Has the same purpose/semantics
 as HTTP Content-Encoding header.
-
 </dd>
 
-<dt>
-:priority
-
-</dt>
+<dt>:priority</dt>
 
 <dd>
 Message priority, from 0 to 9.
-
 </dd>
 
-<dt>
-:message_id
-
-</dt>
+<dt>:message_id</dt>
 
 <dd>
 Message identifier as a string. If applications need to identify
 messages, it is recommended that they use this attribute instead of
-putting it\
- into the message payload.\
-
+putting it 
+ into the message payload.
 </dd>
 
-<dt>
-:reply_to
-
-</dt>
+<dt>:reply_to</dt>
 
 <dd>
 Commonly used to name a reply queue (or any other identifier that helps
-a consumer application to direct its response).\
- Applications are encouraged to use this attribute instead of putting
-this information into the message payload.\
-
+a consumer application to direct its response).
+Applications are encouraged to use this attribute instead of putting
+this information into the message payload.
 </dd>
 
-<dt>
-:correlation_id
-
-</dt>
+<dt>:correlation_id</dt>
 
 <dd>
 ID of the message that this message is a reply to. Applications are
 encouraged to use this attribute instead of putting this information\
- into the message payload.\
-
+ into the message payload.
 </dd>
 
-<dt>
-:type
-
-</dt>
+<dt>:type</dt>
 
 <dd>
 Message type as a string. Recommended to be used by applications instead
 of including this information into the message payload.
-
 </dd>
 
-<dt>
-:user_id
-
-</dt>
+<dt>:user_id</dt>
 
 <dd>
 Sender’s identifier. Note that RabbitMQ will check that the [value of
 this attribute is the same as username AMQP connection was authenticated
 with](http://www.rabbitmq.com/extensions.html#validated-user-id), it
 SHOULD NOT be used to transfer, for example, other application user ids
-or be used as a basis for some kind of Single Sign-On solution.\
-
+or be used as a basis for some kind of Single Sign-On solution.
 </dd>
 
-<dt>
-:app_id
-
-</dt>
+<dt>:app_id</dt>
 
 <dd>
 Application identifier string, for example, “eventoverse” or
 “webcrawler”
-
 </dd>
 
-<dt>
-:timestamp
-
-</dt>
+<dt>:timestamp</dt>
 
 <dd>
 Timestamp of the moment when message was sent, in seconds since the
 Epoch
-
 </dd>
 
-<dt>
-:expiration
-
-</dt>
+<dt>:expiration</dt>
 
 <dd>
 Message expiration specification as a string
-
 </dd>
 
-<dt>
-:headers
-
-</dt>
+<dt>:headers</dt>
 
 <dd>
 Ruby hash of any additional attributes that the application needs.
 Nested hashes are supported.
-
 </dd>
 </dl>
+
 It is recommended that application authors use well-known message
 attributes when applicable instead of relying on custom headers or
 placing information in the message body. For example, if your
@@ -879,32 +823,34 @@ set, the publisher’s identity is not validated and remains private.
 ### Publishing callback and reliable delivery in distributed environments
 
 Sometimes it is convenient to execute an operation after publishing a
-message. For this, `AMQP::Exchange#publish`provides an
+message. For this, `AMQP::Exchange#publish` provides an
 optional callback. It is important to clear up some expectations of when
 exactly it is run and how it is related to topics of message delivery
 reliability and so on.
 
-    exchange.publish(payload, :persistent => true, :type => "reports.done") do
-      # ...
-    end
+``` ruby
+exchange.publish(payload, :persistent => true, :type => "reports.done") do
+  # ...
+end
+```
 
 A common expectation of the code above is that it is run after the
 message “has been sent”, or even “has been delivered”. Unfortunately,
 neither of these expectations can be met by the Ruby amqp gem alone.
 Message publishing happens in several steps:
 
-\* `AMQP::Exchange#publish`takes a message and various
-metadata attributes\
- \* `AMQP::Exchange#publish`internally calls #to_s on
-the message argument to get message payload\
- \* Resulting payload is staged for writing\
- \* On the next event loop tick, data is transferred to the OS kernel
+ * `AMQP::Exchange#publish`takes a message and various
+metadata attributes
+ * `AMQP::Exchange#publish`internally calls #to_s on
+the message argument to get message payload
+ * Resulting payload is staged for writing
+ * On the next event loop tick, data is transferred to the OS kernel
 using one of the underlying system calls
 ([epoll](http://en.wikipedia.org/wiki/Epoll),
 [kqueue](http://en.wikipedia.org/wiki/Kqueue) and so on) or NIO channels
-(in the case of JRuby)\
- \* OS kernel buffers data before sending it\
- \* Network driver may also employ buffering
+(in the case of JRuby)
+ * OS kernel buffers data before sending it
+ * Network driver may also employ buffering
 
 <div class="alert alert-error">
 As you can see, “when data is sent” is a complicated issue and while
@@ -917,11 +863,11 @@ reliably know whether data was received by the broker or a peer
 application is to use message acknowledgements. This is how TCP works
 and this approach is proven to work at enormous scale of the modern
 Internet. AMQP (the protocol) fully embraces this fact and the amqp gem
-follows.\
-
+follows.
 </div>
+
 Given all of this, you may ask ‘when does the
-`AMQP::Exchange#publish`callback fire?’ The answer is on
+`AMQP::Exchange#publish` callback fire?’ The answer is on
 the next event loop tick. By then the data is pushed down to the OS
 kernel. As far as the Ruby library is concerned, it is reasonably safe
 behavior.
@@ -931,16 +877,16 @@ The `AMQP::Exchange#publish`callback is fired on the next
 event loop tick. Data is staged for delivery immediately. Applications
 MUST NOT assume that by the time the callback has fired, the data is
 guaranteed to leave the local machine networking stack, reach the AMQP
-broker or any peer applications that the message needs to be routed to.\
-
+broker or any peer applications that the message needs to be routed to.
 </div>
+
 In cases when you cannot afford to lose a single message, AMQP 0.9.1
 applications can use one (or a combination of) the following protocol
 features:
 
-\* Publisher confirms (a RabbitMQ-specific extension to AMQP 0.9.1)\
- \* Publishing messages as immediate and/or mandatory\
- \* Transactions (these introduce noticeable overhead and have a
+ * Publisher confirms (a RabbitMQ-specific extension to AMQP 0.9.1)
+ * Publishing messages as immediate and/or mandatory
+ * Transactions (these introduce noticeable overhead and have a
 relatively narrow set of use cases)
 
 A more detailed overview of the pros and cons of each option can be
@@ -960,25 +906,55 @@ The following code example demonstrates a message that is published as
 mandatory but cannot be routed (no bindings) and thus is returned back
 to the producer:
 
-{ gist 1041835 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require "rubygems"
+require 'amqp'
+
+puts "=> Handling a returned unroutable message that was published as mandatory"
+puts
+
+AMQP.start(:host => '127.0.0.1') do |connection|
+  channel  = AMQP.channel
+  channel.on_error { |ch, channel_close| EventMachine.stop; raise "channel error: #{channel_close.reply_text}" }
+
+  # this exchange has no bindings, so messages published to it cannot be routed.
+  exchange = channel.fanout("amqpgem.examples.fanout", :auto_delete => true)
+  exchange.on_return do |basic_return, metadata, payload|
+    puts "#{payload} was returned! reply_code = #{basic_return.reply_code}, reply_text = #{basic_return.reply_text}"
+  end
+
+  EventMachine.add_timer(0.3) {
+    10.times do |i|
+      exchange.publish("Message ##{i}", :mandatory => true)
+    end
+  }
+
+  EventMachine.add_timer(2) { connection.close { EventMachine.stop } }
+end
+```
 
 ### Returned messages
 
 When a message is returned, the application that produced it can handle
 that message in different ways:
 
-\* Store it for later redelivery in a persistent store\
- \* Publish it to a different destination\
- \* Log the event and discard the message
+ * Store it for later redelivery in a persistent store
+ * Publish it to a different destination
+ * Log the event and discard the message
 
 Returned messages contain information about the exchange they were
 published to. For convenience, the amqp gem associates returned message
-callbacks with `AMQP::Exchange`instances. To handle
-returned messages, use `AMQP::Exchange#on_return }:
+callbacks with `AMQP::Exchange` instances. To handle
+returned messages, use `AMQP::Exchange#on_return`:
 
-    exchange.on_return do |basic_return, metadata, payload|
-      puts "#{payload} was returned! reply_code = #{basic_return.reply_code}, reply_text = #{basic_return.reply_text}"
-    end
+``` ruby
+exchange.on_return do |basic_return, metadata, payload|
+  puts "#{payload} was returned! reply_code = #{basic_return.reply_code}, reply_text = #{basic_return.reply_text}"
+end
+```
 
 A returned message handler has access to AMQP method (basic.return)
 information, message metadata and payload. The metadata and message body
@@ -995,15 +971,16 @@ with network attached storage like NAS devices and Amazon EBS. AMQP
 0.9.1 lets applications trade off performance for durability, or vice
 versa, on a message-by-message basis.
 
-To publish a persistent message, use the “:persistent” option that
+To publish a persistent message, use the `:persistent` option that
 `AMQP::Exchange#publish`accepts:
 
-    exchange.publish(payload, :persistent => true)
+``` ruby
+exchange.publish(payload, :persistent => true)
+```
 
 <div class="alert alert-error">
 Note that in order to survive a broker crash, both the message and the
 queue that it was routed to must be persistent/durable.
-
 </div>
 [Durability and Message Persistence](/articles/durability/) provides
 more information on the subject.
@@ -1011,9 +988,9 @@ more information on the subject.
 ### Publishing In Multi-threaded Environments
 
 When using amqp gem in multi-threaded environments, the rule of thumb
-is: avoid sharing `AMQP::Channel`instances across threads.
+is: avoid sharing `AMQP::Channel` instances across threads.
 
-Starting with 0.8.0.RC14, `AMQP::Exchange#publish }
+Starting with 0.8.0, `AMQP::Exchange#publish`
 synchronizes data delivery on the channel object associated with
 exchange. This protects application developers from the most common
 problems related to publishing messages on a shared channel from
@@ -1022,16 +999,38 @@ concurrency hazard.
 
 <div class="alert alert-error">
 When using amqp gem in multi-threaded environments, the rule of thumb
-is: avoid sharing `AMQP::Channel`instances across threads.
-
+is: avoid sharing `AMQP::Channel` instances across threads.
 </div>
+
 ### Sending one-off messages
 
 The following example publishes a message and **safely** closes the AMQP
 connection afterwards by passing a block to
 `AMQP::Exchange#publish`:
 
-{ gist 1020425 }
+``` ruby
+require 'rubygems' # or use Bundler.setup
+require 'amqp'
+
+puts "=> Publishing and immediately stopping the event loop in the callback"
+puts
+
+EventMachine.run do
+  connection = AMQP.connect(:host => '127.0.0.1')
+  channel    = AMQP::Channel.new(connection)
+
+  # topic exchange is used just as example. Often it is more convenient to use default exchange,
+  # see http://bit.ly/amqp-gem-default-exchange
+  exchange = channel.topic("a.topic", :durable => true, :auto_delete => true)
+  queue    = channel.queue("a.queue", :auto_delete => true).bind(exchange, :routing_key => "events.#")
+
+  exchange.publish('hello world', :routing_key => "events.hits.homepage", :persistent => true, :nowait => false) do
+    puts "About to unsubscribe..."
+    connection.close { EventMachine.stop }
+  end
+
+end
+```
 
 Headers exchanges
 -----------------
@@ -1065,42 +1064,49 @@ metadata attributes (headers) rather than a routing key string.
 
 Headers exchanges route messages based on message header matching.
 Headers exchanges ignore the routing key attribute. Instead, the
-attributes used for routing are taken from the “headers” attribute. When
-a queue is bound to a headers exchange, the “:arguments” attribute is
+attributes used for routing are taken from the `headers` attribute. When
+a queue is bound to a headers exchange, the `:arguments` attribute is
 used to define matching rules:
 
-    # when binding to a headers exchange, :arguments parameter is used to specify matching rules
-    @channel.queue("", :auto_delete => true).bind(exchange, :arguments => { :os => 'linux' })
+``` ruby
+# when binding to a headers exchange, :arguments parameter is used to specify matching rules
+@channel.queue("", :auto_delete => true).bind(exchange, :arguments => { :os => 'linux' })
+```
 
 When matching on one header, a message is considered matching if the
 value of the header equals the value specified upon binding. Using the
-example above,\
-some messages that match would be:
+example above, some messages that match would be:
 
-    exchange.publish "For linux/IA64",   :headers => { :arch => "IA64", :os => 'linux' }
-    exchange.publish "For linux/x86",    :headers => { :arch => "x86",  :os => 'linux' }
-    exchange.publish "For any linux",    :headers => { :os => 'linux' }
+``` ruby
+exchange.publish "For linux/IA64",   :headers => { :arch => "IA64", :os => 'linux' }
+exchange.publish "For linux/x86",    :headers => { :arch => "x86",  :os => 'linux' }
+exchange.publish "For any linux",    :headers => { :os => 'linux' }
+```
 
 The following example demonstrates matching on integer values:
 
-    # consumer part
-    @channel.queue("", :auto_delete => true).bind(exchange, :arguments => { :cores => 8 })
+``` ruby
+# consumer part
+@channel.queue("", :auto_delete => true).bind(exchange, :arguments => { :cores => 8 })
 
-    # ...
+# ...
 
-    # producer part
-    exchange.publish "For ocotocore", :headers => { :cores => 8 }
+# producer part
+exchange.publish "For ocotocore", :headers => { :cores => 8 }
+```
 
 Matching on hashes (in AMQP 0.9.1 parlance - *attribute tables*) is also
 supported:
 
-    # consumer part
-    channel.queue("", :auto_delete => true).bind(exchange, :arguments => { :package => { :name => 'riak', :version => '0.14.2' } })
+``` ruby
+# consumer part
+channel.queue("", :auto_delete => true).bind(exchange, :arguments => { :package => { :name => 'riak', :version => '0.14.2' } })
 
-    # ...
+# ...
 
-    # producer part
-    exchange.publish "For nodes with Riak 0.14.2", :headers => { :package => { :name => 'riak', :version => '0.14.2' } }
+# producer part
+exchange.publish "For nodes with Riak 0.14.2", :headers => { :package => { :name => 'riak', :version => '0.14.2' } }
+```
 
 #### Matching all vs matching one
 
@@ -1108,64 +1114,119 @@ It is possible to bind a queue to a headers exchange using more than one
 header for matching. In this case, the broker needs one more piece of
 information from the application developer, namely, should it consider
 messages with any of the headers matching, or all of them? This is what
-the “x-match” binding argument is for:
+the `x-match` binding argument is for:
 
-    channel.queue("", :auto_delete => true).bind(exchange, :arguments => { 'x-match' => 'all', :arch => "ia64", :os => 'linux' })
+``` ruby
+channel.queue("", :auto_delete => true).bind(exchange, :arguments => { 'x-match' => 'all', :arch => "ia64", :os => 'linux' })
+```
 
 In the example above, only messages that have an “arch” header value
 equal to “ia64” and an “os” header value equal to “linux” will be
 considered matching.
 
-    channel.queue("", :auto_delete => true).bind(exchange, :arguments => { 'x-match' => 'any', :os => 'macosx', :cores => 8 })
+``` ruby
+channel.queue("", :auto_delete => true).bind(exchange, :arguments => { 'x-match' => 'any', :os => 'macosx', :cores => 8 })
+```
 
 When the “x-match” argument is set to “any”, just one matching header
 value is sufficient. So in the example above, any message with a “cores”
 header value equal to 8 will be considered matching.
 
-#### More examples
-
-TBD
 
 ### Declaring a headers exchange
 
 There are two ways to declare a headers exchange:
 
-\* By instantiating `AMQP::Exchange`and specifying type as
-“:headers”\
- \* By using the `AMQP::Channel#headers`method
+ * By instantiating `AMQP::Exchange` and specifying type as
+`:headers`
+ * By using the `AMQP::Channel#headers` method
 
 Here are two examples to demonstrate:
 
-    exchange = AMQP::Exchange.new(channel, :headers, "builds")
+``` ruby
+exchange = AMQP::Exchange.new(channel, :headers, "builds")
 
-    exchange = channel.headers("builds")
+exchange = channel.headers("builds")
+```
 
 Both methods asynchronously declare a queue. Because declaration
 necessitates a network round trip, publishing operations on
-`AMQP::Exchange`instances are delayed until the broker
+`AMQP::Exchange` instances are delayed until the broker
 reply (`exchange.declare-ok`) is received.
 
 Both methods let you pass a block to run a piece of code when the broker
 responds with `exchange.declare-ok` (meaning that the exchange has
 been successfully declared).
 
-    channel.headers("builds") do |exchange|
-      # exchange is declared and ready to be used.
-    end
+``` ruby
+channel.headers("builds") do |exchange|
+  # exchange is declared and ready to be used.
+end
+```
 
 ### Headers exchange routing example
 
 When there is just one queue bound to a headers exchange, messages are
 routed to it if any or all of the message headers match those specified
 upon binding. Whether it is “any header” or “all of them” depends on the
-“x-match” header value. In the case of multiple queues, a headers
+`x-match` header value. In the case of multiple queues, a headers
 exchange will deliver a copy of a message to each queue, just like
 direct exchanges do. Distribution rules between consumers on a
 particular queue are the same as for a direct exchange.
 
 Full example:
 
-{ gist 1034875 }
+``` ruby
+require 'rubygems'
+require 'amqp'
+
+puts "=> Headers routing example"
+puts
+AMQP.start do |connection|
+  channel   = AMQP::Channel.new(connection)
+  channel.on_error do |ch, channel_close|
+    puts "A channel-level exception: #{channel_close.inspect}"
+  end
+
+  exchange = channel.headers("amq.match", :durable => true)
+
+  channel.queue("", :auto_delete => true).bind(exchange, :arguments => { 'x-match' => 'all', :arch => "ia64", :os => 'linux' }).subscribe do |metadata, payload|
+    puts "[linux/ia64] Got a message: #{payload}"
+  end
+  channel.queue("", :auto_delete => true).bind(exchange, :arguments => { 'x-match' => 'all', :arch => "x86", :os => 'linux' }).subscribe do |metadata, payload|
+    puts "[linux/x86] Got a message: #{payload}"
+  end
+  channel.queue("", :auto_delete => true).bind(exchange, :arguments => { :os => 'linux'}).subscribe do |metadata, payload|
+    puts "[linux] Got a message: #{payload}"
+  end
+  channel.queue("", :auto_delete => true).bind(exchange, :arguments => { 'x-match' => 'any', :os => 'macosx', :cores => 8 }).subscribe do |metadata, payload|
+    puts "[macosx|octocore] Got a message: #{payload}"
+  end
+  channel.queue("", :auto_delete => true).bind(exchange, :arguments => { :package => { :name => 'riak', :version => '0.14.2' } }).subscribe do |metadata, payload|
+    puts "[riak/0.14.2] Got a message: #{payload}"
+  end
+
+  EventMachine.add_timer(0.5) do
+    exchange.publish "For linux/ia64",   :headers => { :arch => "ia64", :os => 'linux' }
+    exchange.publish "For linux/x86",    :headers => { :arch => "x86", :os => 'linux'  }
+    exchange.publish "For linux",        :headers => { :os => 'linux'  }
+    exchange.publish "For OS X",         :headers => { :os => 'macosx' }
+    exchange.publish "For solaris/ia64", :headers => { :os => 'solaris', :arch => 'ia64' }
+    exchange.publish "For ocotocore",    :headers => { :cores => 8  }
+
+    exchange.publish "For nodes with Riak 0.14.2", :headers => { :package => { :name => 'riak', :version => '0.14.2' } }
+  end
+
+
+  show_stopper = Proc.new do
+    $stdout.puts "Stopping..."
+    connection.close { EventMachine.stop }
+  end
+
+  Signal.trap "INT", show_stopper
+  EventMachine.add_timer(2, show_stopper)
+end
+```
 
 ### Headers exchange use cases
 
@@ -1176,9 +1237,9 @@ could be an integer or a hash (dictionary) for example.
 
 Some specific use cases:
 
-\* Transfer of work between stages in a multi-step workflow ([routing
+ * Transfer of work between stages in a multi-step workflow ([routing
 slip pattern](http://eaipatterns.com/RoutingTable.html))\
- \* Distributed build/continuous integration systems can distribute
+ * Distributed build/continuous integration systems can distribute
 builds based on multiple parameters (OS, CPU architecture, availability
 of a particular package).
 
@@ -1202,10 +1263,10 @@ type](https://github.com/jbrisbin/random-exchange) is a custom exchange
 type developed as a RabbitMQ plugin by Jon Brisbin. To quote from the
 project README:
 
-> It is basically a direct exchange, with the exception that, instead of
-> each consumer bound to that exchange with the same routing key getting
-> a copy of the message, the exchange type randomly selects a queue to
-> route to.
+    It is basically a direct exchange, with the exception that, instead of
+    each consumer bound to that exchange with the same routing key getting
+    a copy of the message, the exchange type randomly selects a queue to
+    route to.
 
 This plugin is licensed under [Mozilla Public License
 1.1](http://www.mozilla.org/MPL/MPL-1.1.html), same as RabbitMQ.
@@ -1232,7 +1293,7 @@ spec](/articles/broker_specific_extensions/)
 Consumer applications (applications that receive and process messages)
 may occasionally fail to process individual messages, or might just
 crash. Additionally, network issues might be experienced. This raises a
-question - “when should the AMQP broker remove messages from queues?”
+question - "when should the AMQP broker remove messages from queues?"
 This topic is covered in depth in the [Working With
 Queues](/articles/working_with_queues/) guide, including prefetching and
 examples.
@@ -1240,16 +1301,16 @@ examples.
 In this guide, we will only mention how message acknowledgements are
 related to AMQP transactions and the Publisher Confirms extension. Let
 us consider a publisher application (P) that communications with a
-consumer © using AMQP 0.9.1. Their communication can be graphically
+consumer (C) using AMQP 0.9.1. Their communication can be graphically
 represented like this:
 
-<code>\
-—— —— ——\
-| | S1 | | S2 | |\
-| P | \> | B | \> | C |\
-| | | | | |\
-—— —— ——\
-</code>
+```
+-----       -----       -----
+|   |   S1  |   |   S2  |   |
+| P | ====> | B | ====> | C |
+|   |       |   |       |   |
+-----       -----       -----
+```
 
 We have two network segments, S1 and S2. Each of them may fail. P is
 concerned with making sure that messages cross S1, while the broker (B)
@@ -1277,7 +1338,7 @@ Unbinding queues from exchanges
 -------------------------------
 
 Queues are unbound from exchanges using the
-`AMQP::Queue#unbind`method. This topic is described in
+`AMQP::Queue#unbind` method. This topic is described in
 detail in the [Working with queues](/articles/working_with_queues/)
 documentation guide.
 
@@ -1286,32 +1347,63 @@ Deleting exchange
 
 ### Explicitly deleting an exchange
 
-Exchanges are deleted using the `AMQP::Exchange#delete }
+Exchanges are deleted using the `AMQP::Exchange#delete`
 method:
 
-    exchange.delete
+``` ruby
+exchange.delete
+```
 
 `AMQP::Exchange#delete` takes an optional callback that is
-run when a `exchange.delete-ok` reply arrives from the broker.
+run when a `exchange.delete-ok` reply arrives.
 
-    exchange.delete do |delete_ok|
-      # by now exchange is guaranteed to be deleted
-    end
+``` ruby
+exchange.delete do |delete_ok|
+  # by now exchange is guaranteed to be deleted
+end
+```
 
 ### Auto-deleted exchanges
 
 Exchanges can be **auto-deleted**. To declare an exchange as
-auto-deleted, use the “:auto_delete” option on declaration:
+auto-deleted, use the `:auto_delete` option on declaration:
 
-    exchange = AMQP::Exchange.new(channel, :direct, "nodes.metadata", :auto_delete => true)
+``` ruby
+exchange = AMQP::Exchange.new(channel, :direct, "nodes.metadata", :auto_delete => true)
 
-    exchange = channel.direct("nodes.metadata", :auto_delete => true)
+exchange = channel.direct("nodes.metadata", :auto_delete => true)
+```
 
 Full example:
 
-{ gist 1020226 }
+``` ruby
+require 'amqp'
 
-TBD: explain when exchange is considered to be “no longer in use”
+
+puts "=> Exchange#initialize example that uses :auto_delete => true"
+puts
+AMQP.start(:host => 'localhost', :port => 5673) do |connection|
+  AMQP::Channel.new do |channel, open_ok|
+    puts "Channel ##{channel.id} is now open!"
+
+    AMQP::Exchange.new(channel, :direct, "amqpgem.examples.xchange2", :auto_delete => false) do |exchange|
+      puts "#{exchange.name} is ready to go"
+    end
+
+    AMQP::Exchange.new(channel, :direct, "amqpgem.examples.xchange3", :auto_delete => true) do |exchange|
+      puts "#{exchange.name} is ready to go"
+    end
+  end
+
+  show_stopper = Proc.new do
+    $stdout.puts "Stopping..."
+    connection.close { EventMachine.stop }
+  end
+
+  Signal.trap "INT", show_stopper
+  EM.add_timer(2, show_stopper)
+end
+```
 
 Objects as message producers.
 -----------------------------
@@ -1325,9 +1417,77 @@ that receive and process them).
 
 Full example:
 
-{ gist 1009425 }
+``` ruby
+#!/usr/bin/env ruby
+# encoding: utf-8
 
-TBD
+require "rubygems"
+require "amqp"
+
+class Consumer
+
+  #
+  # API
+  #
+
+  def initialize(channel, queue_name = AMQ::Protocol::EMPTY_STRING)
+    @queue_name = queue_name
+
+    @channel    = channel
+    @channel.on_error(&method(:handle_channel_exception))
+  end # initialize
+
+  def start
+    @queue = @channel.queue(@queue_name, :exclusive => true)
+    @queue.subscribe(&method(:handle_message))
+  end # start
+
+
+
+  #
+  # Implementation
+  #
+
+  def handle_message(metadata, payload)
+    puts "Received a message: #{payload}, content_type = #{metadata.content_type}"
+  end # handle_message(metadata, payload)
+
+  def handle_channel_exception(channel, channel_close)
+    puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
+  end # handle_channel_exception(channel, channel_close)
+end
+
+
+class Producer
+
+  #
+  # API
+  #
+
+  def initialize(channel, exchange)
+    @channel  = channel
+    @exchange = exchange
+  end # initialize(channel, exchange)
+
+  def publish(message, options = {})
+    @exchange.publish(message, options)
+  end # publish(message, options = {})
+end
+
+
+AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
+  channel  = AMQP::Channel.new(connection)
+  worker   = Consumer.new(channel, "amqpgem.objects.integration")
+  worker.start
+
+  producer = Producer.new(channel, channel.default_exchange)
+  puts "Publishing..."
+  producer.publish("Hello, world", :routing_key => "amqpgem.objects.integration")
+
+  # stop in 2 seconds
+  EventMachine.add_timer(2.0) { connection.close { EventMachine.stop } }
+end
+```
 
 Exchange durability vs Message durability
 -----------------------------------------
@@ -1351,8 +1511,8 @@ What to read next
 Documentation is organized as several [documentation guides](/) that
 cover all kinds of topics. Guides related to this one are
 
-\* [Durability and message persistence](/articles/durability/)\
- \* [Bindings](/articles/bindings/)\
- \* [Patterns and Use Cases](/articles/patterns_and_use_cases/)\
- \* [Working With Queues](/articles/working_with_queues/)\
- \* [Error handling and recovery](/articles/error_handling/)
+ * [Durability and message persistence](/articles/durability/)
+ * [Bindings](/articles/bindings/)
+ * [Patterns and Use Cases](/articles/patterns_and_use_cases/)
+ * [Working With Queues](/articles/working_with_queues/)
+ * [Error handling and recovery](/articles/error_handling/)

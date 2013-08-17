@@ -42,16 +42,16 @@ layout: default
     %h2
       About Ruby amqp gem
     %p
-      Ruby amqp gem is a widely used, feature-rich, well-maintained, fast asynchronous AMQP 0.9.1 (RabbitMQ) Ruby client with batteries included.
+      Ruby amqp gem is a widely used, feature-rich, well-maintained, fast asynchronous RabbitMQ Ruby client with batteries included.
 
 
     %h2 About AMQP 0.9.1
     %p
-      AMQP is an open standard for messaging middleware that emphasizes interoperability between different technologies
-      (for example, Java & JVM languages, .NET, Ruby, Python, Node.js, Erlang, C and so on).
+      AMQP 0.9.1 is an open standard for messaging middleware that emphasizes interoperability between different technologies
+      (for example, Java/JVM languages, .NET, Ruby, Python, Node.js, Erlang, C and so on).
 
     %p
-      Key features of AMQP are very flexible yet simple routing and binary protocol efficiency. AMQP supports many sophisticated features, for example,
+      Key features of RabbitMQ are very flexible yet simple routing, HA and replication, and binary protocol efficiency. RabbitMQ supports many sophisticated features, for example,
       message acknowledgements, returning of messages to producer, redelivery of messages that couldn't be processed, load balancing between message consumers and so on.
 
 
@@ -59,7 +59,7 @@ layout: default
       This site is open source.
     %p
       Source for this site is open source and
-      %a{ :href => "https://github.com/ruby-amqp/ruby-amqp.github.com" }
+      %a{ :href => "https://github.com/ruby-amqp/rubyamqp.info" }
         hosted on Github
       If you find an issue, feel free to make edits and submit a pull request!
 
@@ -76,7 +76,7 @@ layout: default
 
     %p
       If you find bugs or inconsistencies in thid guide, please report them
-      %a{ :href => "https://github.com/ruby-amqp/ruby-amqp.github.com/issues" }
+      %a{ :href => "https://github.com/ruby-amqp/rubyamqp.info/issues" }
         using GitHub issues.
   .span8
 
@@ -149,7 +149,7 @@ layout: default
         Describes how to connect to RabbitMQ using TLS (SSL)-encrypted connections
 
       %dt
-        %a{ :href => "/articles/broker_specific_extensions/"}
+        %a{ :href => "/articles/rabbitmq_extensions/"}
           RabbitMQ and other vendor specific AMQP extensions
       %dd
         This guide describes using RabbitMQ and other vendor specific AMQP extensions with Ruby amqp gem

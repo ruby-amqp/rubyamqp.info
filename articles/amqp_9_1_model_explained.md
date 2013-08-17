@@ -283,7 +283,7 @@ in object-oriented programming languages. AMQP methods are grouped into
 0.9.1 reference](http://www.rabbitmq.com/amqp-0-9-1-reference.html) can
 be found on the RabbitMQ website.
 
-Let us take a look at the **exchange.\*** class, a group of methods
+Let us take a look at the `exchange.*` class, a group of methods
 related to operations on exchanges. It includes the following
 operations:
 

@@ -1,4 +1,4 @@
-# About that repository #
+# amqp gem Documentation
 
 This is the documentation site for the [Ruby amqp gem](http://rubyamqp.info).
 

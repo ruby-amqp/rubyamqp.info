@@ -824,17 +824,16 @@ connection3 = AMQP.connect
 channel_exception_handler = Proc.new { |ch, channel_close| EventMachine.stop; raise "channel error: #{channel_close.reply_text}" }
 
 # open two channels
-channel1    = AMQP::Channel.new(connection1)
-channel1.on_error(&channel_exception_handler)
+
 # first app will be given up to 3 messages at a time. If it doesn't
 # ack any messages after it was delivered 3, messages will be routed to
 # the app #2.
-channel1.prefetch(3)
+channel1    = AMQP::Channel.new(connection1, :prefetch => 3)
+channel1.on_error(&channel_exception_handler)
 
-channel2    = AMQP::Channel.new(connection2)
-channel2.on_error(&channel_exception_handler)
 # app #2 processes messages one-by-one and has to send and ack every time
-channel2.prefetch(1)
+channel2    = AMQP::Channel.new(connection2, :prefetch => 1)
+channel2.on_error(&channel_exception_handler)
 
 # app 3 will just publish messages
 channel3    = AMQP::Channel.new(connection3)
@@ -1165,18 +1164,18 @@ acknowledgement.
 
 In AMQP 0.9.1 parlance this is know as **QoS** or **message prefetching**.
 Prefetching is configured on a per-channel (typically) or per-connection
-(rarely used) basis. To configure prefetching per channel, use the
-`AMQP::Channel#prefetch` method. Let us return to the example we used
-in the “Message acknowledgements” section:
+(rarely used) basis. To configure prefetching per channel, pass the
+`:prefetch` option to the Channel constructor. Let us return to the example
+we used in the “Message acknowledgements” section:
 
 ``` ruby
 # app #1 will be given up to 3 messages at a time. If it does not
 # send an ack after receiving the messages, then the messages will
 # be routed to app #2.
-channel1.prefetch(3)
+channel1    = AMQP::Channel.new(connection1, :prefetch => 3)
 
 # app #2 processes messages one-by-one and has to send an ack after receiving each message
-channel2.prefetch(1)
+channel2    = AMQP::Channel.new(connection2, :prefetch => 1)
 ```
 
 In that example, one consumer prefetches three messages and another
@@ -1194,7 +1193,7 @@ to `consumer2`:
 [consumer1] Got message #5, SKIPPED
 —
  by now consumer 1 has received three messages it did not acknowledge.
- With prefetch = 3, AMQP broker will not send it any more messages until
+ With :prefetch => 3, AMQP broker will not send it any more messages until
 consumer 1 sends an ack
 —
 [consumer2] Received Message #6, redelivered = false, ack-ed

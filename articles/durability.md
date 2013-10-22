@@ -1,7 +1,7 @@
 ---
 title: "Durability and related matters"
 layout: article
-permalink: "/durability/"
+permalink: "articles/durability/"
 ---
 
 About this guide

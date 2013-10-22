@@ -1,7 +1,7 @@
 ---
 title: "Bindings"
 layout: article
-permalink: "/bindings/"
+permalink: "articles/bindings/"
 ---
 
 About this guide

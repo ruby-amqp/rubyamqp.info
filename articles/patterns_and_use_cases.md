@@ -1,7 +1,7 @@
 ---
 title: "Patterns and Use Cases"
 layout: article
-permalink: "/patterns_and_use_cases/"
+permalink: "articles/patterns_and_use_cases/"
 —
 
 About this guide

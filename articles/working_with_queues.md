@@ -1,7 +1,7 @@
 ---
-title: "Working with queues”
+title: "Working with queues"
 layout: article
-disqus_identifier: “amqp_queues”
+disqus_identifier: "amqp_queues"
 disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/Queues.textile"
 permalink: "/working_with_queues/"
 ---

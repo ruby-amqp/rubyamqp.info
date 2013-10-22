@@ -1,7 +1,7 @@
 ---
 title: "Testing AMQP applications"
 layout: article
-permalink: "/testing_with_evented_spec/"
+permalink: "articles/testing_with_evented_spec/"
 ---
 
 About this guide

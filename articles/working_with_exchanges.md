@@ -3,7 +3,7 @@ title: "Working with exchanges"
 layout: article
 disqus_identifier: "amqp_exchanges"
 disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/Exchanges.textile"
-permalink: "/working_with_exchanges/"
+permalink: "articles/working_with_exchanges/"
 ---
 
 About this guide

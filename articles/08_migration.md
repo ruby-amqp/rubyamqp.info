@@ -1,5 +1,5 @@
 ---
-title: "Upgrading to amqp gem 0.8.x and later versions”
+title: "Upgrading to amqp gem 0.8.x and later versions"
 layout: article
 permalink: "/08_migration/"
 ---

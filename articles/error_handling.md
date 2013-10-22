@@ -38,7 +38,7 @@ Covered versions
 ----------------
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
-1.0.x.
+1.1.x.
 
 Code examples
 -------------

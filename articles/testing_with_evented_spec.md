@@ -14,7 +14,7 @@ Covered versions
 ----------------
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
-1.0.x and [evented-spec gem](http://github.com/ruby-amqp/evented-spec)
+1.1.x and [evented-spec gem](http://github.com/ruby-amqp/evented-spec)
 0.9.0 and later.
 
 Rationale

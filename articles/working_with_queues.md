@@ -21,7 +21,7 @@ Which versions of the amqp gem does this guide cover?
 -----------------------------------------------------
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
-1.0.x.
+1.1.x.
 
 Queues in AMQP 0.9.1 - overview
 -------------------------------

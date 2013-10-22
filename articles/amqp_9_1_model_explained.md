@@ -1,7 +1,7 @@
 ---
 title: "AMQP 0.9.1 Model Explained"
 layout: article
-permalink: "/amqp_9_1_model_explained/"
+permalink: "articles/amqp_9_1_model_explained/"
 ---
 
 About this guide

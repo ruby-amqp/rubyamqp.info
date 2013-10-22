@@ -3,7 +3,7 @@ title: "Error handling and recovery"
 layout: article
 disqus_identifier: "amqp_error_handling”
 disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/ErrorHandling.textile”
-permalink: "/error_handling/"
+permalink: "articles/error_handling/"
 —
 
 About this guide

@@ -3,7 +3,7 @@ title: "RabbitMQ Extensions to AMQP 0.9.1 in amqp gem"
 layout: article
 disqus_identifier: "rabbitmq_extensions"
 disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/RabbitMQExtensions.textile"
-permalink: "/rabbitmq_extensions/"
+permalink: "articles/rabbitmq_extensions/"
 ---
 
 ## RabbitMQ extensions

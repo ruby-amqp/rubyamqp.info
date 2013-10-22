@@ -1,7 +1,7 @@
 ---
 title: "Upgrading to amqp gem 0.8.x and later versions"
 layout: article
-permalink: "/08_migration/"
+permalink: "articles/08_migration/"
 ---
 
 About this guide

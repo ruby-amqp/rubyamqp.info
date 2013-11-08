@@ -1,8 +1,6 @@
 ---
 title: "Supported RabbitMQ Versions"
 layout: article
-disqus_identifier: "rabbitmq_versions"
-disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/RabbitMQVersions.textile"
 permalink: "rabbitmq_versions/"
 ---
 

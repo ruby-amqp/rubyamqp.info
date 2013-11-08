@@ -82,7 +82,7 @@ This guide assumes that you have installed one of the following supported Ruby i
 
 ```ruby
 source "https://rubygems.org"
-gem "amqp", "~> 1.0.2" # optionally: :git => "git://github.com/ruby-amqp/amqp.git", :branch => "1.1.x-stable"
+gem "amqp", "~> 1.1.0" # optionally: :git => "git://github.com/ruby-amqp/amqp.git", :branch => "1.1.x-stable"
 ```
 
 ### Verifying your installation

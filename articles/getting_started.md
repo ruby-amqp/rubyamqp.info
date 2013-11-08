@@ -1,8 +1,6 @@
 ---
 title: "Getting Started with RabbitMQ and Ruby Using amqp gem"
 layout: article
-disqus_identifier: "getting_started_with_amqp"
-disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/GettingStarted.textile"
 permalink: "getting_started/"
 ---
 

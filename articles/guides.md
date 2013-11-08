@@ -53,7 +53,7 @@ Learn about queue and exchange durability, publishing messages as persistent and
 
 Describes how to connect to RabbitMQ using TLS (SSL)-encrypted connections
 
-## [RabbitMQ and other vendor specific AMQP extensions](/articles/broker_specific_extensions/)
+## [RabbitMQ and other vendor specific AMQP extensions](/articles/rabbitmq_extensions/)
 
 This guide describes using RabbitMQ and other vendor specific AMQP extensions with Ruby amqp gem
 

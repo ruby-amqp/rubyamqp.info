@@ -59,11 +59,11 @@ outdated and *will not work with amqp gem 0.8.0 and later versions*
 
 This guide assumes that you have installed one of the following supported Ruby implementations:
 
- * CRuby v1.9.3
- * CRuby v1.9.2
- * JRuby v1.6 or higher
  * CRuby v2.0.0
+ * CRuby v1.9.3
+ * JRuby v1.7 or higher
  * Rubinius v2.0 or higher
+ * CRuby v1.9.2
  * Ruby v1.8.7 [except `p249`](https://github.com/ruby-amqp/amqp#why-isnt-ruby-187-p249-supported-will-it-be-supported-in-the-future)
  * Ruby Enterprise Edition
 

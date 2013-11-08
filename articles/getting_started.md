@@ -93,7 +93,7 @@ Verify your installation with a quick irb session:
 :001 > require "amqp"
 => true
 :002 > AMQP::VERSION
-=> "1.0.2"</code>
+=> "1.1.0"</code>
 
 ## "Hello, world" example
 

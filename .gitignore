@@ -12,3 +12,5 @@ _site/*
 _source/*
 _cache
 deploy.sh
+output/*
+tmp/*

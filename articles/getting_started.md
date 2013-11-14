@@ -8,8 +8,10 @@ permalink: "articles/getting_started/"
 
 ## About this guide
 
-This guide is a quick tutorial that helps you to get started with RabbitMQ and the [Ruby amqp gem](http://github.com/ruby-amqp/amqp).
-It should take about 20 minutes to read and study the provided code examples. This guide covers:
+This guide is a quick tutorial that helps you to get started with
+RabbitMQ and the [Ruby amqp gem](http://github.com/ruby-amqp/amqp).
+It should take about 20 minutes to read and study the provided code
+examples. This guide covers:
 
  * Installing RabbitMQ, a mature popular server implementation of the AMQP protocol.
  * Installing the amqp gem via [Rubygems](http://rubygems.org) and [Bundler](http://gembundler.com).
@@ -46,18 +48,21 @@ package](http://www.rabbitmq.com/server.html) and install it with
 of the [apt repository](http://www.rabbitmq.com/debian.html#apt) that
 the RabbitMQ team provides.
 
-For RPM-based distributions like RedHat or CentOS, the RabbitMQ team provides an [RPM package](http://www.rabbitmq.com/install.html#rpm).
+For RPM-based distributions like RedHat or CentOS, the RabbitMQ team
+provides an [RPM package](http://www.rabbitmq.com/install.html#rpm).
 
 <div class="alert alert-error"><strong>Note:</strong> The RabbitMQ
-package that ships with some popular Ubuntu versions (for example, 10.04 and 10.10) is
-outdated and *will not work with amqp gem 0.8.0 and later versions*
-(you will need at least RabbitMQ v2.0 for use with this guide).</div>
+package that ships with some popular Ubuntu versions (for example,
+10.04 and 10.10) is outdated and *will not work with amqp gem 0.8.0
+and later versions* (you will need at least RabbitMQ v2.0 for use with
+this guide).</div>
 
 ## Installing the Ruby amqp gem
 
 ### Make sure that you have Ruby and [Rubygems](http://docs.rubygems.org/read/chapter/3) installed
 
-This guide assumes that you have installed one of the following supported Ruby implementations:
+This guide assumes that you have installed one of the following
+supported Ruby implementations:
 
  * CRuby v1.9.3
  * CRuby v1.9.2

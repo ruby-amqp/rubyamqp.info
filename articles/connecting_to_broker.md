@@ -493,7 +493,7 @@ if defined?(PhusionPassenger) # otherwise it breaks rake commands if you put thi
   PhusionPassenger.on_event(:starting_worker_process) do |forked|
     if forked
        # We’re in a smart spawning mode
-       # Now is a good place to connect to the broker
+       # Now is a good time to connect to the broker
     end
   end
 end

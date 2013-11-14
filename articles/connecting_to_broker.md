@@ -479,9 +479,7 @@ avoid problems related to the behavior of the fork(2) system call,
 namely:
 
  * Unintentional file descriptor sharing
- * The fact that a”forked child process only inherits one
-thread“:http://bit.ly/fork-and-threads and therefore the EventMachine
-thread is not inherited
+ * The fact that a [forked child process only inherits one thread](http://bit.ly/fork-and-threads) and therefore the EventMachine thread is not inherited
 
 #### Using an event handler to spawn one amqp connection per worker
 

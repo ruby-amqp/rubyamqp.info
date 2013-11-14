@@ -64,12 +64,12 @@ this guide).</div>
 This guide assumes that you have installed one of the following
 supported Ruby implementations:
 
+ * CRuby v2.0.0
  * CRuby v1.9.3
  * CRuby v1.9.2
- * JRuby v1.6 or higher
- * CRuby v2.0.0
+ * JRuby v1.7 or higher
  * Rubinius v2.0 or higher
- * Ruby v1.8.7 [except `p249`](https://github.com/ruby-amqp/amqp#why-isnt-ruby-187-p249-supported-will-it-be-supported-in-the-future)
+ * Ruby v1.8.7
  * Ruby Enterprise Edition
 
 ### You can use Rubygems to install the amqp gem

@@ -1,13 +1,10 @@
 ---
 title: "Working with exchanges"
 layout: article
-disqus_identifier: "amqp_exchanges"
-disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/Exchanges.textile"
-permalink: "articles/working_with_exchanges/"
+permalink: "working_with_exchanges/"
 ---
 
-About this guide
-----------------
+## About this guide
 
 This guide covers the use of exchanges according to the AMQP 0.9.1
 specification including message publishing, common usage scenarios and
@@ -18,14 +15,12 @@ Commons Attribution 3.0 Unported License</a> (including images and
 stylesheets). The source is available [on
 Github](https://github.com/ruby-amqp/rubyamqp.info).
 
-Which versions of the amqp gem does this guide cover?
------------------------------------------------------
+## Which versions of the amqp gem does this guide cover?
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
 1.1.x.
 
-Exchanges in AMQP 0.9.1 - overview
-----------------------------------
+## Exchanges in AMQP 0.9.1 - overview
 
 ### What are AMQP exchanges?
 
@@ -59,8 +54,7 @@ Exchanges have several attributes associated with them:
  * Whether the exchange is auto-deleted when no longer used
  * Other metadata (sometimes known as `x-arguments`)
 
-Exchange types
---------------
+## Exchange types
 
 There are four built-in exchange types in AMQP v0.9.1:
 
@@ -76,8 +70,7 @@ e.g. [x-recent-history
 exchange](https://github.com/videlalvaro/rabbitmq-recent-history-exchange)
 or [x-random exchange](https://github.com/jbrisbin/random-exchange).
 
-Message attributes
-------------------
+## Message attributes
 
 Before we start looking at various exchange types and their routing
 semantics, we need to introduce message attributes. Every AMQP message
@@ -93,8 +86,7 @@ similar to, but more generic than, a URL in HTTP. Most exchange types
 use the routing key to implement routing logic, but some ignore it and
 use other criteria (e.g. message content).
 
-Fanout exchanges
-----------------
+## Fanout exchanges
 
 ### How fanout exchanges route messages
 
@@ -241,8 +233,7 @@ Applications can rely on that exchange always being available to them.
 Each vhost has a separate instance of that exchange, it is **not shared
 across vhosts** for obvious reasons.
 
-Direct exchanges
-----------------
+## Direct exchanges
 
 ### How direct exchanges route messages
 
@@ -500,8 +491,7 @@ consider using headers exchange)
  * Delivering notifications to individual software services in the
 network
 
-Topic exchanges
----------------
+## Topic exchanges
 
 ### How topic exchanges route messages
 
@@ -595,8 +585,7 @@ only for a particular sport or team)
  * Distributed architecture/OS-specific software builds or packaging
 where each builder can handle only one architecture or OS
 
-Declaring/Instantiating exchanges
----------------------------------
+## Declaring/Instantiating exchanges
 
 With the Ruby amqp gem, exchanges can be declared in two ways:
 
@@ -708,7 +697,7 @@ When set to true, AMQP broker will persist message to disk.
 <dd>
 This flag tells the server how to react if the message cannot be routed
 to a queue. If this flag is set to true, the server will return an
-unroutable message 
+unroutable message
  to the producer with a basic.return AMQP method. If this flag is set to
 false, the server silently drops the message.
 </dd>
@@ -738,7 +727,7 @@ Message priority, from 0 to 9.
 <dd>
 Message identifier as a string. If applications need to identify
 messages, it is recommended that they use this attribute instead of
-putting it 
+putting it
  into the message payload.
 </dd>
 
@@ -1033,8 +1022,8 @@ EventMachine.run do
 end
 ```
 
-Headers exchanges
------------------
+## Headers exchanges
+
 
 Now that message attributes and publishing have been introduced, it is
 time to take a look at one more core exchange type in AMQP 0.9.1. It is
@@ -1254,8 +1243,7 @@ Applications can rely on that exchange always being available to them.
 Each vhost has a separate instance of those exchanges and they are **not
 shared across vhosts** for obvious reasons.
 
-Custom exchange types
----------------------
+## Custom exchange types
 
 ### x-random
 
@@ -1283,8 +1271,7 @@ action](http://bit.ly/rabbitmq).
 This plugin is licensed under the [MIT
 license](https://github.com/videlalvaro/rabbitmq-recent-history-exchange/blob/master/LICENSE.md).
 
-Using the Publisher Confirms extension to AMQP 0.9.1
-----------------------------------------------------
+## Using the Publisher Confirms extension to AMQP 0.9.1
 
 Please refer to [Vendor-specific extensions to AMQP 0.9.1
 spec](/articles/broker_specific_extensions/)
@@ -1323,28 +1310,24 @@ successful processing. For S1, P has to use transactions (a heavyweight
 solution) or the more lightweight Publisher Confirms, a
 RabbitMQ-specific extension.
 
-Using AMQP transactions
------------------------
+## Using AMQP transactions
 
 TBD
 
-Binding queues to exchanges
----------------------------
+## Binding queues to exchanges
 
 Queues are bound to exchanges using the `AMQP::Queue#bind`
 method. This topic is described in detail in the [Working with
 queues](/articles/working_with_queues/) documentation guide.
 
-Unbinding queues from exchanges
--------------------------------
+## Unbinding queues from exchanges
 
 Queues are unbound from exchanges using the
 `AMQP::Queue#unbind` method. This topic is described in
 detail in the [Working with queues](/articles/working_with_queues/)
 documentation guide.
 
-Deleting exchange
------------------
+## Deleting exchange
 
 ### Explicitly deleting an exchange
 
@@ -1406,8 +1389,7 @@ AMQP.start(:host => 'localhost', :port => 5673) do |connection|
 end
 ```
 
-Objects as message producers.
------------------------------
+## Objects as message producers.
 
 Since Ruby is a genuine object-oriented language, it is important to
 demonstrate how the Ruby amqp gem can be integrated into rich
@@ -1490,24 +1472,20 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
 end
 ```
 
-Exchange durability vs Message durability
------------------------------------------
+## Exchange durability vs Message durability
 
 See [Durability guide](/articles/durability/)
 
-Error handling and recovery
----------------------------
+## Error handling and recovery
 
 See [Error handling and recovery guide](/articles/error_handling/)
 
-Vendor-specific extensions related to exchanges
------------------------------------------------
+## Vendor-specific extensions related to exchanges
 
 See [Vendor-specific Extensions
 guide](/articles/broker_specific_extensions/)
 
-What to read next
------------------
+## What to read next
 
 Documentation is organized as several [documentation guides](/) that
 cover all kinds of topics. Guides related to this one are

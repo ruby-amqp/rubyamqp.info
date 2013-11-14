@@ -1,50 +1,56 @@
-jQuery.fn.toc = function () {
-  if(this.length === 0)
-    return;
+$(document).ready(function() {
+  var $toc = $('#toc');
 
-  var listStack = [ $("<ul class='nav nav-list' />")];
-  listStack[0].appendTo(this);
+  function format (item) {
+    if (item.children && item.children.length > 0) {
+      return "<li> <a href=#" + item.id + ">" + item.title + "</a><ul class='nav'>"
+        + item.children.map(format).join('')
+        + "</ul></li>";
+    } else {
+      return "<li> <a href=#" + item.id + ">" + item.title + "</a></li>";
+    }
+  }
+  // return;
 
-  Array.prototype.last = function() { return this[this.length - 1]};
+  if($toc.length) {
+    var $h3s = $('.container .col-md-9 :header');
 
-  var level = 2;
-  $(document).ready(function() {
-    $(":header").each(function(index, el) {
+    var tocTree = [];
+    var lastRoot;
 
-      if(parseInt(el.tagName[1]) === 1)
+    $h3s.each(function(i, el) {
+      var $el = $(el);
+      var id = $el.attr('id');
+      var title = $el.text();
+      var depth = parseInt($el.prop("tagName")[1]);
+
+      if(depth > 3)
         return;
 
-      var text = $(el).text();
-
-      var anchor = text.replace(/[^a-zA-Z 0-9]+/g,'').replace(/\s/g, "_").toLowerCase();
-      $(el).attr('id', anchor);
-
-      var currentLevel = parseInt(el.tagName[1]);
-
-      if(currentLevel > level) {
-        var nextLevelList = $("<ul class='nav nav-list'/>");
-        nextLevelList.appendTo(listStack.last().children("li").last());
-        listStack.push(nextLevelList);
-      } else if(currentLevel < level) {
-        listStack.pop();
+      if (lastRoot && depth > lastRoot.depth) {
+        lastRoot.children.push({id: id, title: title });
+      } else {
+        lastRoot = {depth: depth,
+                    title: title,
+                    id: id,
+                    children: []};
+        tocTree.push(lastRoot);
       }
-
-      level = currentLevel;
-      var li = $("<li />");
-
-      $("<a />").text(text).attr('href', "#" + anchor).appendTo(li);
-      li.appendTo(listStack.last());
     });
-  });
-};
-// $($(".highlight")[2]).text().match(/(.*)\.(.*)/)
-// "AMQP::Channel.direct".match(/(.*)\.(.*)/)
-// "AMQP::Channel#direct".match(/(.*)#(.*)/)
-jQuery.fn.yardLink = function () {
-  var class_method = /(.*)\.(.*)/;
-  var instance_method = /(.*)#(.*)/;
-};
 
-$(document).ready(function() {
-  $(".toc").toc();
+    var titles = tocTree.map(format).join('');
+
+    $toc.html(titles);
+  }
+
+  $("#toc").parent().affix();
+
+  $('#side-navigation').on('activate.bs.scrollspy', function (e) {
+    var parent = $(e.target).parent().parent()[0];
+    if (parent.tagName == "LI") {
+      $(parent).addClass("active");
+    }
+
+  });
+
 });

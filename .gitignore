@@ -10,6 +10,5 @@ _site/*
 *\#*
 ~*
 _source/*
-output/*
-tmp/*
+_cache
 deploy.sh

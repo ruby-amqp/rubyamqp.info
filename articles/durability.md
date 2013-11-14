@@ -1,11 +1,10 @@
 ---
 title: "Durability and related matters"
 layout: article
-permalink: "articles/durability/"
+permalink: "durability/"
 ---
 
-About this guide
-----------------
+## About this guide
 
 This guide covers queue, exchange and message durability, as well as
 othertopics related to durability, for example, durability in cluster
@@ -17,14 +16,12 @@ Commons Attribution 3.0 Unported License</a> (including images and
 stylesheets). The source is available [on
 Github](https://github.com/ruby-amqp/rubyamqp.info).
 
-Covered versions
-----------------
+## Covered versions
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
 1.1.x.
 
-Entity durability and message persistence
------------------------------------------
+## Entity durability and message persistence
 
 ### Durability of exchanges
 

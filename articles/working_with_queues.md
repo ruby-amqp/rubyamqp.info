@@ -1,13 +1,10 @@
 ---
 title: "Working with queues"
 layout: article
-disqus_identifier: "amqp_queues"
-disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/Queues.textile"
-permalink: "articles/working_with_queues/"
+permalink: "working_with_queues/"
 ---
 
-About this guide
-----------------
+## About this guide
 
 This guide covers everything related to queues in the AMQP v0.9.1
 specification, common usage scenarios and how to accomplish typical
@@ -17,14 +14,12 @@ Commons Attribution 3.0 Unported License</a> (including images and
 stylesheets). The source is available [on
 Github](https://github.com/ruby-amqp/rubyamqp.info).
 
-Which versions of the amqp gem does this guide cover?
------------------------------------------------------
+## Which versions of the amqp gem does this guide cover?
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
 1.1.x.
 
-Queues in AMQP 0.9.1 - overview
--------------------------------
+## Queues in AMQP 0.9.1 - overview
 
 ### What are AMQP queues?
 
@@ -65,8 +60,7 @@ like and other aspects of queue behavior.
 
 The amqp gem represents queues as instances of `AMQP::Queue`.
 
-Queue names and declaring queues
---------------------------------
+## Queue names and declaring queues
 
 Every AMQP queue has a name that identifies it. Queue names often
 contain several segments separated by a dot “.”, in a similar fashion to
@@ -251,8 +245,7 @@ the messaging pattern that your application needs.
 many messaging patterns in depth and the RabbitMQ FAQ also has a section
 on [use cases](http://www.rabbitmq.com/faq.html#scenarios).
 
-Declaring a durable shared queue
---------------------------------
+## Declaring a durable shared queue
 
 To declare a durable shared queue, you pass a queue name that is a
 non-blank string and use the `:durable` option:
@@ -309,8 +302,7 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
 end
 ```
 
-Declaring a temporary exclusive queue
--------------------------------------
+## Declaring a temporary exclusive queue
 
 To declare a server-named, exclusive, auto-deleted queue, pass `""` (an empty
 string) as the queue name and use the ](exclusive") and `:auto_delete`
@@ -420,8 +412,7 @@ EventMachine.run do
 end
 ```
 
-Binding queues to exchanges
----------------------------
+## Binding queues to exchanges
 
 In order to receive messages, a queue needs to be bound to at least one
 exchange. Most of the time binding is explcit (done by applications). To
@@ -492,8 +483,7 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
 end
 ```
 
-Subscribing to receive messages (“push API”)
---------------------------------------------
+## Subscribing to receive messages (“push API”)
 
 To set up a queue subscription to enable an application to receive
 messages as they arrive in a queue, one uses the
@@ -1207,8 +1197,7 @@ consumer 1 sends an ack
 <span class="alert alert-error">The prefetching setting is ignored for
 consumers that do not use explicit acknowledgements.</span>
 
-How message acknowledgements relate to transactions and Publisher Confirms
---------------------------------------------------------------------------
+## How message acknowledgements relate to transactions and Publisher Confirms
 
 In cases where you cannot afford to lose a single message, AMQP 0.9.1
 applications can use one or a combination of the following protocol
@@ -1244,8 +1233,7 @@ Message acknowledgements cover reliable delivery over S2 as well as
 successful processing. For S1, P has to use transactions (a heavyweight
 solution) or the more lightweight Publisher Confirms RabbitMQ extension.
 
-Fetching messages when needed (“pull API”)
-------------------------------------------
+## Fetching messages when needed (“pull API”)
 
 The AMQP 0.9.1 specification also provides a way for applications to
 fetch (pull) messages from the queue only when necessary. For that, use
@@ -1298,8 +1286,7 @@ If the queue is empty, then the `payload` argument will be nil,
 otherwise arguments are identical to those of the
 `AMQP::Queue#subscribe` callback.
 
-Unsubscribing from messages
----------------------------
+## Unsubscribing from messages
 
 Sometimes it is necessary to unsubscribe from messages without deleting
 a queue. To do that, use the `AMQP::Queue#unsubscribe`
@@ -1361,8 +1348,7 @@ after this call completes.
 Fetching messages with `AMQP::Queue#pop` is still possible
 even after a consumer is cancelled.
 
-Unbinding queues from exchanges
--------------------------------
+## Unbinding queues from exchanges
 
 To unbind a queue from an exchange use
 `AMQP::Queue#unbind`:
@@ -1405,8 +1391,7 @@ end
 Note that trying to unbind a queue from an exchange that the queue was
 never bound to will result in a channel-level exception.
 
-Querying the number of messages in a queue
-------------------------------------------
+## Querying the number of messages in a queue
 
 It is possible to query the number of messages sitting in the queue by
 declaring the queue with the `:passive` attribute set. The response
@@ -1463,9 +1448,7 @@ AMQP.start(:host => 'localhost') do |connection|
 end
 ```
 
-
-Querying the number of consumers on a queue
--------------------------------------------
+## Querying the number of consumers on a queue
 
 It is possible to query the number of consumers on a queue by declaring
 the queue with the `:passive` attribute set. The response
@@ -1522,8 +1505,7 @@ AMQP.start(:host => 'localhost') do |connection|
 end
 ```
 
-Purging queues
---------------
+## Purging queues
 
 It is possible to purge a queue (remove all of the messages from it)
 using `AMQP::Queue#purge`:
@@ -1576,8 +1558,7 @@ server-generated name. When a queue is declared, it is empty, so for
 server-named queues, there is no need to purge them before they are
 used.
 
-Deleting queues
----------------
+## Deleting queues
 
 To delete a queue, use `AMQP::Queue#delete`. When a queue
 is deleted, all of the messages in it are deleted as well.
@@ -1624,8 +1605,7 @@ AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
 end
 ```
 
-Objects as message consumers and unit testing consumers in isolation
---------------------------------------------------------------------
+## Objects as message consumers and unit testing consumers in isolation
 
 Since Ruby is a genuine object-oriented language, it is important to
 demonstrate how the Ruby amqp gem can be integrated into rich
@@ -1932,24 +1912,20 @@ describe Consumer do
 end
 ```
 
-Queue durability vs message durability
---------------------------------------
+## Queue durability vs message durability
 
 See [Durability guide](/articles/durability/)
 
-Error handling and recovery
----------------------------
+## Error handling and recovery
 
 See [Error handling and recovery guide](/articles/error_handling/)
 
-Vendor-specific extensions related to queues
---------------------------------------------
+## Vendor-specific extensions related to queues
 
 See [Vendor-specific Extensions
 guide](/articles/broker_specific_extensions/)
 
-What to read next
------------------
+## What to read next
 
 The documentation is organized as several [documentation guides](/),
 covering all kinds of topics. Guides related to this one are:

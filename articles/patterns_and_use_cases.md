@@ -1,11 +1,10 @@
 ---
 title: "Patterns and Use Cases"
 layout: article
-permalink: "articles/patterns_and_use_cases/"
-—
+permalink: "patterns_and_use_cases/"
+—--
 
-About this guide
-----------------
+## About this guide
 
 This guide explains typical messaging patterns and use cases. It only
 covers the most common scenarios. For a comprehensive list of messaging
@@ -18,14 +17,12 @@ Commons Attribution 3.0 Unported License</a> (including images and
 stylesheets). The source is available [on
 Github](https://github.com/ruby-amqp/rubyamqp.info).
 
-Covered versions
-----------------
+## Covered versions
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
 1.1.x.
 
-Introduction
-------------
+## Introduction
 
 Messaging patterns are a lot like object-oriented design patterns in
 that they are generalized reusable solutions to specific problems. They
@@ -404,8 +401,7 @@ t.join
  * Command
  * Publish/Subscribe
 
-Document Message pattern
-------------------------
+## Document Message pattern
 
 ### Description and Use cases
 
@@ -425,8 +421,7 @@ with processing of documents:
  * Content extraction
  * Transformation (translation, transcoding and so on) of document data
 
-Competing Consumers pattern
----------------------------
+## Competing Consumers pattern
 
 ### Description and Use cases
 
@@ -444,8 +439,7 @@ TBD
 
 TBD
 
-Publish/Subscribe pattern
--------------------------
+## Publish/Subscribe pattern
 
 ### Description and Use cases
 
@@ -459,8 +453,7 @@ TBD
 
 TBD
 
-Scatter/Gather pattern
-----------------------
+## Scatter/Gather pattern
 
 ### Description and Use cases
 
@@ -474,8 +467,7 @@ TBD
 
 TBD
 
-Smart Proxy pattern
--------------------
+## Smart Proxy pattern
 
 ### Description and Use cases
 
@@ -489,8 +481,7 @@ TBD
 
 TBD
 
-Multistep Processing (Routing Slip) pattern
--------------------------------------------
+## Multistep Processing (Routing Slip) pattern
 
 ### Description and Use cases
 

@@ -6,21 +6,18 @@ disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/Troubleshoo
 permalink: "articles/troubleshooting/"
 ---
 
-About this guide
-----------------
+## About this guide
 
 This guide describes tools and strategies that help in troubleshooting
 and debugging applications that use RabbitMQ in general and the [Ruby amqp
 gem](http://github.com/ruby-amqp/amqp) in particular.
 
-Covered versions
-----------------
+## Covered versions
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
 1.1.x.
 
-First steps
------------
+## First steps
 
 Whenever something doesn’t work, check the following things before
 asking on the mailing list:
@@ -35,8 +32,7 @@ isn’t dead. If it is, this usually means that there was an exception
 that caused it to terminate, or the environment uses the fork(2) system
 call.
 
-Inspecting RabbitMQ log file
--------------------------------
+## Inspecting RabbitMQ log file
 
 In this section we will cover typical problems that can be tracked down
 by reading the RabbitMQ log.
@@ -80,8 +76,7 @@ this amqp gem version. In the case of RabbitMQ, make sure that you run
 version 2.0 or later.
 
 
-Handling channel-level exceptions
----------------------------------
+## Handling channel-level exceptions
 
 A broad range of problems result in AMQP channel exceptions: an
 indication by the broker that there was an issue that the application
@@ -115,8 +110,7 @@ Defining channel-level exception handlers will reveal many issues that
 it might take more time to detect using other troubleshooting
 techniques.
 
-Testing network connection with RabbitMQ using Telnet
---------------------------------------------------------
+## Testing network connection with RabbitMQ using Telnet
 
 One simple way to check network connection between a particular network
 node and a node running an RabbitMQ is to use `telnet`:
@@ -153,8 +147,7 @@ reasons, but it is a good idea to check these two things first:
  * DNS setup (if hostname is used)
 
 
-RabbitMQ Startup Issues
------------------------
+## RabbitMQ Startup Issues
 
 ### Missing erlang-os-mon on Debian and Ubuntu
 

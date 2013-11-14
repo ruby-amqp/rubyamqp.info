@@ -3,7 +3,6 @@ destination: ./_site
 plugins:     ./_plugins
 exclude: [bin, CNAME, Gemfile, Gemfile.lock, README.md]
 permalink: /:title
-relative_permalinks: false
 pygments: true
 markdown: redcarpet
 redcarpet:

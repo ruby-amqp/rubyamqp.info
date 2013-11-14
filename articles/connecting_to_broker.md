@@ -1,11 +1,10 @@
 ---
 title: "Connecting to the broker, integrating amqp gem with Ruby on Rails, Sinatra and Web apps"
 layout: article
-permalink: "article/connecting_to_broker/"
+permalink: "connecting_to_broker/"
 ---
 
-About this guide
-----------------
+## About this guide
 
 This guide covers connection to an AMQP broker from standalone and Web
 applications, connection error handling, authentication failure handling
@@ -17,14 +16,12 @@ Commons Attribution 3.0 Unported License</a> (including images and
 stylesheets). The source is available [on
 Github](https://github.com/ruby-amqp/rubyamqp.info).
 
-Which versions of the amqp gem does this guide cover?
------------------------------------------------------
+## Which versions of the amqp gem does this guide cover?
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
 1.1.x.
 
-Terminology
------------
+## Terminology
 
 In this guide we define a ‘standalone application’ as an application
 that does not run on a Web server like Unicorn or Passenger. The key
@@ -35,8 +32,7 @@ thread is occupied by the Web application server and the code required
 to establish a connection to an AMQP broker needs to be a little bit
 different.
 
-Two ways to specify connection parameters
------------------------------------------
+## Two ways to specify connection parameters
 
 Connection parameters (host, port, username, vhost and so on) can be
 passed in two forms:
@@ -116,8 +112,7 @@ from connection URIs:
 "amqp://dev.rabbitmq.com/foo/bar"    # => ArgumentError
 ```
 
-Starting the event loop and connecting in standalone applications
------------------------------------------------------------------
+## Starting the event loop and connecting in standalone applications
 
 ### EventMachine event loop
 

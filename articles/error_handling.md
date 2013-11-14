@@ -1,13 +1,10 @@
 ---
 title: "Error handling and recovery"
 layout: article
-disqus_identifier: "amqp_error_handling”
-disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/ErrorHandling.textile”
-permalink: "articles/error_handling/"
-—
+permalink: "error_handling/"
+---
 
-About this guide
-----------------
+## About this guide
 
 Development of a robust application, be it message publisher or message
 consumer, involves dealing with multiple kinds of failures: protocol
@@ -34,14 +31,12 @@ Commons Attribution 3.0 Unported License</a> (including images and
 stylesheets). The source is available [on
 Github](https://github.com/ruby-amqp/rubyamqp.info).
 
-Covered versions
-----------------
+## Covered versions
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
 1.1.x.
 
-Code examples
--------------
+## Code examples
 
 There are several
 [examples](https://github.com/ruby-amqp/amqp/tree/master/examples/error_handling)
@@ -225,8 +220,7 @@ is open. In practice, however, when broker closes TCP connection between
 successful TCP connection and before AMQP connection is open, it means
 that authentication has failed.
 
-Handling network connection interruptions
------------------------------------------
+## Handling network connection interruptions
 
 Network connectivity issues are a sad fact of life in modern software
 systems. Even small products and projects these days consist of multiple
@@ -401,8 +395,7 @@ end
 <span class="note">Many applications do not need per-consumer network
 failure handling.`
 
-Recovering from network connection failures
--------------------------------------------
+## Recovering from network connection failures
 
 Detecting network connections is nearly useless if an AMQP-based
 application cannot recover from them. Recovery is the hard part in
@@ -544,15 +537,13 @@ using events and callbacks introduced in the "Manual recovery”
 section.
 </span>
 
-Detecting broker failures
--------------------------
+## Detecting broker failures
 
 AMQP applications see broker failure as TCP connection loss. There is no
 reliable way to know whether there is a network problem or a network
 peer is down.
 
-AMQP connection-level exceptions
---------------------------------
+## AMQP connection-level exceptions
 
 ### Handling connection-level exceptions
 
@@ -622,8 +613,7 @@ EventMachine.run do
 end
 ```
 
-Handling graceful broker shutdown
----------------------------------
+## Handling graceful broker shutdown
 
 When an AMQP broker is shut down, it properly closes connections first.
 To do so, it uses **connection.close** AMQP method. AMQP clients then
@@ -663,8 +653,7 @@ end
 Once AMQP connection is re-opened, channels in automatic recovery mode
 will recover just like they do after network outages.
 
-Integrating channel-level exceptions handling with object-oriented Ruby code
-----------------------------------------------------------------------------
+## Integrating channel-level exceptions handling with object-oriented Ruby code
 
 Error handling can be easily integrated into object-oriented Ruby code
 (in fact, this is highly encouraged). A common technique is to combine
@@ -755,8 +744,7 @@ end
 ```
 
 
-AMQP channel-level exceptions
------------------------------
+## AMQP channel-level exceptions
 
 ### Handling channel-level exceptions
 
@@ -980,8 +968,7 @@ in vhost ‘amqp_gem_testbed’ refused for user ‘amqp_gem_reader’
 </dd>
 </dl>
 
-Conclusion
-----------
+## Conclusion
 
 Distributed applications introduce a whole new class of failures
 developers need to be aware of. Many of them stem from unreliable

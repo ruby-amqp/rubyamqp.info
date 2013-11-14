@@ -1,26 +1,21 @@
 ---
 title: "Supported RabbitMQ Versions"
 layout: article
-disqus_identifier: "rabbitmq_versions"
-disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/RabbitMQVersions.textile"
-permalink: "articles/rabbitmq_versions/"
+permalink: "rabbitmq_versions/"
 ---
 
-About this guide
-----------------
+## About this guide
 
 This guide covers the compatibility of the [Ruby amqp
 gem](http://github.com/ruby-amqp/amqp) with various versions of
 [RabbitMQ](http://rabbitmq.com) messaging broker.
 
-Covered versions
-----------------
+## Covered versions
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
 1.1.x.
 
-RabbitMQ Version Requirement
-----------------------------
+## RabbitMQ Version Requirement
 
 amqp gem before 0.8.0 (0.6.x, 0.7.x) series implemented (most of) the
 AMQP 0.8 specification. amqp gem 0.8.0 and later versions implement AMQP 0.9.1 and thus
@@ -31,8 +26,7 @@ amqp gem 0.8.0 and later versions implement AMQP 0.9.1 and thus
 **require RabbitMQ version 2.0 or later**
 </span>
 
-Using recent versions on Debian and Ubuntu
-------------------------------------------
+## Using recent versions on Debian and Ubuntu
 
 Ubuntu and Debian have both shipped with old RabbitMQ versions in the
 past that only support AMQP protocol 0.8. Ruby amqp gem 0.8.0 and later
@@ -42,8 +36,7 @@ We strongly recommend that you use the [RabbitMQ apt
 repository](http://www.rabbitmq.com/debian.html#apt) that has recent
 versions of RabbitMQ.
 
-OpsCode Chef and Puppet
------------------------
+## OpsCode Chef and Puppet
 
 ### Chef cookbook for RabbitMQ
 
@@ -62,8 +55,7 @@ repositories. Note that it has two dependencies:
  * [puppet-stdlib](https://github.com/puppetlabs/puppetlabs-stdlib)
  * [puppet-apt](https://github.com/puppetlabs/puppet-apt)
 
-TLS (SSL) support
------------------
+## TLS (SSL) support
 
 Note that [before 1.7.0, RabbitMQ did not support
 TLS](http://www.rabbitmq.com/ssl.html). In order to have TLS support,

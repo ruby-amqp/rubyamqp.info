@@ -1,9 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    RedCloth (4.2.9)
-    albino (1.3.3)
-      posix-spawn (>= 0.3.6)
     classifier (1.3.3)
       fast-stemmer (>= 1.0.0)
     colorator (0.1)
@@ -11,8 +8,6 @@ GEM
       highline (~> 1.6.11)
     directory_watcher (1.4.1)
     fast-stemmer (1.0.2)
-    haml (4.0.3)
-      tilt
     highline (1.6.20)
     iconv (1.0.3)
     jekyll (1.2.1)
@@ -33,16 +28,12 @@ GEM
       yajl-ruby (~> 1.1.0)
     redcarpet (2.3.0)
     safe_yaml (0.7.1)
-    tilt (1.4.1)
     yajl-ruby (1.1.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  RedCloth
-  albino
-  haml
   iconv
   jekyll (~> 1.2.1)
   redcarpet

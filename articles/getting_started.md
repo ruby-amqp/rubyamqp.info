@@ -1,9 +1,7 @@
 ---
 title: "Getting Started with RabbitMQ and Ruby Using amqp gem"
 layout: article
-disqus_identifier: "getting_started_with_amqp"
-disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/GettingStarted.textile"
-permalink: "articles/getting_started/"
+permalink: "getting_started/"
 ---
 
 ## About this guide
@@ -85,7 +83,7 @@ supported Ruby implementations:
 
 ### You can also use Bundler to install the gem
 
-``` ruby
+```ruby
 source "https://rubygems.org"
 gem "amqp", "~> 1.1.1"
 ```
@@ -104,40 +102,40 @@ Verify your installation with a quick irb session:
 
 Let us begin with the classic "Hello, world" example. First, here is the code:
 
-``` ruby
+```ruby
 #!/usr/bin/env ruby
 # encoding: utf-8
- 
+
 require "rubygems"
 require "amqp"
- 
+
 EventMachine.run do
   connection = AMQP.connect(:host => '127.0.0.1')
   puts "Connected to AMQP broker. Running #{AMQP::VERSION} version of the gem..."
- 
+
   channel  = AMQP::Channel.new(connection)
   queue    = channel.queue("amqpgem.examples.helloworld", :auto_delete => true)
   exchange = channel.direct("")
- 
+
   queue.subscribe do |payload|
     puts "Received a message: #{payload}. Disconnecting..."
     connection.close { EventMachine.stop }
   end
- 
+
   exchange.publish "Hello, world!", :routing_key => queue.name
 end
 ```
 
 This example demonstrates a very common communication scenario: *application A* wants to publish a message that will end up in a queue that *application B* listens on. In this case, the queue name is "amqpgem.examples.hello". Let us go through the code step by step:
 
-``` ruby
+```ruby
 require "rubygems"
 require "amqp"
 ```
 
 is the simplest way to load the amqp gem if you have installed it with RubyGems, but remember that you can omit the rubygems line if your environment does not need it. The following piece of code
 
-``` ruby
+```ruby
 EventMachine.run do
   # ...
 end
@@ -150,7 +148,7 @@ asynchronous network I/O library called _EventMachine_.
 
 The next line
 
-``` ruby
+```ruby
 connection = AMQP.connect(:host => '127.0.0.1')
 ```
 
@@ -158,7 +156,7 @@ connects to the server running on localhost, with the default port (5672), usern
 
 The next line
 
-``` ruby
+```ruby
 channel  = AMQP::Channel.new(connection)
 ```
 
@@ -168,7 +166,7 @@ Channels are opened on a connection, therefore the `AMQP::Channel` constructor t
 
 This line
 
-``` ruby
+```ruby
 queue    = channel.queue("amqpgem.examples.helloworld", :auto_delete => true)
 ```
 
@@ -176,7 +174,7 @@ declares a _queue_ on the channel that we have just opened. Consumer application
 
 The next line
 
-``` ruby
+```ruby
 exchange = channel.direct("")
 ```
 
@@ -188,7 +186,7 @@ _default exchange_ and it has implied bindings to all queues. Before
 we get into that, let us see how we define a handler for incoming
 messages
 
-``` ruby
+```ruby
 queue.subscribe do |payload|
   puts "Received a message: #{payload}. Disconnecting..."
   connection.close { EventMachine.stop }
@@ -199,7 +197,7 @@ end
 
 Finally, we publish our message
 
-``` ruby
+```ruby
 exchange.publish "Hello, world!", :routing_key => queue.name
 ```
 
@@ -210,25 +208,25 @@ message's routing key. This is how our message ends up in the
 
 This first example can be modified to use the method chaining technique:
 
-``` ruby
+```ruby
 #!/usr/bin/env ruby
 # encoding: utf-8
- 
+
 require "rubygems"
 require "amqp"
- 
+
 EventMachine.run do
   AMQP.connect(:host => '127.0.0.1') do |connection|
     puts "Connected to AMQP broker. Running #{AMQP::VERSION} version of the gem..."
- 
+
     channel  = AMQP::Channel.new(connection)
- 
+
     channel.queue("amqpgem.examples.helloworld", :auto_delete => true).subscribe do |payload|
       puts "Received a message: #{payload}. Disconnecting..."
- 
+
       connection.close { EventMachine.stop }
     end
- 
+
     channel.direct("").publish "Hello, world!", :routing_key => "amqpgem.examples.helloworld"
   end
 end
@@ -255,35 +253,35 @@ Blabbr members, Joe, Aaron and Bob, follow the official NBA account on
 Blabbr to get updates about what is happening in the world of
 basketball. Here is the code:
 
-``` ruby
+```ruby
 #!/usr/bin/env ruby
 # encoding: utf-8
- 
+
 require "rubygems"
 require "amqp"
- 
+
 AMQP.start("amqp://dev.rabbitmq.com:5672") do |connection|
   channel  = AMQP::Channel.new(connection)
   exchange = channel.fanout("nba.scores")
- 
+
   channel.queue("joe", :auto_delete => true).bind(exchange).subscribe do |payload|
     puts "#{payload} => joe"
   end
- 
+
   channel.queue("aaron", :auto_delete => true).bind(exchange).subscribe do |payload|
     puts "#{payload} => aaron"
   end
- 
+
   channel.queue("bob", :auto_delete => true).bind(exchange).subscribe do |payload|
     puts "#{payload} => bob"
   end
- 
+
   exchange.publish("BOS 101, NYK 89").publish("ORL 85, ALT 88")
- 
+
   # disconnect & exit after 2 seconds
   EventMachine.add_timer(2) do
     exchange.delete
- 
+
     connection.close { EventMachine.stop }
   end
 end
@@ -298,7 +296,7 @@ The first line has a few differences from the "Hello, world" example above:
 
 `AMQP.start` is just a convenient way to do
 
-``` ruby
+```ruby
 EventMachine.run do
   AMQP.connect(options) do |connection|
     # ...
@@ -320,7 +318,7 @@ In this example, opening a channel is no different to opening a
 channel in the previous example, however, the exchange is declared
 differently
 
-``` ruby
+```ruby
 exchange = channel.fanout("nba.scores")
 ```
 
@@ -328,14 +326,14 @@ The exchange that we declare above using `AMQP::Channel#fanout` is a _fanout exc
 
 This piece of code
 
-``` ruby
+```ruby
 channel.queue("joe", :auto_delete => true).bind(exchange).subscribe do |payload|
   puts "#{payload} => joe"
 end```
 
 is similar to the subscription code that we used for message delivery previously, but what does that `AMQP::Queue#bind` method do? It sets up a binding between the queue and the exchange that you pass to it. We need to do this to make sure that our fanout exchange routes messages to the queues of any subscribed followers.
 
-``` ruby
+```ruby
 exchange.publish("BOS 101, NYK 89").publish("ORL 85, ALT 88")
 ```
 
@@ -348,7 +346,7 @@ A diagram for Blabbr looks like this:
 
 Next we use EventMachine's [add_timer](http://eventmachine.rubyforge.org/EventMachine.html#M000466) method to run a piece of code in 1 second from now:
 
-``` ruby
+```ruby
 EventMachine.add_timer(1) do
   exchange.delete
   connection.close { EventMachine.stop }
@@ -369,19 +367,19 @@ Our example features multiple consumer applications monitoring updates for diffe
 
 Here is the code:
 
-``` ruby
+```ruby
 #!/usr/bin/env ruby
 # encoding: utf-8
- 
+
 require "rubygems"
 require "amqp"
- 
+
 EventMachine.run do
   AMQP.connect do |connection|
     channel  = AMQP::Channel.new(connection)
     # topic exchange name can be any string
     exchange = channel.topic("weathr", :auto_delete => true)
- 
+
     # Subscribers.
     channel.queue("", :exclusive => true) do |queue|
       queue.bind(exchange, :routing_key => "americas.north.#").subscribe do |headers, payload|
@@ -403,7 +401,7 @@ EventMachine.run do
     channel.queue("asia.hk").bind(exchange, :routing_key => "asia.southeast.hk.#").subscribe do |headers, payload|
       puts "An update for Hong Kong: #{payload}, routing key is #{headers.routing_key}"
     end
- 
+
     EM.add_timer(1) do
       exchange.publish("San Diego update", :routing_key => "americas.north.us.ca.sandiego").
         publish("Berkeley update",         :routing_key => "americas.north.us.ca.berkeley").
@@ -416,12 +414,12 @@ EventMachine.run do
         publish("Rome update",             :routing_key => "europe.italy.roma").
         publish("Paris update",            :routing_key => "europe.france.paris")
     end
- 
- 
+
+
     show_stopper = Proc.new {
       connection.close { EventMachine.stop }
     }
- 
+
     EM.add_timer(2, show_stopper)
   end
 end
@@ -429,13 +427,13 @@ end
 
 The first line that is different from the Blabbr example is
 
-``` ruby
+```ruby
 exchange = channel.topic("pub/sub", :auto_delete => true)
 ```
 
 We use a topic exchange here. Topic exchanges are used for [multicast](http://en.wikipedia.org/wiki/Multicast) messaging where consumers indicate which topics they are interested in (think of it as subscribing to a feed for an individual tag in your favourite blog as opposed to the full feed). Routing with a topic exchange is done by specifying a _routing pattern_ on binding, for example:
 
-``` ruby
+```ruby
 channel.queue("americas.south").bind(exchange, :routing_key => "americas.south.#").subscribe do |headers, payload|
   puts "An update for South America: #{payload}, routing key is #{headers.routing_key}"
 end
@@ -489,7 +487,7 @@ and so on.
 
 As the following binding demonstrates, "#" and "*" can also appear at the beginning of routing patterns:
 
-``` ruby
+```ruby
 channel.queue("us.tx.austin").bind(exchange, :routing_key => "#.tx.austin").subscribe do |headers, payload|
   puts "An update for Austin, TX: #{payload}, routing key is #{headers.routing_key}"
 end
@@ -497,7 +495,7 @@ end
 
 For this example the publishing of messages is no different from that of previous examples. If we were to run the program, a message published with a routing key of "americas.north.us.ca.berkeley" would be routed to 2 queues: "us.california" and the _server-named queue_ that we declared by passing a blank string as the name:
 
-``` ruby
+```ruby
 channel.queue("", :exclusive => true) do |queue|
   queue.bind(exchange, :routing_key => "americas.north.#").subscribe do |headers, payload|
     puts "An update for North America: #{payload}, routing key is #{headers.routing_key}"
@@ -538,7 +536,7 @@ and use object methods as message handlers.
 
 An example to demonstrate this technique:
 
-``` ruby
+```ruby
 class Consumer
 
   #
@@ -586,93 +584,93 @@ end
 
 The "Hello, world" example can be ported to use this technique:
 
-``` ruby
+```ruby
 #!/usr/bin/env ruby
 # encoding: utf-8
- 
+
 require "rubygems"
 require "amqp"
- 
+
 class Consumer
- 
+
   #
   # API
   #
- 
+
   def handle_message(metadata, payload)
     puts "Received a message: #{payload}, content_type = #{metadata.content_type}"
   end # handle_message(metadata, payload)
 end
- 
- 
+
+
 class Worker
- 
+
   #
   # API
   #
- 
- 
+
+
   def initialize(channel, queue_name = AMQ::Protocol::EMPTY_STRING, consumer = Consumer.new)
     @queue_name = queue_name
- 
+
     @channel    = channel
     @channel.on_error(&method(:handle_channel_exception))
- 
+
     @consumer   = consumer
   end # initialize
- 
+
   def start
     @queue = @channel.queue(@queue_name, :exclusive => true)
     @queue.subscribe(&@consumer.method(:handle_message))
   end # start
- 
- 
- 
+
+
+
   #
   # Implementation
   #
- 
+
   def handle_channel_exception(channel, channel_close)
     puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
   end # handle_channel_exception(channel, channel_close)
 end
- 
- 
+
+
 class Producer
- 
+
   #
   # API
   #
- 
+
   def initialize(channel, exchange)
     @channel  = channel
     @exchange = exchange
   end # initialize(channel, exchange)
- 
+
   def publish(message, options = {})
     @exchange.publish(message, options)
   end # publish(message, options = {})
- 
- 
+
+
   #
   # Implementation
   #
- 
+
   def handle_channel_exception(channel, channel_close)
     puts "Oops... a channel-level exception: code = #{channel_close.reply_code}, message = #{channel_close.reply_text}"
   end # handle_channel_exception(channel, channel_close)
 end
- 
- 
+
+
 AMQP.start("amqp://guest:guest@dev.rabbitmq.com") do |connection, open_ok|
   channel  = AMQP::Channel.new(connection)
   worker   = Worker.new(channel, "amqpgem.objects.integration")
   worker.start
- 
+
   producer = Producer.new(channel, channel.default_exchange)
   puts "Publishing..."
   producer.publish("Hello, world", :routing_key => "amqpgem.objects.integration")
- 
+
   # stop in 2 seconds
   EventMachine.add_timer(2.0) { connection.close { EventMachine.stop } }
 end
@@ -680,13 +678,13 @@ end
 
 The most important line in this example is
 
-``` ruby
+```ruby
 @queue.subscribe(&@consumer.method(:handle_message))
 ```
 
 Ampersand (&) preceding an object is equivalent to calling the #to_proc method on it. We obtain a Consumer#handle_message method reference with
 
-``` ruby
+```ruby
 @consumer.method(:handle_message)
 ```
 
@@ -696,7 +694,7 @@ handle incoming messages.
 Note that the `Consumer` class above can be easily tested in isolation, without spinning up any AMQP connections.
 Here is one example using [RSpec](http://relishapp.com/rspec)
 
-``` ruby
+```ruby
 require "ostruct"
 require "json"
 

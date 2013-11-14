@@ -1,11 +1,10 @@
 ---
 title: "AMQP 0.9.1 Model Explained"
 layout: article
-permalink: "articles/amqp_9_1_model_explained/"
+permalink: "amqp_9_1_model_explained/"
 ---
 
-About this guide
-----------------
+## About this guide
 
 This guide explains the AMQP 0.9.1 Model used by RabbitMQ. Understanding
 the AMQP Model will make a lot of other documentation, both for the Ruby
@@ -30,8 +29,7 @@ models
  * What negative message acknowledgements are
  * and a lot of other things
 
-High-level overview of AMQP 0.9.1 and the AMQP Model
-----------------------------------------------------
+## High-level overview of AMQP 0.9.1 and the AMQP Model
 
 ### What is AMQP
 
@@ -351,8 +349,7 @@ communication on another channel, therefore every AMQP method also
 carries a channel number that clients use to figure out which channel
 the method is for (and thus, which event handler needs to be invoked).
 
-AMQP Virtual Hosts (vhosts)
----------------------------
+## AMQP Virtual Hosts (vhosts)
 
 To make it possible for a single broker to host multiple isolated
 “environments” (groups of users, exchanges, queues and so on), AMQP
@@ -369,8 +366,7 @@ common use cases for vhosts are
 staging) of one or more applications
  * To implement a multi-tenant environment
 
-AMQP is Extensible
-------------------
+## AMQP is Extensible
 
 AMQP 0.9.1 has several extension points:
 
@@ -390,8 +386,7 @@ RabbitMQ management frontend and HTTP API are implemented as a plugin.
 These features make the AMQP 0.9.1 Model even more flexible and
 applicable to a very broad range of problems.
 
-Key differences from some other messaging models
-------------------------------------------------
+## Key differences from some other messaging models
 
 One key difference to understand about the AMQP 0.9.1 model is that
 **messages are not sent to queues. They are sent to exchanges that route
@@ -401,8 +396,7 @@ themselves.
 
 TBD
 
-AMQP 0.9.1 clients ecosystem
-----------------------------
+## AMQP 0.9.1 clients ecosystem
 
 ### Overview
 
@@ -420,8 +414,7 @@ themselves to the terminology of a particular client library. This way
 communicating with developers using different libraries will be
 significantly easier.
 
-Wrapping up
------------
+## Wrapping up
 
 This is the end of the AMQP 0.9.1 Model tutorial. Congratulations! Armed
 with this knowledge, you will find it easier to follow the rest of the
@@ -433,8 +426,7 @@ To stay up to date with amqp gem development, [follow @rubyamqp on
 Twitter](http://twitter.com/rubyamqp) and [join our mailing
 list](http://groups.google.com/group/ruby-amqp).
 
-What to read next
------------------
+## What to read next
 
 Documentation is organized as a number of documentation guides, covering
 all kinds of topics from [use cases for various exchange

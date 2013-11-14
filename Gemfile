@@ -7,8 +7,3 @@ gem "redcarpet"
 #
 # gem install iconv -- --with-iconv-dir=~/.rvm/usr
 gem "iconv"
-# backwards compatibility, will be removed
-# after Markdown transition is done
-gem "haml"
-gem "RedCloth"
-gem "albino"

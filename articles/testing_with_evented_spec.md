@@ -1,24 +1,21 @@
 ---
 title: "Testing AMQP applications"
 layout: article
-permalink: "articles/testing_with_evented_spec/"
+permalink: "testing_with_evented_spec/"
 ---
 
-About this guide
-----------------
+## About this guide
 
 This guide covers unit testing of amqp-based applications, primarily
 using [evented-spec](http://github.com/ruby-amqp/evented-spec).
 
-Covered versions
-----------------
+## Covered versions
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
 1.1.x and [evented-spec gem](http://github.com/ruby-amqp/evented-spec)
 0.9.0 and later.
 
-Rationale
----------
+## Rationale
 
 The AMQP 0.9.1 protocol is inherently asynchronous. Testing of asynchronous
 code is often more difficult than synchronous code. There are two
@@ -40,8 +37,7 @@ covers the usage of that gem in the context of applications that use the
 amqp gem but can also be useful for testing EventMachine and
 Cool.io-based applications.
 
-Using evented-spec
-------------------
+## Using evented-spec
 
 ### Setting up
 
@@ -92,16 +88,16 @@ lets you do this:
 ``` ruby
 require 'spec_helper'
 require 'evented-spec'
- 
+
 describe "Hello, world! example" do
   include EventedSpec::AMQPSpec
- 
+
   default_options :vhost => "amqp_testing_vhost"
   default_timeout 1
- 
+
   it "should pass" do
     done
-  end 
+  end
 end
 ```
 
@@ -155,12 +151,12 @@ channel-level exception in AMQP):
 
 ``` ruby
 require 'spec_helper'
- 
+
 describe AMQP do
   include EventedSpec::AMQPSpec
   default_timeout 5
- 
- 
+
+
   context "when queue is redeclared with different attributes across two channels" do
     let(:name)              { "amqp-gem.nondurable.queue" }
     let(:options)           {
@@ -169,22 +165,22 @@ describe AMQP do
     let(:different_options) {
       { :durable => true, :passive => false }
     }
- 
- 
+
+
     it "should trigger channel-level #on_error callback" do
       @channel = AMQP::Channel.new
       @channel.on_error do |ch, close|
         puts "This should never happen"
       end
       @q1 = @channel.queue(name, options)
- 
+
       # backwards compatibility, please consider against
       # using global error handlers in your programs!
       AMQP::Channel.on_error do |msg|
         puts "Global handler has fired: #{msg}"
         @global_callback_fired = true
       end
- 
+
       # Small delays to ensure the order of execution
       delayed(0.1) {
         @other_channel = AMQP::Channel.new
@@ -194,12 +190,12 @@ describe AMQP do
         puts "other_channel.id = #{@other_channel.id}"
         @q2 = @other_channel.queue(name, different_options)
       }
- 
+
       delayed(0.3) {
         @q1.delete
         @q2.delete
       }
- 
+
       done(0.4) {
         @callback_fired.should be_true
         @global_callback_fired.should be_true
@@ -237,8 +233,7 @@ module, <a class='highlight'>#it</a> calls are wrapped in
 your examples as if you’re connected. Please note that you still need to
 open your own channel(s).
 
-What to read next
------------------
+## What to read next
 
 There is a lot more to evented-spec than described in this guide.
 [evented-spec

@@ -1,11 +1,10 @@
 ---
 title: "Using TLS (SSL) with Ruby amqp gem and RabbitMQ"
 layout: article
-permalink: "articles/connection_encryption_with_tls/"
+permalink: "connection_encryption_with_tls/"
 ---
 
-About this guide
-----------------
+## About this guide
 
 This guide covers connection to RabbitMQ nodes using TLS (also known as
 SSL) and related issues. This guide does not explain basic TLS concepts.
@@ -13,14 +12,12 @@ For that, refer to resources like [Introduction to
 SSL](https://developer.mozilla.org/en/Introduction_to_SSL) or [Wikipedia
 page on TLS](http://en.wikipedia.org/wiki/Transport_Layer_Security).
 
-Covered versions
-----------------
+## Covered versions
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
 1.1.x.
 
-RabbitMQ Version Requirements
------------------------------
+## RabbitMQ Version Requirements
 
 RabbitMQ has supported TLS since version 1.7.0. Minimum requirements are
 
@@ -33,8 +30,7 @@ to an incorrect RC4 implementation in earlier versions of Erlang.
 
 Learn more at [rabbitmq.com TLS page](http://www.rabbitmq.com/ssl.html).
 
-Pre-requisites
---------------
+## Pre-requisites
 
 RabbitMQ needs to be configured to use TLS. Just like Web
 servers, TLS connections are usually accepted on a separate port (5671).
@@ -42,8 +38,7 @@ servers, TLS connections are usually accepted on a separate port (5671).
 to configure RabbitMQ to use TLS, how to generate certificates for
 development and so on.
 
-Connecting to RabbitMQ using TLS
------------------------------------
+## Connecting to RabbitMQ using TLS
 
 To instruct Ruby amqp gem to use TLS for connection, pass :ssl option
 that specifies certificate chain file path as well as private key file
@@ -76,8 +71,7 @@ starting TCP connection <0.9904.0> from 127.0.0.1:53444
 upgraded TCP connection <0.9904.0> to SSL
 ```
 
-Example code
-------------
+## Example code
 
 TLS example (as well as sample certificates you can use to get started
 with) can be found in the [amqp gem git

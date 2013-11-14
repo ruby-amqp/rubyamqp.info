@@ -1,9 +1,7 @@
 ---
 title: "RabbitMQ Extensions to AMQP 0.9.1 in amqp gem"
 layout: article
-disqus_identifier: "rabbitmq_extensions"
-disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/RabbitMQExtensions.textile"
-permalink: "articles/rabbitmq_extensions/"
+permalink: "rabbitmq_extensions/"
 ---
 
 ## RabbitMQ extensions
@@ -22,8 +20,7 @@ amqp gem supports many RabbitMQ extensions to AMQP 0.9.1:
   * [Dead Letter Exchanges](http://www.rabbitmq.com/dlx.html)
   * [Validated user_id](http://www.rabbitmq.com/validated-user-id.html)
 
-Enabling RabbitMQ extensions
-----------------------------
+## Enabling RabbitMQ extensions
 
 If you are using RabbitMQ and want to use these
 extensions, simply replace
@@ -39,8 +36,7 @@ require "amqp"
 require "amqp/extensions/rabbitmq"
 ```
 
-Per-queue Message Time-to-Live
-------------------------------
+## Per-queue Message Time-to-Live
 
 Per-queue Message Time-to-Live (TTL) is a RabbitMQ extension to AMQP
 0.9.1 that allows developers to control how long a message published to
@@ -124,8 +120,7 @@ end
 See also rabbitmq.com section on [Per-queue Message
 TTL](http://www.rabbitmq.com/ttl.html#per-queue-message-ttl)
 
-Publisher Confirms (Publisher Acknowledgements)
------------------------------------------------
+## Publisher Confirms (Publisher Acknowledgements)
 
 In some situations it is essential that no messages are lost. The only
 reliable way of ensuring this is by using confirmations. The [Publisher
@@ -226,8 +221,7 @@ end
 See also rabbitmq.com section on [Confirms aka Publisher
 Acknowledgements](http://www.rabbitmq.com/confirms.html)
 
-basic.nack
-----------
+## basic.nack
 
 The AMQP 0.9.1 specification defines the basic.reject method that allows
 clients to reject individual, delivered messages, instructing the broker
@@ -252,8 +246,7 @@ multiple messages at once. Otherwise, basic.reject is used as usual.
 See also rabbitmq.com section on [Confirms aka Publisher
 Acknowledgements](http://www.rabbitmq.com/nack.html)
 
-Alternate Exchanges
--------------------
+## Alternate Exchanges
 
 Alternate Exchanges is a RabbitMQ extension to AMQP 0.9.1 that allows
 developers to define “fallback” exchanges where unroutable messages will
@@ -307,10 +300,8 @@ end
 See also rabbitmq.com section on [Alternate
 Exchanges](http://www.rabbitmq.com/ae.html)
 
-Wrapping Up
------------
+## Wrapping Up
 
 With amqp gem you can use a number of RabbitMQ extensions to AMQP 0.9.1.
-Some are special features in the library,\
-while some other are used via extra declaration attributes and message
-properties.
+Some are special features in the library, while some other are used via
+extra declaration attributes and message properties.

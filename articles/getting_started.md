@@ -329,7 +329,8 @@ This piece of code
 ```ruby
 channel.queue("joe", :auto_delete => true).bind(exchange).subscribe do |payload|
   puts "#{payload} => joe"
-end```
+end
+```
 
 is similar to the subscription code that we used for message delivery previously, but what does that `AMQP::Queue#bind` method do? It sets up a binding between the queue and the exchange that you pass to it. We need to do this to make sure that our fanout exchange routes messages to the queues of any subscribed followers.
 

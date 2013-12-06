@@ -273,7 +273,7 @@ require "amqp"
 puts "=> TCP connection failure handling with a callback"
 puts
 
-handler             = Proc.new { |settings| puts "Failed to connect, as expected"; EM.stop`
+handler             = Proc.new { |settings| puts "Failed to connect, as expected"; EM.stop }
 connection_settings = {
   :port     => 9689,
   :vhost    => "/amq_client_testbed",

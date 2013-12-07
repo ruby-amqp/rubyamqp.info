@@ -273,7 +273,7 @@ require "amqp"
 puts "=> TCP connection failure handling with a callback"
 puts
 
-handler             = Proc.new { |settings| puts "Failed to connect, as expected"; EM.stop`
+handler             = Proc.new { |settings| puts "Failed to connect, as expected"; EM.stop }
 connection_settings = {
   :port     => 9689,
   :vhost    => "/amq_client_testbed",
@@ -535,7 +535,7 @@ the mailing list.
 
 ## What to read next
 
- * [Working With Queues](articles/working_with_queues/). This guide
+ * [Working With Queues](/articles/working_with_queues/). This guide
 focuses on features that consumer applications use heavily.\
  * [Working With Exchanges](/articles/working_with_exchanges/). This
 guide focuses on features that producer applications use heavily.

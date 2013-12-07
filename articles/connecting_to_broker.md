@@ -537,7 +537,7 @@ the mailing list.
 
 ## What to read next
 
- * [Working With Queues](articles/working_with_queues/). This guide
+ * [Working With Queues](/articles/working_with_queues/). This guide
 focuses on features that consumer applications use heavily.\
  * [Working With Exchanges](/articles/working_with_exchanges/). This
 guide focuses on features that producer applications use heavily.

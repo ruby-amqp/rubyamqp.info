@@ -403,7 +403,7 @@ EventMachine.run do
       puts "An update for Hong Kong: #{payload}, routing key is #{headers.routing_key}"
     end
 
-    EM.add_timer(1) do
+    EventMachine.add_timer(1) do
       exchange.publish("San Diego update", :routing_key => "americas.north.us.ca.sandiego").
         publish("Berkeley update",         :routing_key => "americas.north.us.ca.berkeley").
         publish("San Francisco update",    :routing_key => "americas.north.us.ca.sanfrancisco").
@@ -421,7 +421,7 @@ EventMachine.run do
       connection.close { EventMachine.stop }
     }
 
-    EM.add_timer(2, show_stopper)
+    EventMachine.add_timer(2, show_stopper)
   end
 end
 ```

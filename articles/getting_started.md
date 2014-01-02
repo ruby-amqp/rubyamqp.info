@@ -429,7 +429,7 @@ end
 The first line that is different from the Blabbr example is
 
 ```ruby
-exchange = channel.topic("pub/sub", :auto_delete => true)
+exchange = channel.topic("weathr", :auto_delete => true)
 ```
 
 We use a topic exchange here. Topic exchanges are used for [multicast](http://en.wikipedia.org/wiki/Multicast) messaging where consumers indicate which topics they are interested in (think of it as subscribing to a feed for an individual tag in your favourite blog as opposed to the full feed). Routing with a topic exchange is done by specifying a _routing pattern_ on binding, for example:

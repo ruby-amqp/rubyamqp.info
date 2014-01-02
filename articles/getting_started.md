@@ -260,7 +260,7 @@ basketball. Here is the code:
 require "rubygems"
 require "amqp"
 
-AMQP.start("amqp://dev.rabbitmq.com:5672") do |connection|
+AMQP.start("amqp://127.0.0.1:5672") do |connection|
   channel  = AMQP::Channel.new(connection)
   exchange = channel.fanout("nba.scores")
 

@@ -27,7 +27,7 @@ GitHub](https://github.com/ruby-amqp/rubyamqp.info).
 
 ## Which versions of the amqp gem does this guide cover?
 
-This guide covers [Ruby amqp gem](https://github.com/ruby-amqp/amqp) 1.1.x.
+This guide covers [Ruby amqp gem](https://github.com/ruby-amqp/amqp) 1.2.x.
 
 ## Installing RabbitMQ
 
@@ -62,6 +62,7 @@ this guide).</div>
 This guide assumes that you have installed one of the following
 supported Ruby implementations:
 
+ * CRuby v2.1.0
  * CRuby v2.0.0
  * CRuby v1.9.3
  * CRuby v1.9.2

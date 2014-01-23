@@ -7,3 +7,4 @@ gem "redcarpet"
 #
 # gem install iconv -- --with-iconv-dir=~/.rvm/usr
 gem "iconv"
+gem "rake", "~> 10.1.1"

@@ -86,7 +86,7 @@ supported Ruby implementations:
 
 ```ruby
 source "https://rubygems.org"
-gem "amqp", "~> 1.2.0"
+gem "amqp", "~> 1.2.1"
 ```
 
 ### Verifying your installation

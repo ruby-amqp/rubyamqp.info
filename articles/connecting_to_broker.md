@@ -21,6 +21,7 @@ Github](https://github.com/ruby-amqp/rubyamqp.info).
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
 1.3.x.
 
+
 ## Terminology
 
 In this guide we define a ‘standalone application’ as an application
@@ -273,7 +274,7 @@ require "amqp"
 puts "=> TCP connection failure handling with a callback"
 puts
 
-handler             = Proc.new { |settings| puts "Failed to connect, as expected"; EM.stop`
+handler             = Proc.new { |settings| puts "Failed to connect, as expected"; EM.stop }
 connection_settings = {
   :port     => 9689,
   :vhost    => "/amq_client_testbed",
@@ -479,9 +480,7 @@ avoid problems related to the behavior of the fork(2) system call,
 namely:
 
  * Unintentional file descriptor sharing
- * The fact that a”forked child process only inherits one
-thread“:http://bit.ly/fork-and-threads and therefore the EventMachine
-thread is not inherited
+ * The fact that a [forked child process only inherits one thread](http://bit.ly/fork-and-threads) and therefore the EventMachine thread is not inherited
 
 #### Using an event handler to spawn one amqp connection per worker
 
@@ -493,7 +492,7 @@ if defined?(PhusionPassenger) # otherwise it breaks rake commands if you put thi
   PhusionPassenger.on_event(:starting_worker_process) do |forked|
     if forked
        # We’re in a smart spawning mode
-       # Now is a good place to connect to the broker
+       # Now is a good time to connect to the broker
     end
   end
 end
@@ -537,7 +536,7 @@ the mailing list.
 
 ## What to read next
 
- * [Working With Queues](articles/working_with_queues/). This guide
+ * [Working With Queues](/articles/working_with_queues/). This guide
 focuses on features that consumer applications use heavily.\
  * [Working With Exchanges](/articles/working_with_exchanges/). This
 guide focuses on features that producer applications use heavily.

@@ -6,8 +6,10 @@ permalink: "getting_started/"
 
 ## About this guide
 
-This guide is a quick tutorial that helps you to get started with RabbitMQ and the [Ruby amqp gem](http://github.com/ruby-amqp/amqp).
-It should take about 20 minutes to read and study the provided code examples. This guide covers:
+This guide is a quick tutorial that helps you to get started with
+RabbitMQ and the [Ruby amqp gem](http://github.com/ruby-amqp/amqp).
+It should take about 20 minutes to read and study the provided code
+examples. This guide covers:
 
  * Installing RabbitMQ, a mature popular server implementation of the AMQP protocol.
  * Installing the amqp gem via [Rubygems](http://rubygems.org) and [Bundler](http://gembundler.com).
@@ -27,6 +29,7 @@ GitHub](https://github.com/ruby-amqp/rubyamqp.info).
 
 This guide covers [Ruby amqp gem](https://github.com/ruby-amqp/amqp) 1.3.x.
 
+
 ## Installing RabbitMQ
 
 The [RabbitMQ site](http://rabbitmq.com) has a good [installation guide](http://www.rabbitmq.com/install.html) that addresses many operating systems.
@@ -44,25 +47,29 @@ package](http://www.rabbitmq.com/server.html) and install it with
 of the [apt repository](http://www.rabbitmq.com/debian.html#apt) that
 the RabbitMQ team provides.
 
-For RPM-based distributions like RedHat or CentOS, the RabbitMQ team provides an [RPM package](http://www.rabbitmq.com/install.html#rpm).
+For RPM-based distributions like RedHat or CentOS, the RabbitMQ team
+provides an [RPM package](http://www.rabbitmq.com/install.html#rpm).
 
 <div class="alert alert-error"><strong>Note:</strong> The RabbitMQ
-package that ships with some popular Ubuntu versions (for example, 10.04 and 10.10) is
-outdated and *will not work with amqp gem 0.8.0 and later versions*
-(you will need at least RabbitMQ v2.0 for use with this guide).</div>
+package that ships with some popular Ubuntu versions (for example,
+10.04 and 10.10) is outdated and *will not work with amqp gem 0.8.0
+and later versions* (you will need at least RabbitMQ v2.0 for use with
+this guide).</div>
 
 ## Installing the Ruby amqp gem
 
 ### Make sure that you have Ruby and [Rubygems](http://docs.rubygems.org/read/chapter/3) installed
 
-This guide assumes that you have installed one of the following supported Ruby implementations:
+This guide assumes that you have installed one of the following
+supported Ruby implementations:
 
+ * CRuby v2.1.0
  * CRuby v2.0.0
  * CRuby v1.9.3
+ * CRuby v1.9.2
  * JRuby v1.7 or higher
  * Rubinius v2.0 or higher
- * CRuby v1.9.2
- * Ruby v1.8.7 [except `p249`](https://github.com/ruby-amqp/amqp#why-isnt-ruby-187-p249-supported-will-it-be-supported-in-the-future)
+ * Ruby v1.8.7
  * Ruby Enterprise Edition
 
 ### You can use Rubygems to install the amqp gem
@@ -256,7 +263,7 @@ basketball. Here is the code:
 require "rubygems"
 require "amqp"
 
-AMQP.start("amqp://dev.rabbitmq.com:5672") do |connection|
+AMQP.start("amqp://127.0.0.1:5672") do |connection|
   channel  = AMQP::Channel.new(connection)
   exchange = channel.fanout("nba.scores")
 
@@ -325,7 +332,8 @@ This piece of code
 ```ruby
 channel.queue("joe", :auto_delete => true).bind(exchange).subscribe do |payload|
   puts "#{payload} => joe"
-end```
+end
+```
 
 is similar to the subscription code that we used for message delivery previously, but what does that `AMQP::Queue#bind` method do? It sets up a binding between the queue and the exchange that you pass to it. We need to do this to make sure that our fanout exchange routes messages to the queues of any subscribed followers.
 
@@ -398,7 +406,7 @@ EventMachine.run do
       puts "An update for Hong Kong: #{payload}, routing key is #{headers.routing_key}"
     end
 
-    EM.add_timer(1) do
+    EventMachine.add_timer(1) do
       exchange.publish("San Diego update", :routing_key => "americas.north.us.ca.sandiego").
         publish("Berkeley update",         :routing_key => "americas.north.us.ca.berkeley").
         publish("San Francisco update",    :routing_key => "americas.north.us.ca.sanfrancisco").
@@ -416,7 +424,7 @@ EventMachine.run do
       connection.close { EventMachine.stop }
     }
 
-    EM.add_timer(2, show_stopper)
+    EventMachine.add_timer(2, show_stopper)
   end
 end
 ```
@@ -424,7 +432,7 @@ end
 The first line that is different from the Blabbr example is
 
 ```ruby
-exchange = channel.topic("pub/sub", :auto_delete => true)
+exchange = channel.topic("weathr", :auto_delete => true)
 ```
 
 We use a topic exchange here. Topic exchanges are used for [multicast](http://en.wikipedia.org/wiki/Multicast) messaging where consumers indicate which topics they are interested in (think of it as subscribing to a feed for an individual tag in your favourite blog as opposed to the full feed). Routing with a topic exchange is done by specifying a _routing pattern_ on binding, for example:

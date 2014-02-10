@@ -19,7 +19,7 @@ Github](https://github.com/ruby-amqp/rubyamqp.info).
 ## Covered versions
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
-1.1.x.
+1.3.x.
 
 ## Entity durability and message persistence
 

@@ -15,7 +15,7 @@ gem](http://github.com/ruby-amqp/amqp) in particular.
 ## Covered versions
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
-1.1.x.
+1.3.x.
 
 ## First steps
 

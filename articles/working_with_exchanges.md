@@ -18,7 +18,7 @@ Github](https://github.com/ruby-amqp/rubyamqp.info).
 ## Which versions of the amqp gem does this guide cover?
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
-1.1.x.
+1.3.x.
 
 ## Exchanges in AMQP 0.9.1 - overview
 

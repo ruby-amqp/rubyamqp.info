@@ -519,7 +519,7 @@ once confirmation has arrived.
 A word of warning: you may find examples on the Web of `AMQP::Channel#queue` usage that do not use callbacks. We *recommend
 that you use a callback for server-named queues*, otherwise your code
 may be subject to [race
-conditions](ttp://en.wikipedia.org/wiki/Race_condition). Even though
+conditions](http://en.wikipedia.org/wiki/Race_condition). Even though
 the amqp gem tries to be reasonably smart and protect you from most
 common problems (for example, binding operations will be delayed until
 after queue name is received from the broker), there is no way it can

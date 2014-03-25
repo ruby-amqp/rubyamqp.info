@@ -47,7 +47,7 @@ recovery. Feel free to contribute new examples.
 
 When applications connect to the broker, they need to handle connection
 failures. Networks are not
-100 reliable, even with modern system configuration tools like Chef or Puppet misconfigurations happen and the broker might also be down. Error detection should happen as early as possible. There are two ways of detecting TCP connection failure, the first one is to catch an exception:
+100% reliable, even with modern system configuration tools like Chef or Puppet misconfigurations happen and the broker might also be down. Error detection should happen as early as possible. There are two ways of detecting TCP connection failure, the first one is to catch an exception:
 
 ``` ruby
 begin
@@ -411,49 +411,47 @@ channels on that connection.`
 
 Similarly to the Shutdown Protocol, the amqp gem entities implement a
 Recovery Protocol. The Recovery Protocol consists of three methods that
-connections, channels, queues, consumers and exchanges all implement:\
- * `AMQP::Session#before_recovery`\
- * `AMQP::Session#auto_recover`\
+connections, channels, queues, consumers and exchanges all implement:
+
+ * `AMQP::Session#before_recovery`
+ * `AMQP::Session#auto_recover`
  * `AMQP::Session#after_recovery`
 
-AMQP::Session#before_recovery lets application developers register a
+`AMQP::Session#before_recovery` lets application developers register a
 callback that will be executed **after TCP connection is re-established
 but before AMQP connection is reopened**.
-{AMQP::Session#after_recovery} is similar except that the callback is
+`AMQP::Session#after_recovery` is similar except that the callback is
 run **after AMQP connection is reopened**.
 
-`AMQP::Channel`,
-`AMQP::Queue`,
-`AMQP::Consumer` and
-`AMQP::Exchange` methods behavior is
-identical.
+`AMQP::Channel`, `AMQP::Queue`, `AMQP::Consumer`, and `AMQP::Exchange`
+method's behavior is identical.
 
 Recovery process for AMQP applications usually involves the following
 steps:
 
-# Re-open AMQP connection.\
- # Once connection is open again, re-open all AMQP channels on that
-connection.\
- # For each channel, re-declare all exchanges\
- # For each channel, re-declare all queues\
- # Once queue is declared, for each queue, re-register all bindings\
- # Once queue is declared, for each queue, re-register all consumers
+ 1. Re-open AMQP connection.
+ 2. Once connection is open again, re-open all AMQP channels on that
+    connection.
+ 3. For each channel, re-declare all exchanges.
+ 4. For each channel, re-declare all queues.
+ 5. Once queue is declared, for each queue, re-register all bindings.
+ 6. Once queue is declared, for each queue, re-register all consumers.
 
 ### Automatic recovery
 
 Many applications use the same recovery strategy that consists of the
 following steps:
 
- * Re-open channels
- * For each channel, re-declare exchanges (except for predefined ones)
- * For each channel, re-declare queues
- * For each queue, recover all bindings
- * For each queue, recover all consumers
+ 1. Re-open channels.
+ 2. For each channel, re-declare exchanges (except for predefined ones).
+ 3. For each channel, re-declare queues.
+ 4. For each queue, recover all bindings.
+ 5. For each queue, recover all consumers.
 
 The amqp gem provides a feature known as "automatic recovery” that is
 **opt-in** (not opt-out, not used by default) and lets application
 developers get the aforementioned recovery strategy by setting one
-additional attribute on AMQP::Channel instance:
+additional attribute on `AMQP::Channel` instance:
 
 ``` ruby
 ch = AMQP::Channel.new(connection)
@@ -479,7 +477,7 @@ actually do this. Typically you decide what channels should be using
 automatic recovery during the application design stage.
 
 Full example (run it, then shut down AMQP broker running on localhost,
-then bring it back up and use management tools such as \`rabbitmqctl\`to
+then bring it back up and use management tools such as `rabbitmqctl` to
 see that queues, bindings and consumers have all recovered):
 
 ``` ruby
@@ -531,7 +529,7 @@ end
 Server-named queues, when recovered automatically, will get **new
 server-generated names** to guarantee there are no name collisions.
 
-<span note="class">When in doubt, try using automatic recovery first. If
+<span class="note">When in doubt, try using automatic recovery first. If
 it is not sufficient for your application, switch to manual recovery
 using events and callbacks introduced in the "Manual recovery”
 section.
@@ -573,7 +571,7 @@ reference](http://www.rabbitmq.com/amqp-0-9-1-reference.html#constants).
 
 <span class="note">Only one connection-level exception handler can be
 defined per connection instance (the one added last replaces previously
-added ones).`
+added ones).
 
 Full example:
 
@@ -754,14 +752,16 @@ They are handled in a similar manner, by defining a callback with
 takes a callback and yields two arguments to it when a channel-level
 exception happens:
 
-    channel.on_error do |ch, channel_close|
-      puts "Handling a channel-level exception."
-      puts
-      puts "AMQP class id : #{channel_close.class_id}"
-      puts "AMQP method id: #{channel_close.method_id}"
-      puts "Status code   : #{channel_close.reply_code}"
-      puts "Error message : #{channel_close.reply_text}"
-    end
+``` ruby
+channel.on_error do |ch, channel_close|
+  puts "Handling a channel-level exception."
+  puts
+  puts "AMQP class id : #{channel_close.class_id}"
+  puts "AMQP method id: #{channel_close.method_id}"
+  puts "Status code   : #{channel_close.reply_code}"
+  puts "Error message : #{channel_close.reply_text}"
+end
+```
 
 Status codes are similar to those of HTTP. For the full list of error
 codes and their meaning, consult [AMQP 0.9.1 constants

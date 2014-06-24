@@ -62,8 +62,8 @@ this guide).</div>
 This guide assumes that you have installed one of the following
 supported Ruby implementations:
 
- * CRuby v2.1.0
- * CRuby v2.0.0
+ * CRuby v2.1
+ * CRuby v2.0
  * CRuby v1.9.3
  * CRuby v1.9.2
  * JRuby v1.7 or higher

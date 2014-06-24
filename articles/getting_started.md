@@ -27,7 +27,8 @@ GitHub](https://github.com/ruby-amqp/rubyamqp.info).
 
 ## Which versions of the amqp gem does this guide cover?
 
-This guide covers [Ruby amqp gem](https://github.com/ruby-amqp/amqp) 1.2.x.
+This guide covers [Ruby amqp gem](https://github.com/ruby-amqp/amqp) 1.3.x.
+
 
 ## Installing RabbitMQ
 
@@ -517,7 +518,7 @@ once confirmation has arrived.
 A word of warning: you may find examples on the Web of `AMQP::Channel#queue` usage that do not use callbacks. We *recommend
 that you use a callback for server-named queues*, otherwise your code
 may be subject to [race
-conditions](ttp://en.wikipedia.org/wiki/Race_condition). Even though
+conditions](http://en.wikipedia.org/wiki/Race_condition). Even though
 the amqp gem tries to be reasonably smart and protect you from most
 common problems (for example, binding operations will be delayed until
 after queue name is received from the broker), there is no way it can

@@ -7,7 +7,7 @@ layout: article
 
 [amqp gem has a mailing list](groups.google.com/group/ruby-amqp). We
 encourage you to also join the
-[rabbitmq-discuss](https://groups.google.com/forum/#!forum/rabbitmq-users)
+[rabbitmq-users](https://groups.google.com/forum/#!forum/rabbitmq-users)
 mailing list. Feel free to ask any questions that you may have.
 
 

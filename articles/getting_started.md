@@ -87,7 +87,7 @@ supported Ruby implementations:
 
 ```ruby
 source "https://rubygems.org"
-gem "amqp", "~> 1.4.0"
+gem "amqp", "~> 1.4.1"
 ```
 
 ### Verifying your installation
@@ -98,7 +98,7 @@ Verify your installation with a quick irb session:
 :001 > require "amqp"
 => true
 :002 > AMQP::VERSION
-=> "1.4.0"</code>
+=> "1.4.1"</code>
 
 ## "Hello, world" example
 

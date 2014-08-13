@@ -27,7 +27,7 @@ GitHub](https://github.com/ruby-amqp/rubyamqp.info).
 
 ## Which versions of the amqp gem does this guide cover?
 
-This guide covers [Ruby amqp gem](https://github.com/ruby-amqp/amqp) 1.4.x.
+This guide covers Ruby amqp gem 1.5.x.
 
 
 ## Installing RabbitMQ
@@ -87,7 +87,7 @@ supported Ruby implementations:
 
 ```ruby
 source "https://rubygems.org"
-gem "amqp", "~> 1.4.1"
+gem "amqp", "~> 1.5.0"
 ```
 
 ### Verifying your installation
@@ -98,7 +98,7 @@ Verify your installation with a quick irb session:
 :001 > require "amqp"
 => true
 :002 > AMQP::VERSION
-=> "1.4.1"</code>
+=> "1.5.0"</code>
 
 ## "Hello, world" example
 

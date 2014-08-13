@@ -94,11 +94,13 @@ gem "amqp", "~> 1.5.0"
 
 Verify your installation with a quick irb session:
 
-<code>irb -rubygems
+```
+irb -rubygems
 :001 > require "amqp"
 => true
 :002 > AMQP::VERSION
-=> "1.5.0"</code>
+=> "1.5.0"
+```
 
 ## "Hello, world" example
 

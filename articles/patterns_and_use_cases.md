@@ -20,7 +20,7 @@ Github](https://github.com/ruby-amqp/rubyamqp.info).
 ## Covered versions
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
-1.5.x.
+1.6.x.
 
 ## Introduction
 

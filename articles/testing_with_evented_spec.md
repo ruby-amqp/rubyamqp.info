@@ -10,8 +10,7 @@ using [evented-spec](http://github.com/ruby-amqp/evented-spec).
 
 ## Covered versions
 
-This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
-1.6.x and [evented-spec gem](http://github.com/ruby-amqp/evented-spec)
+This guide covers Ruby amqp gem 1.7.x and [evented-spec gem](http://github.com/ruby-amqp/evented-spec)
 0.9.0 and later.
 
 ## Rationale

@@ -18,8 +18,7 @@ Github](https://github.com/ruby-amqp/rubyamqp.info).
 Covered versions
 ----------------
 
-This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
-0.8.0 and later.
+This guide covers Ruby amqp gem 1.7.0 and later.
 
 Bindings in AMQP 0.9.1
 ----------------------

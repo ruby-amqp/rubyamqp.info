@@ -12,7 +12,7 @@ gem](http://github.com/ruby-amqp/amqp) with various versions of
 ## Covered versions
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
-1.5.x.
+1.6.x.
 
 ## RabbitMQ Version Requirement
 

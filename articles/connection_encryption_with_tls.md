@@ -14,7 +14,7 @@ page on TLS](http://en.wikipedia.org/wiki/Transport_Layer_Security).
 ## Covered versions
 
 This guide covers [Ruby amqp gem](http://github.com/ruby-amqp/amqp)
-1.5.x.
+1.6.x.
 
 ## RabbitMQ Version Requirements
 

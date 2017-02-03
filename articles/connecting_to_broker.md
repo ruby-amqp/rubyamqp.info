@@ -1,7 +1,6 @@
 ---
 title: "Connecting to the broker, integrating amqp gem with Ruby on Rails, Sinatra and Web apps"
 layout: article
-permalink: "connecting_to_broker/"
 ---
 
 ## About this guide

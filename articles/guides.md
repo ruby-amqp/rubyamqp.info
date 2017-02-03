@@ -9,7 +9,7 @@ An overview of amqp gem with a quick tutorial that helps you to get started with
 20 minutes to read and study the provided code examples.
 
 
-## [AMQP 0.9.1 Model Explained](/articles/amqp_9_1_model_explained/)
+## [AMQP 0.9.1 Model Explained](/articles/amqp_9_1_model_explained.html)
 
 This guide covers:
 
@@ -22,7 +22,7 @@ This guide covers:
  * What are AMQP 0.9.1 classes and methods
 
 
-## [Connecting to RabbitMQ](/articles/connecting_to_broker/)
+## [Connecting to RabbitMQ](/articles/connecting_to_broker.html)
 
 This guide covers:
 
@@ -32,7 +32,7 @@ This guide covers:
  * How to close a channel
  * How to disconnect
 
-## [Working With Queues](/articles/working_with_queues/)
+## [Working With Queues](/articles/working_with_queues.html)
 
 This guide covers:
 
@@ -48,7 +48,7 @@ This guide covers:
  * How to delete queues
  * Other topics related to queues
 
-## [Working With Exchanges](/articles/working_with_exchanges/)
+## [Working With Exchanges](/articles/working_with_exchanges.html)
 
 This guide covers:
 
@@ -67,7 +67,7 @@ This guide covers:
  * Other topics related to exchanges and publishing
 
 
-## [Working with bindings](/articles/bindings/)
+## [Working with bindings](/articles/bindings.html)
 
 This guide covers:
 
@@ -76,7 +76,7 @@ This guide covers:
  * Other topics related to bindings
 
 
-## [Durability and Related Matters](/articles/durability/)
+## [Durability and Related Matters](/articles/durability.html)
 
 This guide covers:
 
@@ -84,13 +84,13 @@ This guide covers:
  * Durability of messages
 
 
-## [Patterns and Use Cases](/articles/patterns_and_use_cases/)
+## [Patterns and Use Cases](/articles/patterns_and_use_cases.html)
 
 This guide focuses implementation of common messaging patterns using
 AMQP Model features as building blocks.
 
 
-## [Error Handling and Recovery](/articles/error_handling/)
+## [Error Handling and Recovery](/articles/error_handling.html)
 
 This guide covers:
 
@@ -99,14 +99,14 @@ This guide covers:
  * Other things that may go wrong
 
 
-## [Using TLS (SSL) connections](/articles/connection_encryption_with_tls/)
+## [Using TLS (SSL) connections](/articles/connection_encryption_with_tls.html)
 
 This guide covers:
 
  * How to use TLS (SSL) connections to RabbitMQ with amqp gem
 
 
-## [RabbitMQ Extensions](/articles/rabbitmq_extensions/)
+## [RabbitMQ Extensions](/articles/rabbitmq_extensions.html)
 
 This guide covers [RabbitMQ extensions](http://www.rabbitmq.com/extensions.html) and how they are used in amqp gem:
 
@@ -120,19 +120,19 @@ This guide covers [RabbitMQ extensions](http://www.rabbitmq.com/extensions.html)
  * How to use sender-selected routing (`CC` and `BCC` headers)
 
 
-## [Troubleshooting your AMQP applications](/articles/troubleshooting/)
+## [Troubleshooting your AMQP applications](/articles/troubleshooting.html)
 
 Explains what to do when your AMQP applications using Ruby amqp gem
 and RabbitMQ misbehave.
 
 
-## [amqp gem 0.8 migration guide](/articles/08_migration/)
+## [amqp gem 0.8 migration guide](/articles/08_migration.html)
 
 Learn how to migrate your amqp gem 0.6.x and 0.7.x applications to
 0.8.0 and later and why you should do it.
 
 
-## [Testing AMQP applications with Evented Spec](/articles/testing_with_evented_spec/)
+## [Testing AMQP applications with Evented Spec](/articles/testing_with_evented_spec.html)
 
-Learn about techniques of asynchronous testing for your AMQP
+Learn about techniques of asynchronous testing for your messaging
 applications, and how to use Evented Spec.

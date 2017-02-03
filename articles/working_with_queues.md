@@ -1,7 +1,6 @@
 ---
 title: "Working with queues"
 layout: article
-permalink: "working_with_queues/"
 ---
 
 ## About this guide

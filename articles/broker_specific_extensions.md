@@ -1,7 +1,6 @@
 ---
 title: "RabbitMQ Extensions to AMQP 0.9.1 in amqp gem"
 layout: article
-permalink: "rabbitmq_extensions/"
 ---
 
 ## RabbitMQ extensions

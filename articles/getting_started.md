@@ -1,7 +1,6 @@
 ---
 title: "Getting Started with RabbitMQ and Ruby Using amqp gem"
 layout: article
-permalink: "getting_started/"
 ---
 
 ## About this guide

@@ -1,7 +1,6 @@
 ---
 title: "Using TLS (SSL) with Ruby amqp gem and RabbitMQ"
 layout: article
-permalink: "connection_encryption_with_tls/"
 ---
 
 ## About this guide

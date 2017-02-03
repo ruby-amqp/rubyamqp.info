@@ -1,7 +1,6 @@
 ---
 title: "Working with exchanges"
 layout: article
-permalink: "working_with_exchanges/"
 ---
 
 ## About this guide

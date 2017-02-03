@@ -1,7 +1,6 @@
 ---
 title: "Supported RabbitMQ Versions"
 layout: article
-permalink: "rabbitmq_versions/"
 ---
 
 ## About this guide

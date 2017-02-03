@@ -3,7 +3,6 @@ title: "Troubleshooting RabbitMQ applications"
 layout: article
 disqus_identifier: "troubleshooting"
 disqus_url: "http://rdoc.info/github/ruby-amqp/amqp/master/file/docs/Troubleshooting.textile"
-permalink: "articles/troubleshooting/"
 ---
 
 ## About this guide

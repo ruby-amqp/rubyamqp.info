@@ -1,7 +1,6 @@
 ---
 title: "Error handling and recovery"
 layout: article
-permalink: "error_handling/"
 ---
 
 ## About this guide

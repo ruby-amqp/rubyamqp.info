@@ -1,7 +1,6 @@
 ---
 title: "Bindings"
 layout: article
-permalink: "bindings/"
 ---
 
 About this guide

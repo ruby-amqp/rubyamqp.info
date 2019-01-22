@@ -42,12 +42,12 @@ Per-queue Message Time-to-Live (TTL) is a RabbitMQ extension to AMQP
 a queue can live before it is discarded. A message that has been in the
 queue for longer than the configured TTL is said to be dead. Dead
 messages will not be delivered to consumers and cannot be fetched using
-the **basic.get** operation ({ yard_link AMQP::Queue#pop }).
+the **basic.get** operation (`AMQP::Queue#pop`).
 
 Message TTL is specified using the **x-message-ttl** argument on
 declaration. With the amqp gem, you pass it to
-{ yard_link AMQP::Queue#initialize }
-or{ yard_link AMQP::Channel#queue }:
+`AMQP::Queue#initialize`
+or`AMQP::Channel#queue`:
 
     <code># 1000 millisecondschannel.queue("", :arguments => { "x-message-ttl" => 1000 })</code>
 
@@ -234,7 +234,7 @@ processing of messages.
 ### Public API
 
 When RabbitMQ extensions are loaded, the
-{ yard_link AMQP::Channel#reject } method is overriden via a mixin to
+`AMQP::Channel#reject` method is overriden via a mixin to
 take one additional argument: multi (defaults to false). When the
 ‘multi’ argument is passed with a value of ‘true’, then the amqp gem
 will use the basic.nack AMQP method, instead of basic.reject, to reject

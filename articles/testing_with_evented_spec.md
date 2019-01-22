@@ -40,8 +40,8 @@ Cool.io-based applications.
 ### Setting up
 
 To start using amqp all you need is to include
-{ yard_link EventedSpec::AMQPSpec } module into your context and add
-{ yard_link #done } calls to your examples:
+`EventedSpec::AMQPSpec` module into your context and add
+`#done` calls to your examples:
 
 { gist 1027377 }
 

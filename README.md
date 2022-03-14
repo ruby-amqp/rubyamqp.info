@@ -1,7 +1,8 @@
 # amqp gem Documentation
 
-This is the documentation site for the [Ruby amqp gem](http://rubyamqp.info).
+This is the original documentation site for the [Ruby amqp gem](http://ruby-amqp.github.io/amqp/).
 
+These docs have been moved to GitHub pages.
 
 ## How to contribute
 
